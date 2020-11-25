@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Webadmin.Models
 {
-    public partial class StaffPosition
+    public partial class StaffPositions
     {
-        public StaffPosition()
+        public StaffPositions()
         {
-            staff = new HashSet<staff>();
+            Staff = new HashSet<Staff>();
         }
 
         public int StaffPositionId { get; set; }
         public string StaffPositionName { get; set; }
 
-        public virtual ICollection<staff> staff { get; set; }
+        public virtual ICollection<Staff> Staff { get; set; }
     }
 }

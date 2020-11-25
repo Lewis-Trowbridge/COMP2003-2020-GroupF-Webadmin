@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Webadmin.Models
 {
-    public partial class Customer
+    public partial class Customers
     {
         public int CustomerId { get; set; }
         public string CustomerName { get; set; }

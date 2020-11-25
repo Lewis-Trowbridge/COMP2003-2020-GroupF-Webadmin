@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Webadmin.Models
 {
-    public partial class staff
+    public partial class Staff
     {
-        public staff()
+        public Staff()
         {
-            Employments = new HashSet<Employment>();
-            StaffShifts = new HashSet<StaffShift>();
+            Employment = new HashSet<Employment>();
+            StaffShifts = new HashSet<StaffShifts>();
         }
 
         public int StaffId { get; set; }
@@ -18,8 +16,8 @@ namespace Webadmin.Models
         public int StaffContactNum { get; set; }
         public int? StaffPositionId { get; set; }
 
-        public virtual StaffPosition StaffPosition { get; set; }
-        public virtual ICollection<Employment> Employments { get; set; }
-        public virtual ICollection<StaffShift> StaffShifts { get; set; }
+        public virtual StaffPositions StaffPosition { get; set; }
+        public virtual ICollection<Employment> Employment { get; set; }
+        public virtual ICollection<StaffShifts> StaffShifts { get; set; }
     }
 }

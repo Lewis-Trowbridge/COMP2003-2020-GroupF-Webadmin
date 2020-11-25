@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Webadmin.Models
 {
-    public partial class Booking
+    public partial class Bookings
     {
-        public Booking()
+        public Bookings()
         {
-            BookingLocations = new HashSet<BookingLocation>();
+            BookingLocations = new HashSet<BookingLocations>();
         }
 
         public int BookingId { get; set; }
         public DateTime BookingTime { get; set; }
         public int BookingSize { get; set; }
 
-        public virtual ICollection<BookingLocation> BookingLocations { get; set; }
+        public virtual ICollection<BookingLocations> BookingLocations { get; set; }
     }
 }

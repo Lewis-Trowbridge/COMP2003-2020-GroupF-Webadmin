@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Webadmin.Models
 {
     public partial class Employment
@@ -10,7 +8,7 @@ namespace Webadmin.Models
         public int VenueId { get; set; }
         public int StaffId { get; set; }
 
-        public virtual staff Staff { get; set; }
-        public virtual Venue Venue { get; set; }
+        public virtual Staff Staff { get; set; }
+        public virtual Venues Venue { get; set; }
     }
 }

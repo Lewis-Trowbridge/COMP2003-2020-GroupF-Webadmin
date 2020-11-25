@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Webadmin.Models
 {
-    public partial class Admin
+    public partial class Admins
     {
-        public Admin()
+        public Admins()
         {
-            AdminLocations = new HashSet<AdminLocation>();
+            AdminLocations = new HashSet<AdminLocations>();
         }
 
         public int AdminId { get; set; }
@@ -17,6 +15,6 @@ namespace Webadmin.Models
         public string AdminPassword { get; set; }
         public string AdminLevel { get; set; }
 
-        public virtual ICollection<AdminLocation> AdminLocations { get; set; }
+        public virtual ICollection<AdminLocations> AdminLocations { get; set; }
     }
 }

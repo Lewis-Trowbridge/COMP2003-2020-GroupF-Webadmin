@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Webadmin.Models
 {
-    public partial class BookingLocation
+    public partial class BookingLocations
     {
         public int VenueId { get; set; }
         public int BookingId { get; set; }
 
-        public virtual Booking Booking { get; set; }
-        public virtual Venue Venue { get; set; }
+        public virtual Bookings Booking { get; set; }
+        public virtual Venues Venue { get; set; }
     }
 }
