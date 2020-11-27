@@ -1,0 +1,39 @@
+﻿@model Webadmin.Models.Venues
+
+@{
+    ViewData["Title"] = "View";
+}
+<div class="text-center justify-content-center">
+    <h1>Register a venue</h1>
+    <p>This will register this venue to your admin account,</p>
+    <p>allowing you to manage bookings and staff.</p>
+</div>
+<form asp-controller="Venues" asp-action="Registration">
+    <div class="form-group">
+        <label asp-for="VenueName">Venue name</label>
+        <input asp-for="VenueName" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="AddLineOne">Address line 1</label>
+        <input asp-for="AddLineOne" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="AddLineTwo">Address line 2</label>
+        <input asp-for="AddLineTwo" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="City">City</label>
+        <input asp-for="City" class="form-control" required/>
+    </div>
+    <div class="form-group">
+        <label asp-for="County">County</label>
+        <input asp-for="County" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="VenuePostcode">Venue postcode</label>
+        <input asp-for="VenuePostcode" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary justify-content-center">Submit</button>
+</form>
+
+
