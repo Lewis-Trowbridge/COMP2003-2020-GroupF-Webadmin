@@ -5,12 +5,11 @@
 }
 <div class="text-center justify-content-center">
     <h1>Register a venue</h1>
-    <p>This will register this venue to your admin account,</p>
-    <p>allowing you to manage bookings and staff.</p>
+    <p>This will register this venue to your admin account, allowing you to manage bookings and staff.</p>
 </div>
 <form asp-controller="Venues" asp-action="Registration">
     <div class="form-group">
-        <label asp-for="VenueName">Venue name</label>
+        <label asp-for="VenueName">Name</label>
         <input asp-for="VenueName" class="form-control" required />
     </div>
     <div class="form-group">
@@ -30,10 +29,12 @@
         <input asp-for="County" class="form-control" required />
     </div>
     <div class="form-group">
-        <label asp-for="VenuePostcode">Venue postcode</label>
+        <label asp-for="VenuePostcode">Postcode</label>
         <input asp-for="VenuePostcode" class="form-control" required />
     </div>
-    <button type="submit" class="btn btn-primary justify-content-center">Submit</button>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary justify-content-center">Submit</button>
+    </div>
 </form>
 
 
