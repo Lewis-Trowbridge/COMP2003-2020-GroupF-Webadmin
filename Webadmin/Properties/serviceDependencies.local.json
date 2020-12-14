@@ -3,6 +3,15 @@
     "mssql1": {
       "type": "mssql.local",
       "connectionId": "WebadminContext"
+    },
+    "secrets1": {
+      "type": "secrets.user"
+    },
+    "mssql2": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/comp2003-f-sqlserver/databases/comp2003-f-cleanTableDb",
+      "type": "mssql.azure",
+      "connectionId": "cleanTableDb",
+      "secretStore": "LocalSecretsFile"
     }
   }
 }
