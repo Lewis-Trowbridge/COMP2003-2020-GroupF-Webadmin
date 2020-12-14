@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Webadmin.Models;
 
 namespace Webadmin.Models
 {
@@ -27,6 +28,7 @@ namespace Webadmin.Models
         public virtual DbSet<StaffPositions> StaffPositions { get; set; }
         public virtual DbSet<StaffShifts> StaffShifts { get; set; }
         public virtual DbSet<Venues> Venues { get; set; }
+        public virtual DbSet<Flags> Flags { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,7 +40,11 @@ namespace Webadmin.Models
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        { //------------------------ Flags
+
+            //------------------------
+
+
             modelBuilder.Entity<AdminLocations>(entity =>
             {
                 entity.HasKey(e => new { e.VenueId, e.AdminId })
@@ -340,5 +346,6 @@ namespace Webadmin.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
     }
 }

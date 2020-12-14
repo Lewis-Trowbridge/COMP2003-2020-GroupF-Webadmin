@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Webadmin.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
+using Webadmin.Data;
 
 namespace Webadmin
 {
@@ -30,6 +31,9 @@ namespace Webadmin
 
             services.AddDbContext<cleanTableDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("cleanTableDb")));
+
+            services.AddDbContext<WebadminContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("WebadminContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

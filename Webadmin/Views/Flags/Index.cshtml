@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Webadmin.Models.Flags>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FlagTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlagLocationPage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlagCategory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlagPersistent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlagUrgency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlagDesc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlagVenueID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlagDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlagResolved)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlagTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlagLocationPage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlagCategory)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlagPersistent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlagUrgency)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlagDesc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlagVenueID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlagDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlagResolved)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
