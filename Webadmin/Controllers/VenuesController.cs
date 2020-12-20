@@ -22,6 +22,8 @@ namespace Webadmin.Controllers
         // GET: Venues
         public async Task<IActionResult> Index()
         {
+            // Set admin ID - hardcoded temporarily
+            _context.Interceptor.SetAdminId(2);
             return View(await _context.Venues.ToListAsync());
         }
 

@@ -6,6 +6,9 @@ namespace Webadmin.Models
 {
     public partial class cleanTableDbContext : DbContext
     {
+        public SessionContextInterceptor Interceptor { get; set; }
+
+
         public cleanTableDbContext()
         {
         }
@@ -13,6 +16,8 @@ namespace Webadmin.Models
         public cleanTableDbContext(DbContextOptions<cleanTableDbContext> options)
             : base(options)
         {
+            SessionContextInterceptor interceptor = new SessionContextInterceptor();
+            this.Interceptor = interceptor;
         }
 
         public virtual DbSet<AdminLocations> AdminLocations { get; set; }
@@ -30,10 +35,12 @@ namespace Webadmin.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.AddInterceptors(Interceptor);
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=cleanTableDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                
             }
         }
 
