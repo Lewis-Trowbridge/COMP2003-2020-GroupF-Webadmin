@@ -24,8 +24,8 @@ namespace Webadmin.Models
             {
                 SqlParameter adminIdParameter = new SqlParameter("@admin_id", adminID);
                 string sessionContextCommandText = "EXEC sp_set_session_context @key=N'admin_id', @value = @admin_id ;";
-                command.CommandText = sessionContextCommandText + command.CommandText;
-                command.Parameters.Insert(0, adminIdParameter);
+            command.CommandText = sessionContextCommandText + command.CommandText;
+            command.Parameters.Insert(0, adminIdParameter);
             }
             catch (NullReferenceException)
             {
@@ -40,10 +40,10 @@ namespace Webadmin.Models
             try
             {
                 // Attempt to insert 
-                SqlParameter adminIdParameter = new SqlParameter("@admin_id", adminID);
+            SqlParameter adminIdParameter = new SqlParameter("@admin_id", adminID);
                 string sessionContextCommandText = "EXEC sp_set_session_context @key=N'admin_id', @value = @admin_id ; ";
-                command.CommandText = sessionContextCommandText + command.CommandText;
-                command.Parameters.Insert(0, adminIdParameter);
+            command.CommandText = sessionContextCommandText + command.CommandText;
+            command.Parameters.Insert(0, adminIdParameter);
             }
             catch (NullReferenceException)
             {
