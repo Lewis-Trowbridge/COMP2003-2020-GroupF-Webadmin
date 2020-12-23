@@ -22,6 +22,7 @@ namespace Webadmin.Models
         {
             try
             {
+                // Attempt to insert the admin ID - will break if it is null and be caught, in which case this is treated as an unauthenticated request
                 SqlParameter adminIdParameter = new SqlParameter("@admin_id", adminID);
                 string sessionContextCommandText = "EXEC sp_set_session_context @key=N'admin_id', @value = @admin_id ;";
             command.CommandText = sessionContextCommandText + command.CommandText;
@@ -29,7 +30,8 @@ namespace Webadmin.Models
             }
             catch (NullReferenceException)
             {
-
+                // This is an unauthenticated request - the row-level security will prevent access if it should be prevented, so nothing
+                // should be done here and the original query should go ahead in the case that this request does not need to be authenticated
             }
 
             return result;
@@ -47,7 +49,8 @@ namespace Webadmin.Models
             }
             catch (NullReferenceException)
             {
-
+                // This is an unauthenticated request - the row-level security will prevent access if it should be prevented, so nothing
+                // should be done here and the original query should go ahead in the case that this request does not need to be authenticated
             }
 
             return Task.FromResult(result);
