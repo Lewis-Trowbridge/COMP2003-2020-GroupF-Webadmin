@@ -162,6 +162,36 @@ namespace Webadmin.Controllers
             return Ok(venueId);
         }
 
+        public async Task<IActionResult> Dashboard(int? id)
+        {
+            _context.Interceptor.SetAdminId(2);
+
+            Venues venueToDisplay = await _context.Venues.FindAsync(id);
+            
+
+            if (venueToDisplay != null)
+            {
+                List<Bookings> bookingsList = await (from venue in _context.Venues
+                                                         join location in _context.BookingLocations on venue.VenueId equals location.VenueId
+                                                         join booking in _context.Bookings on location.BookingId equals booking.BookingId
+                                                         select booking).ToListAsync();
+                List<Staff> staffList = await (from venue in _context.Venues
+                                                  join employment in _context.Employment on venue.VenueId equals employment.VenueId
+                                                  join staff in _context.Staff on employment.StaffId equals staff.StaffId
+                                                  join staffPositions in _context.StaffPositions on staff.StaffPositionId equals staffPositions.StaffPositionId
+                                                  select staff).ToListAsync();
+
+                ViewBag.Bookings = bookingsList;
+                ViewBag.Staff = staffList;
+
+                return View(venueToDisplay);
+            }
+            else
+            {
+                return StatusCode(401);
+            }
+        }
+
         private async Task<int> CallAddVenueSP(string venueName, string venueAddressLineOne, string venueAddressLineTwo, string venueCity, string venueCounty, string venuePostcode, int adminId)
         {
             //TODO: Replace this once retrieval of admin ID is possible

@@ -1,0 +1,89 @@
+﻿@model Webadmin.Models.Venues;
+@{
+    ViewData["Title"] = Model.VenueName + " - Dashboard";
+    List<Bookings> bookings = (List<Bookings>)ViewBag.Bookings;
+    List<Staff> staff = (List<Staff>)ViewBag.Staff;
+}
+
+<div class="col">
+    <div class="text-center">
+        <h1>@Model.VenueName</h1>
+    </div>
+    <div>
+        <h2>Bookings</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        ID
+                    </th>
+                    <th scope="col">
+                        Time
+                    </th>
+                    <th scope="col">
+                        Size
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (Bookings booking in bookings)
+                    {
+                        <tr>
+                            <th scope="row">@booking.BookingId</th>
+                            <td>
+                                @booking.BookingTime
+                            </td>
+                            <td>
+                                @booking.BookingSize
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h2>Staff</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        ID
+                    </th>
+                    <th scope="col">
+                        Name
+                    </th>
+                    <th scope="col">
+                        Contact number
+                    </th>
+                    <th scope="col">
+                        Position
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ 
+                    foreach (Staff staffMember in staff)
+                    {
+                        <tr>
+                            <th scope="row">
+                                @staffMember.StaffId
+                            </th>
+                            <td>
+                                @staffMember.StaffName
+                            </td>
+                            <td>
+                                @staffMember.StaffContactNum
+                            </td>
+                            <td>
+                                @staffMember.StaffPositionId
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
