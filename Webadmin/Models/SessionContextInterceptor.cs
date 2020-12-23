@@ -20,20 +20,35 @@ namespace Webadmin.Models
 
         public override InterceptionResult<DbDataReader> ReaderExecuting(DbCommand command, CommandEventData eventData, InterceptionResult<DbDataReader> result)
         {
-            SqlParameter adminIdParameter = new SqlParameter("@admin_id", adminID);
-            string sessionContextCommandText = "EXEC sp_set_session_context @key=N'admin_id', @value = @admin_id ;";
-            command.CommandText = sessionContextCommandText + command.CommandText;
-            command.Parameters.Insert(0, adminIdParameter);
+            try
+            {
+                SqlParameter adminIdParameter = new SqlParameter("@admin_id", adminID);
+                string sessionContextCommandText = "EXEC sp_set_session_context @key=N'admin_id', @value = @admin_id ;";
+                command.CommandText = sessionContextCommandText + command.CommandText;
+                command.Parameters.Insert(0, adminIdParameter);
+            }
+            catch (NullReferenceException)
+            {
+
+            }
 
             return result;
         }
 
         public override Task<InterceptionResult<DbDataReader>> ReaderExecutingAsync(DbCommand command, CommandEventData eventData, InterceptionResult<DbDataReader> result, CancellationToken cancellationToken = default)
         {
-            SqlParameter adminIdParameter = new SqlParameter("@admin_id", adminID);
-            string sessionContextCommandText = "EXEC sp_set_session_context @key=N'admin_id', @value = @admin_id ; ";
-            command.CommandText = sessionContextCommandText + command.CommandText;
-            command.Parameters.Insert(0, adminIdParameter);
+            try
+            {
+                // Attempt to insert 
+                SqlParameter adminIdParameter = new SqlParameter("@admin_id", adminID);
+                string sessionContextCommandText = "EXEC sp_set_session_context @key=N'admin_id', @value = @admin_id ; ";
+                command.CommandText = sessionContextCommandText + command.CommandText;
+                command.Parameters.Insert(0, adminIdParameter);
+            }
+            catch (NullReferenceException)
+            {
+
+            }
 
             return Task.FromResult(result);
         }
