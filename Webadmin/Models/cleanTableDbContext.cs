@@ -87,6 +87,12 @@ namespace Webadmin.Models
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
+                entity.Property(e => e.AdminSalt)
+                    .IsRequired()
+                    .HasColumnName("admin_salt")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.AdminPassword)
                     .IsRequired()
                     .HasColumnName("admin_password")
