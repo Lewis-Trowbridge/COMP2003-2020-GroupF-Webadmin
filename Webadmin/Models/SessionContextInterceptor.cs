@@ -20,8 +20,8 @@ namespace Webadmin.Models
 
         public override InterceptionResult<DbDataReader> ReaderExecuting(DbCommand command, CommandEventData eventData, InterceptionResult<DbDataReader> result)
         {
-            SqlParameter adminIdParameter = new SqlParameter("@value", adminID);
-            string sessionContextCommandText = "EXEC sp_set_session_context @key=N'admin_id', @value, @read_only=1 ;";
+            SqlParameter adminIdParameter = new SqlParameter("@admin_id", adminID);
+            string sessionContextCommandText = "EXEC sp_set_session_context @key=N'admin_id', @value = @admin_id ;";
             command.CommandText = sessionContextCommandText + command.CommandText;
             command.Parameters.Insert(0, adminIdParameter);
 
@@ -31,7 +31,7 @@ namespace Webadmin.Models
         public override Task<InterceptionResult<DbDataReader>> ReaderExecutingAsync(DbCommand command, CommandEventData eventData, InterceptionResult<DbDataReader> result, CancellationToken cancellationToken = default)
         {
             SqlParameter adminIdParameter = new SqlParameter("@admin_id", adminID);
-            string sessionContextCommandText = "EXEC sp_set_session_context @key=N'admin_id', @value=@admin_id ; ";
+            string sessionContextCommandText = "EXEC sp_set_session_context @key=N'admin_id', @value = @admin_id ; ";
             command.CommandText = sessionContextCommandText + command.CommandText;
             command.Parameters.Insert(0, adminIdParameter);
 
