@@ -3,13 +3,6 @@
     "mssql1": {
       "type": "mssql",
       "connectionId": "WebadminContext"
-    },
-    "secrets1": {
-      "type": "secrets"
-    },
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "cleanTableDb"
     }
   }
 }
