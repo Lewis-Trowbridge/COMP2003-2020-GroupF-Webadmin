@@ -167,19 +167,37 @@ namespace Webadmin.Controllers
             _context.Interceptor.SetAdminId(2);
 
             Venues venueToDisplay = await _context.Venues.FindAsync(id);
-            
+
 
             if (venueToDisplay != null)
             {
-                List<Bookings> bookingsList = await (from venue in _context.Venues
-                                                         join location in _context.BookingLocations on venue.VenueId equals location.VenueId
-                                                         join booking in _context.Bookings on location.BookingId equals booking.BookingId
-                                                         select booking).ToListAsync();
-                List<Staff> staffList = await (from venue in _context.Venues
-                                                  join employment in _context.Employment on venue.VenueId equals employment.VenueId
-                                                  join staff in _context.Staff on employment.StaffId equals staff.StaffId
-                                                  join staffPositions in _context.StaffPositions on staff.StaffPositionId equals staffPositions.StaffPositionId
-                                                  select staff).ToListAsync();
+
+                // Grab necessary data for bookings from database
+                List<DashboardStructs.BookingDashboardDisplay> bookingsList = await (from venue in _context.Venues
+                                          join location in _context.BookingLocations on venue.VenueId equals location.VenueId
+                                          join booking in _context.Bookings on location.BookingId equals booking.BookingId
+                                          join bookingAttendees in _context.BookingAttendees on booking.BookingId equals bookingAttendees.BookingId
+                                          join customers in _context.Customers on bookingAttendees.CustomerId equals customers.CustomerId
+                                          select new DashboardStructs.BookingDashboardDisplay{ 
+                                              BookingId = booking.BookingId,
+                                              BookingTime = booking.BookingTime,
+                                              BookingSize = booking.BookingSize,
+                                              BookingAttended = bookingAttendees.BookingAttended,
+                                              BookingCustomerName = customers.CustomerName
+                                          }).Take(5).ToListAsync();
+
+                // Grab necessary data for staff from database
+                List<DashboardStructs.StaffDashboardDisplay> staffList = await (from venue in _context.Venues
+                                       join employment in _context.Employment on venue.VenueId equals employment.VenueId
+                                       join staff in _context.Staff on employment.StaffId equals staff.StaffId
+                                       join staffPositions in _context.StaffPositions on staff.StaffPositionId equals staffPositions.StaffPositionId
+                                       select new DashboardStructs.StaffDashboardDisplay { 
+                                           StaffId = staff.StaffId,
+                                           StaffName = staff.StaffName,
+                                           StaffContactNum = staff.StaffContactNum,
+                                           StaffPosition = staffPositions.StaffPositionName
+                                       }).Take(5).ToListAsync();
+
 
                 ViewBag.Bookings = bookingsList;
                 ViewBag.Staff = staffList;
@@ -211,7 +229,7 @@ namespace Webadmin.Controllers
 
             // Executes the stored procedure
             await _context.Database.ExecuteSqlRawAsync("EXEC add_venue @venue_name, @add_line_one, @add_line_two, @venue_postcode, @city, @county, @admin_id, @venue_id OUTPUT", parameters);
-            
+
             return (int)parameters[7].Value;
         }
 

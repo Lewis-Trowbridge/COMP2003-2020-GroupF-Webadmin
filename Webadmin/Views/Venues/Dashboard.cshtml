@@ -1,8 +1,8 @@
 ﻿@model Webadmin.Models.Venues;
 @{
     ViewData["Title"] = Model.VenueName + " - Dashboard";
-    List<Bookings> bookings = (List<Bookings>)ViewBag.Bookings;
-    List<Staff> staff = (List<Staff>)ViewBag.Staff;
+    List<DashboardStructs.BookingDashboardDisplay> bookings = (List<DashboardStructs.BookingDashboardDisplay>)ViewBag.Bookings;
+    List<DashboardStructs.StaffDashboardDisplay> staff = (List<DashboardStructs.StaffDashboardDisplay>)ViewBag.Staff;
 }
 
 <div class="col">
@@ -18,24 +18,46 @@
                         ID
                     </th>
                     <th scope="col">
+                        Name
+                    </th>
+                    <th scope="col">
                         Time
                     </th>
                     <th scope="col">
                         Size
                     </th>
+                    <th scope="col">
+                        Attended?
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 @{
-                    foreach (Bookings booking in bookings)
+                    foreach (DashboardStructs.BookingDashboardDisplay booking in bookings)
                     {
                         <tr>
                             <th scope="row">@booking.BookingId</th>
+                            <td>
+                                @booking.BookingCustomerName
+                            </td>
                             <td>
                                 @booking.BookingTime
                             </td>
                             <td>
                                 @booking.BookingSize
+                            </td>
+                            <td>
+                                @{
+                                    if (booking.BookingAttended)
+                                    {
+                                        <input type="checkbox" checked />
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" />
+                                    }
+                                }
+
                             </td>
                         </tr>
                     }
@@ -64,7 +86,7 @@
             </thead>
             <tbody>
                 @{ 
-                    foreach (Staff staffMember in staff)
+                    foreach (DashboardStructs.StaffDashboardDisplay staffMember in staff)
                     {
                         <tr>
                             <th scope="row">
@@ -77,7 +99,7 @@
                                 @staffMember.StaffContactNum
                             </td>
                             <td>
-                                @staffMember.StaffPositionId
+                                @staffMember.StaffPosition
                             </td>
                         </tr>
                     }
