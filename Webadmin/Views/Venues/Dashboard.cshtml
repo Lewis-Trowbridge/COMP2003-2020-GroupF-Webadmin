@@ -6,12 +6,29 @@
 }
 
 <div class="col">
-    <div class="text-center">
-        <h1>@Model.VenueName</h1>
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <h1 class="mx-auto">@Model.VenueName</h1>
+            </div>
+            <div class="row">
+                <span class="mx-auto">@Model.AddLineOne, @Model.AddLineTwo</span>
+            </div>
+            <div class="row">
+                <span class="mx-auto">@Model.City</span>
+            </div>
+            <div class="row">
+                <span class="mx-auto">@Model.County</span>
+            </div>
+            <div class="row">
+                <span class="mx-auto">@Model.VenuePostcode</span>
+            </div>
+        </div>
     </div>
-    <div>
+    <br />
+    <div class="row">
         <h2>Bookings</h2>
-        <table class="table">
+        <table class="table table-hover table-striped">
             <thead>
                 <tr>
                     <th scope="col">
@@ -65,9 +82,10 @@
             </tbody>
         </table>
     </div>
-    <div>
+    <br />
+    <div class="row">
         <h2>Staff</h2>
-        <table class="table">
+        <table class="table table-hover table-striped">
             <thead>
                 <tr>
                     <th scope="col">
