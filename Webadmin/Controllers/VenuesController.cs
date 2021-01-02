@@ -150,7 +150,7 @@ namespace Webadmin.Controllers
         [HttpGet]
         public async Task<IActionResult> Registration()
         {
-            return View("RegistrationForm");
+            return View();
         }
 
         [HttpPost]
@@ -158,13 +158,12 @@ namespace Webadmin.Controllers
         public async Task<IActionResult> Registration(string venueName, string venuePostcode, string addLineOne, string addLineTwo, string city, string county, int adminId)
         {
             int venueId = await CallAddVenueSP(venueName, addLineOne, addLineTwo, city, county, venuePostcode, adminId);
-            //TODO: Replace this with returning of the dashboard view once implemented
-            return Ok(venueId);
+            return RedirectToAction(nameof(Dashboard), new { id = venueId });
         }
 
         public async Task<IActionResult> Dashboard(int? id)
         {
-            _context.Interceptor.SetAdminId(2);
+            _context.Interceptor.SetAdminId(1);
 
             Venues venueToDisplay = await _context.Venues.FindAsync(id);
 
