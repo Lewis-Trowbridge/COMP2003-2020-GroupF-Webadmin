@@ -1,0 +1,37 @@
+﻿@model Webadmin.Models.Admins
+
+@{
+    ViewData["Title"] = "Add";
+}
+
+<form>
+    <p>Venue Name</p>
+    <input type="text" id="venueNameAdd" name="venueNameAdd" /><br>
+
+    <p>Venue Postcode</p>
+    <input type="text" id="venuePostcodeAdd" name="venuePostcodeAdd" /><br>
+
+    <p>Address Line 1</p>
+    <input type="text" id="addressOneAdd" name="addressOneAdd" /><br>
+
+    <p>Address Line 2</p>
+    <input type="text" id="addressTwoAdd" name="addressTwoAdd" /><br>
+
+    <p>City</p>
+    <input type="text" id="cityAdd" name="cityAdd" /><br>
+
+    <p>County</p>
+    <input type="text" id="countyAdd" name="countyAdd" /><br>
+
+    <input type="submit" value="Add" onclick="btnAdd_onClick()">
+</form>
+
+<div>
+    <a asp-action="Index">Back to list</a>
+</div>
+
+<script>
+    function btnAdd_onCLick() {
+        tableAdd(venueNameAdd, venuePostcodeAdd, addressOneAdd, addressTwoAdd, cityAdd, countyAdd);
+    }
+</script>

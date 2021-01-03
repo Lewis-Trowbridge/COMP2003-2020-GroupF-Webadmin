@@ -1,0 +1,41 @@
+﻿@model Webadmin.Models.Admins
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Admins</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="AdminId" />
+            <div class="form-group">
+                <label asp-for="AdminUsername" class="control-label"></label>
+                <input asp-for="AdminUsername" class="form-control" />
+                <span asp-validation-for="AdminUsername" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdminPassword" class="control-label"></label>
+                <input asp-for="AdminPassword" class="form-control" />
+                <span asp-validation-for="AdminPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdminLevel" class="control-label"></label>
+                <input asp-for="AdminLevel" class="form-control" />
+                <span asp-validation-for="AdminLevel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
