@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Webadmin.Models;
+using Microsoft.Data.SqlClient;
 
 namespace Webadmin.Controllers
 {
@@ -55,6 +56,7 @@ namespace Webadmin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,FlagTitle,FlagLocationPage,FlagCategory,FlagPersistent,FlagUrgency,FlagDesc,FlagVenueID,FlagDate,FlagResolved")] Flags flags)
         {
+            //either add stored procedure here or create new subroutine and view for it -- venuesController does with new subroutine and view
             if (ModelState.IsValid)
             {
                 _context.Add(flags);
@@ -63,6 +65,50 @@ namespace Webadmin.Controllers
             }
             return View(flags);
         }
+
+        //--
+        public async Task<IActionResult> createFlag()
+        {
+            return View("FlagForm");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> createFlag(string flagTitle, string flagLocationPage, string flagCategory, 
+            bool flagPersistent, int flagUrgency, string flagDesc, int flagVenueId, DateTime flagDate, bool flagResolved)
+        {
+            int ID = await CallAddFlagSP(flagTitle, flagLocationPage, flagCategory, flagPersistent, flagUrgency, flagDesc, flagVenueId, flagDate, flagResolved);
+            
+            //TODO: Replace this with returning of the dashboard view once implemented
+            return Ok(ID);
+        }
+        private async Task<int> CallAddFlagSP(string flagTitle, string flagLocationPage, string flagCategory,
+            bool flagPersistent, int flagUrgency, string flagDesc, int flagVenueId, DateTime flagDate, bool flagResolved)
+        {
+            // Initialisation of parameters - long and monotonous but necessary
+            SqlParameter[] parameters = new SqlParameter[9];
+
+            //parameters[0] = new SqlParameter("@id", 1); //done through identity server side, might take out
+
+            parameters[0] = new SqlParameter("@flag_title", flagTitle);
+            parameters[1] = new SqlParameter("@flag_location_page", flagLocationPage);
+            parameters[2] = new SqlParameter("@flag_category", flagCategory);
+            parameters[3] = new SqlParameter("@flag_persistent", flagPersistent);
+            parameters[4] = new SqlParameter("@flag_urgency", flagUrgency);
+            parameters[5] = new SqlParameter("@flag_desc", flagDesc);
+            parameters[6] = new SqlParameter("@flag_venue_id", flagVenueId);
+            parameters[7] = new SqlParameter("@flag_date", flagDate);
+            parameters[8] = new SqlParameter("@flag_resolved", flagResolved);          
+
+
+
+            // Executes the stored procedure
+            await _context.Database.ExecuteSqlRawAsync("EXEC add_error @flag_title, @flag_location_page, @flag_category, @flag_persistent, @flag_urgency, @flag_desc, @flag_venue_id, @flag_date, @flag_resolved", parameters);
+
+            //return the id of the flag just created - set to 1 for now but change **
+            return 1;
+        }
+        //--
 
         // GET: Flags/Edit/5
         public async Task<IActionResult> Edit(int? id)

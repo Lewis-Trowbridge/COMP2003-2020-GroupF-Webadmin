@@ -1,0 +1,74 @@
+﻿@model Webadmin.Models.Flags
+
+@{
+    ViewData["Title"] = "FlagForm";
+}
+
+<h1>FlagForm</h1>
+
+<h4>Flags</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="Flags" asp-action="createFlag">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FlagTitle" class="control-label"></label>
+                <input asp-for="FlagTitle" class="form-control" required />
+                <span asp-validation-for="FlagTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FlagLocationPage" class="control-label"></label>
+                <input asp-for="FlagLocationPage" class="form-control" required />
+                <span asp-validation-for="FlagLocationPage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FlagCategory" class="control-label"></label>
+                <input asp-for="FlagCategory" class="form-control" required />
+                <span asp-validation-for="FlagCategory" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="FlagPersistent" /> @Html.DisplayNameFor(model => model.FlagPersistent)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="FlagUrgency" class="control-label"></label>
+                <input asp-for="FlagUrgency" class="form-control" required />
+                <span asp-validation-for="FlagUrgency" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FlagDesc" class="control-label"></label>
+                <input asp-for="FlagDesc" class="form-control" required />
+                <span asp-validation-for="FlagDesc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FlagVenueID" class="control-label"></label>
+                <input asp-for="FlagVenueID" class="form-control" required />
+                <span asp-validation-for="FlagVenueID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FlagDate" class="control-label"></label>
+                <input asp-for="FlagDate" class="form-control" required />
+                <span asp-validation-for="FlagDate" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="FlagResolved" /> @Html.DisplayNameFor(model => model.FlagResolved)
+                </label>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary justify-content-center">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
