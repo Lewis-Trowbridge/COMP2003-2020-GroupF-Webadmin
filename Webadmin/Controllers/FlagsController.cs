@@ -66,7 +66,7 @@ namespace Webadmin.Controllers
             return View(flags);
         }
 
-        //--
+        //-- create new flag --
         public async Task<IActionResult> createFlag()
         {
             return View("FlagForm");
@@ -77,12 +77,12 @@ namespace Webadmin.Controllers
         public async Task<IActionResult> createFlag(string flagTitle, string flagLocationPage, string flagCategory, 
             bool flagPersistent, int flagUrgency, string flagDesc, int flagVenueId, DateTime flagDate, bool flagResolved)
         {
-            int ID = await CallAddFlagSP(flagTitle, flagLocationPage, flagCategory, flagPersistent, flagUrgency, flagDesc, flagVenueId, flagDate, flagResolved);
+            ViewResult result = await CallAddFlagSP(flagTitle, flagLocationPage, flagCategory, flagPersistent, flagUrgency, flagDesc, flagVenueId, flagDate, flagResolved);
             
             //TODO: Replace this with returning of the dashboard view once implemented
-            return Ok(ID);
+            return result;
         }
-        private async Task<int> CallAddFlagSP(string flagTitle, string flagLocationPage, string flagCategory,
+        private async Task<ViewResult> CallAddFlagSP(string flagTitle, string flagLocationPage, string flagCategory,
             bool flagPersistent, int flagUrgency, string flagDesc, int flagVenueId, DateTime flagDate, bool flagResolved)
         {
             // Initialisation of parameters - long and monotonous but necessary
@@ -106,9 +106,9 @@ namespace Webadmin.Controllers
             await _context.Database.ExecuteSqlRawAsync("EXEC add_error @flag_title, @flag_location_page, @flag_category, @flag_persistent, @flag_urgency, @flag_desc, @flag_venue_id, @flag_date, @flag_resolved", parameters);
 
             //return the id of the flag just created - set to 1 for now but change **
-            return 1;
+            return View("FlagForm");
         }
-        //--
+        //-- /create new flag --
 
         // GET: Flags/Edit/5
         public async Task<IActionResult> Edit(int? id)
