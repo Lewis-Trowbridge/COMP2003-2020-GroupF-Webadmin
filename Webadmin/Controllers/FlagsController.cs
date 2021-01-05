@@ -67,14 +67,14 @@ namespace Webadmin.Controllers
         }
 
         //-- create new flag --
-        public async Task<IActionResult> createFlag()
+        public async Task<IActionResult> CreateFlag()
         {
             return View("FlagForm");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> createFlag(string flagTitle, string flagLocationPage, string flagCategory, 
+        public async Task<IActionResult> CreateFlag(string flagTitle, string flagLocationPage, string flagCategory, 
             bool flagPersistent, int flagUrgency, string flagDesc, int flagVenueId, DateTime flagDate, bool flagResolved)
         {
             ViewResult result = await CallAddFlagSP(flagTitle, flagLocationPage, flagCategory, flagPersistent, flagUrgency, flagDesc, flagVenueId, flagDate, flagResolved);
