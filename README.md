@@ -3,11 +3,11 @@
 ## Team  
 
 ### Product owners
-Daisy Hawkins & Melissa Wright
+Daisy Hawkins (DHawkins96) & Melissa Wright (MelWright223)
 ### Scrum masters
-Jack Harrison & Telle Abbott
+Jack Harrison (Wizzorb) & Telle Abbott (UnknownTelle)
 ### Techinal Leads
-Nathan Everett & Lewis Trowbridge 
+Nathan Everett (neverett8fr) & Lewis Trowbridge (Lewis-Trowbridge)
 
 ## Product vision
 For pub/restaurant businesses, customers 
