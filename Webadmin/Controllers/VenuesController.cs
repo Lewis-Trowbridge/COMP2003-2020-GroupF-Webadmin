@@ -23,7 +23,7 @@ namespace Webadmin.Controllers
         public async Task<IActionResult> Index()
         {
             // Set admin ID - hardcoded temporarily
-            _context.Interceptor.SetAdminId(2);
+            _context.Interceptor.SetAdminId(1);
             return View(await _context.Venues.ToListAsync());
         }
 
@@ -150,7 +150,7 @@ namespace Webadmin.Controllers
         [HttpGet]
         public async Task<IActionResult> Registration()
         {
-            return View("RegistrationForm");
+            return View();
         }
 
         [HttpPost]
@@ -158,8 +158,55 @@ namespace Webadmin.Controllers
         public async Task<IActionResult> Registration(string venueName, string venuePostcode, string addLineOne, string addLineTwo, string city, string county, int adminId)
         {
             int venueId = await CallAddVenueSP(venueName, addLineOne, addLineTwo, city, county, venuePostcode, adminId);
-            //TODO: Replace this with returning of the dashboard view once implemented
-            return Ok(venueId);
+            return RedirectToAction(nameof(Dashboard), new { id = venueId });
+        }
+
+        public async Task<IActionResult> Dashboard(int? id)
+        {
+            _context.Interceptor.SetAdminId(1);
+
+            Venues venueToDisplay = await _context.Venues.FindAsync(id);
+
+
+            if (venueToDisplay != null)
+            {
+
+                // Grab necessary data for bookings from database
+                List<DashboardStructs.BookingDashboardDisplay> bookingsList = await (from venue in _context.Venues
+                                          join location in _context.BookingLocations on venue.VenueId equals location.VenueId
+                                          join booking in _context.Bookings on location.BookingId equals booking.BookingId
+                                          join bookingAttendees in _context.BookingAttendees on booking.BookingId equals bookingAttendees.BookingId
+                                          join customers in _context.Customers on bookingAttendees.CustomerId equals customers.CustomerId
+                                          select new DashboardStructs.BookingDashboardDisplay{ 
+                                              BookingId = booking.BookingId,
+                                              BookingTime = booking.BookingTime,
+                                              BookingSize = booking.BookingSize,
+                                              BookingAttended = bookingAttendees.BookingAttended,
+                                              BookingCustomerName = customers.CustomerName
+                                          }).Take(5).ToListAsync();
+
+                // Grab necessary data for staff from database
+                List<DashboardStructs.StaffDashboardDisplay> staffList = await (from venue in _context.Venues
+                                       join employment in _context.Employment on venue.VenueId equals employment.VenueId
+                                       join staff in _context.Staff on employment.StaffId equals staff.StaffId
+                                       join staffPositions in _context.StaffPositions on staff.StaffPositionId equals staffPositions.StaffPositionId
+                                       select new DashboardStructs.StaffDashboardDisplay { 
+                                           StaffId = staff.StaffId,
+                                           StaffName = staff.StaffName,
+                                           StaffContactNum = staff.StaffContactNum,
+                                           StaffPosition = staffPositions.StaffPositionName
+                                       }).Take(5).ToListAsync();
+
+
+                ViewBag.Bookings = bookingsList;
+                ViewBag.Staff = staffList;
+
+                return View(venueToDisplay);
+            }
+            else
+            {
+                return StatusCode(401);
+            }
         }
 
         private async Task<int> CallAddVenueSP(string venueName, string venueAddressLineOne, string venueAddressLineTwo, string venueCity, string venueCounty, string venuePostcode, int adminId)
@@ -181,7 +228,7 @@ namespace Webadmin.Controllers
 
             // Executes the stored procedure
             await _context.Database.ExecuteSqlRawAsync("EXEC add_venue @venue_name, @add_line_one, @add_line_two, @venue_postcode, @city, @county, @admin_id, @venue_id OUTPUT", parameters);
-            
+
             return (int)parameters[7].Value;
         }
 
