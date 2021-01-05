@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Webadmin.Models;
 
 namespace Webadmin.Models
 {
@@ -32,6 +33,7 @@ namespace Webadmin.Models
         public virtual DbSet<StaffPositions> StaffPositions { get; set; }
         public virtual DbSet<StaffShifts> StaffShifts { get; set; }
         public virtual DbSet<Venues> Venues { get; set; }
+        public virtual DbSet<Flags> Flags { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -45,7 +47,30 @@ namespace Webadmin.Models
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        { //------------------------ Flags
+
+            modelBuilder.Entity<Flags>(entity =>
+            {
+                entity.HasKey(e => e.ID).HasName("PK__FlagID");
+                entity.ToTable("Flags");
+
+                entity.Property(e => e.ID).HasColumnName("id");
+                entity.Property(e => e.FlagTitle).HasColumnName("flag_title");
+                entity.Property(e => e.FlagLocationPage).HasColumnName("flag_location_page");
+                entity.Property(e => e.FlagCategory).HasColumnName("flag_category");
+                entity.Property(e => e.FlagPersistent).HasColumnName("flag_persistent");
+                entity.Property(e => e.FlagUrgency).HasColumnName("flag_urgency");
+                entity.Property(e => e.FlagDesc).HasColumnName("flag_desc");
+                entity.Property(e => e.FlagVenueID).HasColumnName("flag_venue_id");
+                entity.Property(e => e.FlagDate).HasColumnName("flag_date");
+                entity.Property(e => e.FlagResolved).HasColumnName("flag_resolved");
+
+
+            });
+
+            //------------------------
+
+
             modelBuilder.Entity<AdminLocations>(entity =>
             {
                 entity.HasKey(e => new { e.VenueId, e.AdminId })
@@ -353,5 +378,6 @@ namespace Webadmin.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
     }
 }
