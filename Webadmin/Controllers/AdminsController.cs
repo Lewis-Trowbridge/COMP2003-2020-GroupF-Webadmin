@@ -58,8 +58,8 @@ namespace Webadmin.Views
         {
             if (ModelState.IsValid)
             {
-                string salt = createSalt(10);
-                string hashedpassword = generateHash(admins.AdminPassword, salt);
+                string salt = CreateSalt(10);
+                string hashedpassword = GenerateHash(admins.AdminPassword, salt);
                 
                 admins.AdminPassword = hashedpassword;
                 admins.AdminSalt = salt;
@@ -70,7 +70,7 @@ namespace Webadmin.Views
             return View(admins);
         }
 
-        private string generateHash(object input, string salt)
+        private string GenerateHash(object input, string salt)
         {
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(input + salt);
 
@@ -79,7 +79,7 @@ namespace Webadmin.Views
             return Convert.ToBase64String(hash);
         }
 
-        private string createSalt(int size)
+        private string CreateSalt(int size)
         {
             var rng = new System.Security.Cryptography.RNGCryptoServiceProvider();
             var buff = new byte[size];
