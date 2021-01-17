@@ -1,0 +1,10 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Webadmin",
+    "\\Webadmin\\Controllers",
+    "\\Webadmin\\Models"
+  ],
+  "SelectedNode": "\\Webadmin\\Models\\cleanTableDbContext.cs",
+  "PreviewInSolutionExplorer": false
+}
