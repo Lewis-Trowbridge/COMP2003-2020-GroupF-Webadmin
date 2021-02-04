@@ -26,7 +26,7 @@ namespace Webadmin.Controllers
 
         public tableDelete(string vID) 
         {
-            string DeleteTableQuery = "DELETE FROM venues WHERE venueID = " + vID;  //Somewhat of a placeholder, not sure if there is an ID table, or what it's called.
+            string DeleteTableQuery = "DELETE FROM venues WHERE venueID = " + vID;
         }
 
         // GET: Venues
