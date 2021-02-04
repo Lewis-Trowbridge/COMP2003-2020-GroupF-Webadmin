@@ -19,16 +19,6 @@ namespace Webadmin.Controllers
             _context = context;
         }
 
-        public tableAdd(string vNameAdd, string pCodeAdd, string a1Add, string a2Add, string cityAdd, string countyAdd)
-        {
-            string AddTableQuery = "INSERT INTO venues VALUES (" + vNameAdd + ", " + pCodeAdd + ", " + a1Add + ", " + a2Add + ", " + cityAdd + ", " + countyAdd + ");";
-        }
-
-        public tableDelete(string vID) 
-        {
-            string DeleteTableQuery = "DELETE FROM venues WHERE venueID = " + vID;
-        }
-
         // GET: Venues
         public async Task<IActionResult> Index()
         {
