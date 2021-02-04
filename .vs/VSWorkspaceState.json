@@ -3,10 +3,8 @@
     "",
     "\\Webadmin",
     "\\Webadmin\\Controllers",
-    "\\Webadmin\\Models",
-    "\\Webadmin\\Views",
-    "\\Webadmin\\Views\\Shared",
-    "\\Webadmin\\Views\\Venues"
+    "\\Webadmin\\Models"
   ],
+  "SelectedNode": "\\Webadmin\\Models\\cleanTableDbContext.cs",
   "PreviewInSolutionExplorer": false
 }
