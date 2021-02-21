@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
+// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
+// If you have enabled NRTs for your project, then un-comment the following line:
+// #nullable disable
+
 namespace Webadmin.Models
 {
     public partial class Staff
@@ -14,9 +18,8 @@ namespace Webadmin.Models
         public int StaffId { get; set; }
         public string StaffName { get; set; }
         public int StaffContactNum { get; set; }
-        public int? StaffPositionId { get; set; }
+        public string StaffPosition { get; set; }
 
-        public virtual StaffPositions StaffPosition { get; set; }
         public virtual ICollection<Employment> Employment { get; set; }
         public virtual ICollection<StaffShifts> StaffShifts { get; set; }
     }

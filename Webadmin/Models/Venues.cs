@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
+// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
+// If you have enabled NRTs for your project, then un-comment the following line:
+// #nullable disable
+
 namespace Webadmin.Models
 {
     public partial class Venues
@@ -8,7 +12,7 @@ namespace Webadmin.Models
         public Venues()
         {
             AdminLocations = new HashSet<AdminLocations>();
-            BookingLocations = new HashSet<BookingLocations>();
+            Bookings = new HashSet<Bookings>();
             Employment = new HashSet<Employment>();
         }
 
@@ -21,7 +25,7 @@ namespace Webadmin.Models
         public string County { get; set; }
 
         public virtual ICollection<AdminLocations> AdminLocations { get; set; }
-        public virtual ICollection<BookingLocations> BookingLocations { get; set; }
+        public virtual ICollection<Bookings> Bookings { get; set; }
         public virtual ICollection<Employment> Employment { get; set; }
     }
 }

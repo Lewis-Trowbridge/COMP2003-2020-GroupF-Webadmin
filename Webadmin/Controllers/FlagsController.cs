@@ -34,7 +34,7 @@ namespace Webadmin.Controllers
             }
 
             var flags = await _context.Flags
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (flags == null)
             {
                 return NotFound();
@@ -133,7 +133,7 @@ namespace Webadmin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,FlagTitle,FlagLocationPage,FlagCategory,FlagPersistent,FlagUrgency,FlagDesc,FlagVenueID,FlagDate,FlagResolved")] Flags flags)
         {
-            if (id != flags.ID)
+            if (id != flags.Id)
             {
                 return NotFound();
             }
@@ -147,7 +147,7 @@ namespace Webadmin.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FlagsExists(flags.ID))
+                    if (!FlagsExists(flags.Id))
                     {
                         return NotFound();
                     }
@@ -170,7 +170,7 @@ namespace Webadmin.Controllers
             }
 
             var flags = await _context.Flags
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (flags == null)
             {
                 return NotFound();
@@ -192,7 +192,7 @@ namespace Webadmin.Controllers
 
         private bool FlagsExists(int id)
         {
-            return _context.Flags.Any(e => e.ID == id);
+            return _context.Flags.Any(e => e.Id == id);
         }
     }
 }
