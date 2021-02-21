@@ -1,30 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-using Microsoft.EntityFrameworkCore;
-using Webadmin.Models;
+// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
+// If you have enabled NRTs for your project, then un-comment the following line:
+// #nullable disable
 
 namespace Webadmin.Models
 {
-    public class Flags
+    public partial class Flags
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string FlagTitle { get; set; }
         public string FlagLocationPage { get; set; }
         public string FlagCategory { get; set; }
-        public bool FlagPersistent { get; set; }
-        public int FlagUrgency { get; set; }
+        public bool? FlagPersistent { get; set; }
+        public int? FlagUrgency { get; set; }
         public string FlagDesc { get; set; }
-        public int FlagVenueID { get; set; } //possibly have 'Public Venues FlagVenueID' --- foreign key
-        public DateTime FlagDate { get; set; }
-        public bool FlagResolved { get; set; }
-        
-
-
+        public int? FlagVenueId { get; set; }
+        public DateTime? FlagDate { get; set; }
+        public bool? FlagResolved { get; set; }
     }
-
-
-
 }
