@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Webadmin.Models;
+using Microsoft.Data.SqlClient;
 
 namespace Webadmin.Models
 {
@@ -379,5 +380,13 @@ namespace Webadmin.Models
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
+        public void staff_delete (int staffID)
+        {
+            cleanTableDbContext delete_context = new cleanTableDbContext();
+            delete_context.Database.ExecuteSqlRaw("EXEC delete_staff @staff_id",
+                new SqlParameter("@staff_id", staffID));
+        }
+
+        
     }
 }
