@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,23 +22,21 @@ namespace Webadmin.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         { //temp value 
-            timer = new Timer(DoWork, null, 5000, 10000);
+            timer = new Timer(DoWork, null, TimeSpan.Zero,
+            TimeSpan.FromDays(1));
 
-           
             return Task.CompletedTask;
         }
 
-        public void DoWork(object state)
-        {
-           // cleanTableDbContext
+        public async void DoWork(object state)
+        { 
+            await cleanTableDbContext.Database.ExecuteSqlRawAsync("EXEC deleteTimer");
         }
-
-
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            return Task.CompletedTask;
 
+            return Task.CompletedTask;
         } 
         
         public void Dispose()
