@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Webadmin.Controllers;
 using Webadmin.Models;
 
 namespace Webadmin.Views
@@ -54,23 +56,28 @@ namespace Webadmin.Views
        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AdminId,AdminUsername,AdminPassword,AdminSalt,AdminLevel")] Admins admins)
+        public async Task<IActionResult> Create(string adminUsername, string adminPassword, int adminLevel, string adminSalt)
         {
-            if (ModelState.IsValid)
-            {
-                string salt = createSalt(10);
-                string hashedpassword = generateHash(admins.AdminPassword, salt);
-                
-                admins.AdminPassword = hashedpassword;
-                admins.AdminSalt = salt;
-                _context.Add(admins);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(admins);
+            string salt = CreateSalt(10);
+            string hashedpassword = GenerateHash(adminPassword, salt);
+            adminPassword = hashedpassword;
+            adminSalt = salt;
+
+
+            SqlParameter[] parameters = new SqlParameter[4];
+
+            parameters[0] = new SqlParameter(" @admin_username", adminUsername);
+            parameters[1] = new SqlParameter(" @admin_password", adminPassword);
+            parameters[2] = new SqlParameter(" @admin_level", adminLevel);
+            parameters[3] = new SqlParameter(" @admin_salt", adminSalt);
+
+            // Executes the stored procedure
+            await _context.Database.ExecuteSqlRawAsync("EXEC add_admin @admin_username, @admin_password, @admin_level, @admin_salt", parameters);
+
+            return RedirectToAction(nameof(Index));
         }
 
-        private string generateHash(object input, string salt)
+        private string GenerateHash(object input, string salt)
         {
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(input + salt);
 
@@ -79,7 +86,7 @@ namespace Webadmin.Views
             return Convert.ToBase64String(hash);
         }
 
-        private string createSalt(int size)
+        private string CreateSalt(int size)
         {
             var rng = new System.Security.Cryptography.RNGCryptoServiceProvider();
             var buff = new byte[size];
