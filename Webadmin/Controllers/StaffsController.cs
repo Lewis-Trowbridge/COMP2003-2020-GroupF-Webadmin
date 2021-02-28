@@ -19,7 +19,7 @@ namespace Webadmin.Controllers
             _context = context;
         }
 
-        // GET: Staffs
+        // GET: Staffs/Indext/id
         public async Task<IActionResult> Index()
         {;
             return View(await _context.Staff.ToListAsync());
@@ -43,22 +43,20 @@ namespace Webadmin.Controllers
             return View(staff);
         }
         /* GET: To view the page required to add a new member of staff */
-        [HttpGet]
-        public IActionResult Create()
+       // [HttpGet("int/{id}")] // GET /Staffs/Create/id
+        public IActionResult Create(int id) //venue id
         {
+            ViewBag.VenueId = id;
             return View();
         }
 
         /* Post: Allows you to add new staff */
-        [HttpPost("{venueId:int}")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(int venueId, string StaffName, int StaffContactNum)
+        public IActionResult Create(string StaffName, int StaffContactNum, string StaffPosition, int VenueId)
         {
-            // TODO: Look into view bags and getting the venueId so the staff will be put into correct id. It will look something like this
-            ViewBag.VenueId = venueId;
-            // *****
-            CallAddSaffSP(StaffName, StaffContactNum);
-            return RedirectToAction();
+            CallAddSaffSP(StaffName, StaffContactNum, StaffPosition, VenueId);
+            return RedirectToAction(nameof(Index));
         }
 
         // Some stuff to read on getting the venue ID
@@ -72,14 +70,16 @@ namespace Webadmin.Controllers
         /*  DATABASE LINKED CODE  */
 
         /* Makes a link to the stored procedure */
-        private async void CallAddSaffSP(string StaffName, int StaffContactNum)
+        private async void CallAddSaffSP(string StaffName, int StaffContactNum, string StaffPosition, int VenueId)
         {
             // Ask about a venue ID
-            SqlParameter[] parameters = new SqlParameter[1];
+            SqlParameter[] parameters = new SqlParameter[4];
             parameters[0] = new SqlParameter("@staff_name", StaffName);
             parameters[1] = new SqlParameter("@staff_contact_num", StaffContactNum);
+            parameters[2] = new SqlParameter("@staff_position", StaffPosition);
+            parameters[3] = new SqlParameter("@venue_id", VenueId);
             /* Executes 'add_staff' stored procedure*/
-            await _context.Database.ExecuteSqlRawAsync("EXEC add_staff, @staff_name, @staff_contact_num, @staff_position_id", parameters);
+            _context.Database.ExecuteSqlRaw("EXEC add_staff @staff_name, @staff_contact_num, @staff_position, @venue_id", parameters);
         }
 
 
