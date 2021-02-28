@@ -12,7 +12,6 @@ namespace Webadmin.Models
     {
         public SessionContextInterceptor Interceptor { get; set; }
 
-
         public cleanTableDbContext()
         {
         }
@@ -51,7 +50,7 @@ namespace Webadmin.Models
             modelBuilder.Entity<AdminLocations>(entity =>
             {
                 entity.HasKey(e => new { e.VenueId, e.AdminId })
-                    .HasName("PK__admin_lo__86921A99E0133B36");
+                    .HasName("PK__admin_lo__86921A994ABEC73A");
 
                 entity.ToTable("admin_locations");
 
@@ -73,12 +72,12 @@ namespace Webadmin.Models
             modelBuilder.Entity<Admins>(entity =>
             {
                 entity.HasKey(e => e.AdminId)
-                    .HasName("PK__admins__43AA4141D6F72DBB");
+                    .HasName("PK__admins__43AA4141065ED78C");
 
                 entity.ToTable("admins");
 
                 entity.HasIndex(e => e.AdminUsername)
-                    .HasName("UQ__admins__0CEDD55F8F0E072A")
+                    .HasName("UQ__admins__0CEDD55FF35CEE82")
                     .IsUnique();
 
                 entity.Property(e => e.AdminId).HasColumnName("admin_id");
@@ -92,12 +91,6 @@ namespace Webadmin.Models
                 entity.Property(e => e.AdminPassword)
                     .IsRequired()
                     .HasColumnName("admin_password")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.AdminSalt)
-                    .IsRequired()
-                    .HasColumnName("admin_salt")
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
@@ -119,12 +112,22 @@ namespace Webadmin.Models
                 entity.Property(e => e.BookingId).HasColumnName("booking_id");
 
                 entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+
+                entity.HasOne(d => d.Booking)
+                    .WithMany()
+                    .HasForeignKey(d => d.BookingId)
+                    .HasConstraintName("FK__booking_a__booki__4E88ABD4");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany()
+                    .HasForeignKey(d => d.CustomerId)
+                    .HasConstraintName("FK__booking_a__custo__4F7CD00D");
             });
 
             modelBuilder.Entity<Bookings>(entity =>
             {
                 entity.HasKey(e => e.BookingId)
-                    .HasName("PK__bookings__5DE3A5B10A626279");
+                    .HasName("PK__bookings__5DE3A5B1987AA430");
 
                 entity.ToTable("bookings");
 
@@ -144,24 +147,24 @@ namespace Webadmin.Models
                     .WithMany(p => p.Bookings)
                     .HasForeignKey(d => d.VenueId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__bookings__venue___2A164134");
+                    .HasConstraintName("FK__bookings__venue___4AB81AF0");
 
                 entity.HasOne(d => d.VenueTable)
                     .WithMany(p => p.Bookings)
                     .HasForeignKey(d => d.VenueTableId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__bookings__venue___2EDAF651");
+                    .HasConstraintName("FK__bookings__venue___4BAC3F29");
             });
 
             modelBuilder.Entity<Customers>(entity =>
             {
                 entity.HasKey(e => e.CustomerId)
-                    .HasName("PK__customer__CD65CB8511777C82");
+                    .HasName("PK__customer__CD65CB85816F9077");
 
                 entity.ToTable("customers");
 
                 entity.HasIndex(e => e.CustomerUsername)
-                    .HasName("UQ__customer__64E4CB014C3FBEC7")
+                    .HasName("UQ__customer__64E4CB015344ACC3")
                     .IsUnique();
 
                 entity.Property(e => e.CustomerId).HasColumnName("customer_id");
@@ -190,7 +193,7 @@ namespace Webadmin.Models
             modelBuilder.Entity<Employment>(entity =>
             {
                 entity.HasKey(e => new { e.VenueId, e.StaffId })
-                    .HasName("PK__employme__533E8354AE10DF90");
+                    .HasName("PK__employme__533E835466CC7C92");
 
                 entity.ToTable("employment");
 
@@ -213,42 +216,28 @@ namespace Webadmin.Models
             {
                 entity.HasNoKey();
 
-                entity.ToTable("flags");
-
                 entity.Property(e => e.FlagCategory)
-                    .HasColumnName("flag_category")
-                    .HasMaxLength(450)
+                    .HasMaxLength(400)
                     .IsUnicode(false);
 
-                entity.Property(e => e.FlagDate)
-                    .HasColumnName("flag_date")
-                    .HasColumnType("datetime");
+                entity.Property(e => e.FlagDate).HasColumnType("datetime");
 
                 entity.Property(e => e.FlagDesc)
-                    .HasColumnName("flag_desc")
-                    .HasMaxLength(2000)
+                    .HasMaxLength(1000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FlagLocationPage)
-                    .HasColumnName("flag_location_page")
-                    .HasMaxLength(450)
+                    .HasMaxLength(400)
                     .IsUnicode(false);
-
-                entity.Property(e => e.FlagPersistent).HasColumnName("flag_persistent");
-
-                entity.Property(e => e.FlagResolved).HasColumnName("flag_resolved");
 
                 entity.Property(e => e.FlagTitle)
-                    .HasColumnName("flag_title")
-                    .HasMaxLength(450)
+                    .HasMaxLength(400)
                     .IsUnicode(false);
 
-                entity.Property(e => e.FlagUrgency).HasColumnName("flag_urgency");
-
-                entity.Property(e => e.FlagVenueId).HasColumnName("flag_venue_id");
+                entity.Property(e => e.FlagVenueId).HasColumnName("FlagVenueID");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
+                    .HasColumnName("ID")
                     .ValueGeneratedOnAdd();
             });
 
@@ -267,12 +256,6 @@ namespace Webadmin.Models
                 entity.Property(e => e.VenueTimeId)
                     .HasColumnName("venue_time_id")
                     .ValueGeneratedOnAdd();
-
-                entity.HasOne(d => d.Venue)
-                    .WithMany()
-                    .HasForeignKey(d => d.VenueId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__opening_t__venue__14270015");
             });
 
             modelBuilder.Entity<Staff>(entity =>
@@ -299,7 +282,7 @@ namespace Webadmin.Models
             modelBuilder.Entity<StaffShifts>(entity =>
             {
                 entity.HasKey(e => e.StaffShiftId)
-                    .HasName("PK__staff_sh__488620F3C5DEA45E");
+                    .HasName("PK__staff_sh__488620F31F883AE1");
 
                 entity.ToTable("staff_shifts");
 
@@ -340,7 +323,7 @@ namespace Webadmin.Models
             modelBuilder.Entity<Venues>(entity =>
             {
                 entity.HasKey(e => e.VenueId)
-                    .HasName("PK__venues__82A8BE8D9F10979F");
+                    .HasName("PK__venues__82A8BE8D51FF46ED");
 
                 entity.ToTable("venues");
 

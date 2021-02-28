@@ -21,7 +21,7 @@ namespace Webadmin.Controllers
 
         // GET: Staffs/Indext/id
         public async Task<IActionResult> Index()
-        {;
+        {
             return View(await _context.Staff.ToListAsync());
         }
 
@@ -42,8 +42,10 @@ namespace Webadmin.Controllers
 
             return View(staff);
         }
-        /* GET: To view the page required to add a new member of staff */
-       // [HttpGet("int/{id}")] // GET /Staffs/Create/id
+        /* GET: To view the page required to add a new member of staff 
+         * 
+         * GET /Staffs/Create/id
+         */
         public IActionResult Create(int id) //venue id
         {
             ViewBag.VenueId = id;
@@ -51,26 +53,18 @@ namespace Webadmin.Controllers
         }
 
         /* Post: Allows you to add new staff */
-        [HttpPost]
+        [HttpPost] // POST  /Staffs/Create/id
         [ValidateAntiForgeryToken]
-        public IActionResult Create(string StaffName, int StaffContactNum, string StaffPosition, int VenueId)
+        public IActionResult Create(string StaffName, string StaffContactNum, string StaffPosition, int VenueId)
         {
             CallAddSaffSP(StaffName, StaffContactNum, StaffPosition, VenueId);
             return RedirectToAction(nameof(Index));
         }
 
-        // Some stuff to read on getting the venue ID
-        // https://www.tutorialsteacher.com/mvc/viewbag-in-asp.net-mvc
-        // https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-5.0#http-verb-templates
-
-
-        
-
-
         /*  DATABASE LINKED CODE  */
 
         /* Makes a link to the stored procedure */
-        private async void CallAddSaffSP(string StaffName, int StaffContactNum, string StaffPosition, int VenueId)
+        private void CallAddSaffSP(string StaffName, string StaffContactNum, string StaffPosition, int VenueId)
         {
             // Ask about a venue ID
             SqlParameter[] parameters = new SqlParameter[4];
@@ -100,7 +94,7 @@ namespace Webadmin.Controllers
             {
                 return NotFound();
             }
-            ViewData["StaffPositionId"] = new SelectList(_context.StaffPositions, "StaffPositionId", "StaffPositionId", staff.StaffPositionId);
+            //ViewData["StaffPositionId"] = new SelectList(_context.StaffPositions, "StaffPositionId", "StaffPositionId", staff.StaffPositionId);
             return View(staff);
         }
 
@@ -136,7 +130,7 @@ namespace Webadmin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StaffPositionId"] = new SelectList(_context.StaffPositions, "StaffPositionId", "StaffPositionId", staff.StaffPositionId);
+            //ViewData["StaffPositionId"] = new SelectList(_context.StaffPositions, "StaffPositionId", "StaffPositionId", staff.StaffPositionId);
             return View(staff);
         }
 

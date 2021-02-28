@@ -13,7 +13,5 @@ namespace Webadmin.Models
         public int VenueId { get; set; }
         public TimeSpan VenueOpeningTime { get; set; }
         public TimeSpan VenueClosingTime { get; set; }
-
-        public virtual Venues Venue { get; set; }
     }
 }

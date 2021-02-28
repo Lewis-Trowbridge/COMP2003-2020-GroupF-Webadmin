@@ -32,7 +32,7 @@ namespace Webadmin
             services.AddDbContext<cleanTableDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("cleanTableDb")));
 
-            services.AddHostedService<DatabaseCleanerService>();
+            //services.AddHostedService<DatabaseCleanerService>();
 
         }
 
