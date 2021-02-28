@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    int VenuesId = ViewBag.VenueId;
 }
 
 <h1>Create</h1>
@@ -23,8 +24,12 @@
                 <span asp-validation-for="StaffContactNum" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StaffPositionId" class="control-label"></label>
-                <select asp-for="StaffPositionId" class ="form-control" asp-items="ViewBag.StaffPositionId"></select>
+                <label asp-for="StaffPosition" class="control-label"></label>
+                <input asp-for="StaffPosition" class="form-control" />
+                <span asp-validation-for="StaffPosition" class="text-danger"></span>
+            </div>
+            <div class=" form-group">
+                <input value="@VenuesId" name="venueId"></input>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
