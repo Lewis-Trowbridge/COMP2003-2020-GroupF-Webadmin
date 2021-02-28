@@ -73,7 +73,8 @@ namespace Webadmin.Controllers
 
                 // Grab necessary data for bookings from database
                 List<DashboardStructs.BookingDashboardDisplay> bookingsList = await (from venue in _context.Venues
-                                                                                     join booking in _context.Bookings on venue.VenueId equals booking.VenueId
+                                                                                     join location in _context.BookingLocations on venue.VenueId equals location.VenueId
+                                                                                     join booking in _context.Bookings on location.BookingId equals booking.BookingId
                                                                                      join bookingAttendees in _context.BookingAttendees on booking.BookingId equals bookingAttendees.BookingId
                                                                                      join customers in _context.Customers on bookingAttendees.CustomerId equals customers.CustomerId
                                                                                      select new DashboardStructs.BookingDashboardDisplay
@@ -89,12 +90,13 @@ namespace Webadmin.Controllers
                 List<DashboardStructs.StaffDashboardDisplay> staffList = await (from venue in _context.Venues
                                                                                 join employment in _context.Employment on venue.VenueId equals employment.VenueId
                                                                                 join staff in _context.Staff on employment.StaffId equals staff.StaffId
-                                                                                                                                                               select new DashboardStructs.StaffDashboardDisplay
+                                                                                join staffPositions in _context.StaffPositions on staff.StaffPositionId equals staffPositions.StaffPositionId
+                                                                                select new DashboardStructs.StaffDashboardDisplay
                                                                                 {
                                                                                     StaffId = staff.StaffId,
                                                                                     StaffName = staff.StaffName,
                                                                                     StaffContactNum = staff.StaffContactNum,
-                                                                                    StaffPosition = staff.StaffPosition
+                                                                                    StaffPosition = staffPositions.StaffPositionName
                                                                                 }).Take(5).ToListAsync();
 
 
@@ -217,8 +219,6 @@ namespace Webadmin.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-       
 
         private bool VenuesExists(int id)
         {
