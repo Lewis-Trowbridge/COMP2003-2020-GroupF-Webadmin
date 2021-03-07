@@ -53,61 +53,61 @@ namespace Webadmin.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Registration(string venueName, string venuePostcode, string addLineOne, string addLineTwo, string city, string county, int adminId)
-        {
-            int venueId = await CallAddVenueSP(venueName, addLineOne, addLineTwo, city, county, venuePostcode, adminId);
-            return RedirectToAction(nameof(Dashboard), new { id = venueId });
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Registration(string venueName, string venuePostcode, string addLineOne, string addLineTwo, string city, string county, int adminId)
+        //{
+        //    int venueId = await CallAddVenueSP(venueName, addLineOne, addLineTwo, city, county, venuePostcode, adminId);
+        //    return RedirectToAction(nameof(Dashboard), new { id = venueId });
+        //}
 
-        public async Task<IActionResult> Dashboard(int? id)
-        {
-            _context.Interceptor.SetAdminId(1);
+        //public async Task<IActionResult> Dashboard(int? id)
+        //{
+        //    _context.Interceptor.SetAdminId(1);
 
-            Venues venueToDisplay = await _context.Venues.FindAsync(id);
-
-
-            if (venueToDisplay != null)
-            {
-
-                // Grab necessary data for bookings from database
-                List<DashboardStructs.BookingDashboardDisplay> bookingsList = await (from venue in _context.Venues
-                                                                                     join booking in _context.Bookings on venue.VenueId equals booking.VenueId
-                                                                                     join bookingAttendees in _context.BookingAttendees on booking.BookingId equals bookingAttendees.BookingId
-                                                                                     join customers in _context.Customers on bookingAttendees.CustomerId equals customers.CustomerId
-                                                                                     select new DashboardStructs.BookingDashboardDisplay
-                                                                                     {
-                                                                                         BookingId = booking.BookingId,
-                                                                                         BookingTime = booking.BookingTime,
-                                                                                         BookingSize = booking.BookingSize,
-                                                                                         BookingAttended = bookingAttendees.BookingAttended,
-                                                                                         BookingCustomerName = customers.CustomerName
-                                                                                     }).Take(5).ToListAsync();
-
-                // Grab necessary data for staff from database
-                List<DashboardStructs.StaffDashboardDisplay> staffList = await (from venue in _context.Venues
-                                                                                join employment in _context.Employment on venue.VenueId equals employment.VenueId
-                                                                                join staff in _context.Staff on employment.StaffId equals staff.StaffId
-                                                                                select new DashboardStructs.StaffDashboardDisplay
-                                                                                {
-                                                                                    StaffId = staff.StaffId,
-                                                                                    StaffName = staff.StaffName,
-                                                                                    StaffContactNum = staff.StaffContactNum,
-                                                                                    StaffPosition = staff.StaffPosition
-                                                                                }).Take(5).ToListAsync();
+        //    Venues venueToDisplay = await _context.Venues.FindAsync(id);
 
 
-                ViewBag.Bookings = bookingsList;
-                ViewBag.Staff = staffList;
+        //    if (venueToDisplay != null)
+        //    {
 
-                return View(venueToDisplay);
-            }
-            else
-            {
-                return StatusCode(401);
-            }
-        }
+        //        // Grab necessary data for bookings from database
+        //        List<DashboardStructs.BookingDashboardDisplay> bookingsList = await (from venue in _context.Venues
+        //                                                                             join booking in _context.Bookings on venue.VenueId equals booking.VenueId
+        //                                                                             join bookingAttendees in _context.BookingAttendees on booking.BookingId equals bookingAttendees.BookingId
+        //                                                                             join customers in _context.Customers on bookingAttendees.CustomerId equals customers.CustomerId
+        //                                                                             select new DashboardStructs.BookingDashboardDisplay
+        //                                                                             {
+        //                                                                                 BookingId = booking.BookingId,
+        //                                                                                 BookingTime = booking.BookingTime,
+        //                                                                                 BookingSize = booking.BookingSize,
+        //                                                                                 BookingAttended = bookingAttendees.BookingAttended,
+        //                                                                                 BookingCustomerName = customers.CustomerName
+        //                                                                             }).Take(5).ToListAsync();
+
+        //        // Grab necessary data for staff from database
+        //        List<DashboardStructs.StaffDashboardDisplay> staffList = await (from venue in _context.Venues
+        //                                                                        join employment in _context.Employment on venue.VenueId equals employment.VenueId
+        //                                                                        join staff in _context.Staff on employment.StaffId equals staff.StaffId
+        //                                                                        select new DashboardStructs.StaffDashboardDisplay
+        //                                                                        {
+        //                                                                            StaffId = staff.StaffId,
+        //                                                                            StaffName = staff.StaffName,
+        //                                                                            StaffContactNum = staff.StaffContactNum,
+        //                                                                            StaffPosition = staff.StaffPosition
+        //                                                                        }).Take(5).ToListAsync();
+
+
+        //        ViewBag.Bookings = bookingsList;
+        //        ViewBag.Staff = staffList;
+
+        //        return View(venueToDisplay);
+        //    }
+        //    else
+        //    {
+        //        return StatusCode(401);
+        //    }
+        //}
 
         /* DATABASE LINKED CODE */
 

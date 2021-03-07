@@ -20,9 +20,9 @@ namespace Webadmin.Controllers
         }
 
         // GET: Staffs/Indext/id
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_context.Staff.ToListAsync());
+            return View(await _context.Staff.ToListAsync());
         }
 
         // GET: Staffs/Details/5
