@@ -20,9 +20,9 @@ namespace Webadmin.Controllers
         }
 
         // GET: Staffs/Indext/id
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Staff.ToListAsync());
+            return View(_context.Staff.ToListAsync());
         }
 
         // GET: Staffs/Details/5
@@ -61,6 +61,19 @@ namespace Webadmin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult Edit(int id)
+        {
+            ViewBag.StaffId = id;
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int StaffId, string StaffName, string StaffContactNum, string StaffPosition)
+        {
+            CallEditStaffSP(StaffId, StaffName, StaffContactNum, StaffPosition);
+            return RedirectToAction(nameof(Index));
+        }
+
         /*  DATABASE LINKED CODE  */
 
         /* Makes a link to the stored procedure */
@@ -76,98 +89,14 @@ namespace Webadmin.Controllers
             _context.Database.ExecuteSqlRaw("EXEC add_staff @staff_name, @staff_contact_num, @staff_position, @venue_id", parameters);
         }
 
-
-
-
-        /*   GENERATED CODE   */
-
-        // GET: Staffs/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        private void CallEditStaffSP(int StaffID, string StaffName, string StaffContactNum, string StaffPostion)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var staff = await _context.Staff.FindAsync(id);
-            if (staff == null)
-            {
-                return NotFound();
-            }
-            //ViewData["StaffPositionId"] = new SelectList(_context.StaffPositions, "StaffPositionId", "StaffPositionId", staff.StaffPositionId);
-            return View(staff);
+            SqlParameter[] parameters = new SqlParameter[4];
+            parameters[0] = new SqlParameter("@staff_id", StaffID);
+            parameters[1] = new SqlParameter("staff_name", StaffName);
+            parameters[2] = new SqlParameter("staff_contact_num", StaffContactNum);
+            parameters[3] = new SqlParameter("staff_position", StaffPostion);
+            _context.Database.ExecuteSqlRaw("EXEC edit_staff @staff_id, @staff_name, @staff_contact_num, @staff_position", parameters);
         }
-
-        // POST: Staffs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StaffId,StaffName,StaffContactNum,StaffPositionId")] Staff staff)
-        {
-            if (id != staff.StaffId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(staff);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StaffExists(staff.StaffId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            //ViewData["StaffPositionId"] = new SelectList(_context.StaffPositions, "StaffPositionId", "StaffPositionId", staff.StaffPositionId);
-            return View(staff);
-        }
-
-        // GET: Staffs/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var staff = await _context.Staff
-                .Include(s => s.StaffPosition)
-                .FirstOrDefaultAsync(m => m.StaffId == id);
-            if (staff == null)
-            {
-                return NotFound();
-            }
-
-            return View(staff);
-        }
-
-        // POST: Staffs/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var staff = await _context.Staff.FindAsync(id);
-            _context.Staff.Remove(staff);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool StaffExists(int id)
-        {
-            return _context.Staff.Any(e => e.StaffId == id);
-        }
-
     }
 }
