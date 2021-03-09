@@ -42,18 +42,18 @@ namespace Webadmin.Controllers
 
             return View(staff);
         }
-        /* GET: To view the page required to add a new member of staff 
-         * 
-         * GET /Staffs/Create/id
-         */
+
+        // Create new staff details
+        
+        // GET /Staffs/Create/5
         public IActionResult Create(int id) //venue id
         {
             ViewBag.VenueId = id;
             return View();
         }
 
-        /* Post: Allows you to add new staff */
-        [HttpPost] // POST  /Staffs/Create/id
+        // Post: Allows you to add new staff 
+        [HttpPost] // /Staffs/Create/id
         [ValidateAntiForgeryToken]
         public IActionResult Create(string StaffName, string StaffContactNum, string StaffPosition, int VenueId)
         {
@@ -62,6 +62,8 @@ namespace Webadmin.Controllers
         }
 
         // Edit staff details
+
+        // GET /Staffs/
         public IActionResult Edit(int id)
         {
             ViewBag.StaffId = id;
@@ -77,19 +79,18 @@ namespace Webadmin.Controllers
 
         /*  DATABASE LINKED CODE  */
 
-        /* Makes a link to the stored procedure */
+        // Execute add_staff stored procedure on SQL Database
         private void CallAddSaffSP(string StaffName, string StaffContactNum, string StaffPosition, int VenueId)
         {
-            // Ask about a venue ID
             SqlParameter[] parameters = new SqlParameter[4];
             parameters[0] = new SqlParameter("@staff_name", StaffName);
             parameters[1] = new SqlParameter("@staff_contact_num", StaffContactNum);
             parameters[2] = new SqlParameter("@staff_position", StaffPosition);
             parameters[3] = new SqlParameter("@venue_id", VenueId);
-            /* Executes 'add_staff' stored procedure*/
             _context.Database.ExecuteSqlRaw("EXEC add_staff @staff_name, @staff_contact_num, @staff_position, @venue_id", parameters);
         }
 
+        // Execute edit_staff stored procedure on SQL Database
         private void CallEditStaffSP(string StaffName, string StaffContactNum, string StaffPosition, int StaffId)
         {
             SqlParameter[] parameters = new SqlParameter[4];
