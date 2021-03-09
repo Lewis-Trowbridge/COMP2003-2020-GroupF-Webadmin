@@ -61,6 +61,7 @@ namespace Webadmin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Edit staff details
         public IActionResult Edit(int id)
         {
             ViewBag.StaffId = id;
@@ -68,9 +69,9 @@ namespace Webadmin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int StaffId, string StaffName, string StaffContactNum, string StaffPosition)
+        public IActionResult Edit(string StaffName, string StaffContactNum, string StaffPosition, int StaffId)
         {
-            CallEditStaffSP(StaffId, StaffName, StaffContactNum, StaffPosition);
+            CallEditStaffSP(StaffName, StaffContactNum, StaffPosition, StaffId);
             return RedirectToAction(nameof(Index));
         }
 
@@ -89,13 +90,13 @@ namespace Webadmin.Controllers
             _context.Database.ExecuteSqlRaw("EXEC add_staff @staff_name, @staff_contact_num, @staff_position, @venue_id", parameters);
         }
 
-        private void CallEditStaffSP(int StaffID, string StaffName, string StaffContactNum, string StaffPostion)
+        private void CallEditStaffSP(string StaffName, string StaffContactNum, string StaffPosition, int StaffId)
         {
             SqlParameter[] parameters = new SqlParameter[4];
-            parameters[0] = new SqlParameter("@staff_id", StaffID);
-            parameters[1] = new SqlParameter("staff_name", StaffName);
-            parameters[2] = new SqlParameter("staff_contact_num", StaffContactNum);
-            parameters[3] = new SqlParameter("staff_position", StaffPostion);
+            parameters[0] = new SqlParameter("@staff_name", StaffName);
+            parameters[1] = new SqlParameter("@staff_contact_num", StaffContactNum);
+            parameters[2] = new SqlParameter("@staff_position", StaffPosition);
+            parameters[3] = new SqlParameter("@staff_id", StaffId);
             _context.Database.ExecuteSqlRaw("EXEC edit_staff @staff_id, @staff_name, @staff_contact_num, @staff_position", parameters);
         }
     }
