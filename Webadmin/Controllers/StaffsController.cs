@@ -80,10 +80,26 @@ namespace Webadmin.Controllers
         // Delete staff details
 
         //GET /Staffs/Delete/ID
-        public IActionResult Delete(int? id)
+        //public IActionResult Delete(int? id)
+        //{
+        //    ViewBag.StaffID = id;
+        //    return View();
+        //}
+        public async Task<IActionResult> Delete(int? id)
         {
-            ViewBag.StaffID = id;
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var staff = await _context.Staff
+                .FirstOrDefaultAsync(m => m.StaffId == id);
+            if (staff == null)
+            {
+                return NotFound();
+            }
+
+            return View(staff);
         }
         // POST
         [HttpPost] // /Staffs/Delete/ID
