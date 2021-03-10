@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Delete";
+    int StaffId = ViewBag.StaffId;
 }
 
 <h1>Delete</h1>
@@ -32,7 +33,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="StaffId" />
+        <input value="@StaffId" name="staffId">
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>

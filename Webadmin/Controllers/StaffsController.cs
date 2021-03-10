@@ -77,6 +77,22 @@ namespace Webadmin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Delete staff details
+
+        //GET /Staffs/Delete/ID
+        public IActionResult Delete(int? id)
+        {
+            ViewBag.StaffID = id;
+            return View();
+        }
+        // POST
+        [HttpPost] // /Staffs/Delete/ID
+        public IActionResult Delete(int staffId)
+        {
+            CallDeleteStaffSP(staffId);
+            return RedirectToAction(nameof(Index));
+        }
+
         /*  DATABASE LINKED CODE  */
 
         // Execute add_staff stored procedure on SQL Database
@@ -99,6 +115,14 @@ namespace Webadmin.Controllers
             parameters[2] = new SqlParameter("@staff_position", StaffPosition);
             parameters[3] = new SqlParameter("@staff_id", StaffId);
             _context.Database.ExecuteSqlRaw("EXEC edit_staff @staff_id, @staff_name, @staff_contact_num, @staff_position", parameters);
+        }
+
+        // Execute delete_staff stored procedure on SQL Database
+        private void CallDeleteStaffSP(int staffId)
+        {
+            SqlParameter[] parameters = new SqlParameter[1];
+            parameters[0] = new SqlParameter("@staff_id", staffId);
+            _context.Database.ExecuteSqlRaw("EXEC delete_staff @staff_id", parameters);
         }
     }
 }
