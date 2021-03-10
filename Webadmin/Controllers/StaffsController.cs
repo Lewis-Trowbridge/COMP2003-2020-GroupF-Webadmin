@@ -48,16 +48,16 @@ namespace Webadmin.Controllers
         // GET /Staffs/Create/5
         public IActionResult Create(int id) //venue id
         {
-            ViewBag.VenueId = id;
+            ViewBag.venueId = id;
             return View();
         }
 
         // Post: Allows you to add new staff 
         [HttpPost] // /Staffs/Create/id
         [ValidateAntiForgeryToken]
-        public IActionResult Create(string StaffName, string StaffContactNum, string StaffPosition, int VenueId)
+        public IActionResult Create(string staffName, string staffContactNum, string staffPosition, int venueId)
         {
-            CallAddSaffSP(StaffName, StaffContactNum, StaffPosition, VenueId);
+            CallAddSaffSP(staffName, staffContactNum, staffPosition, venueId);
             return RedirectToAction(nameof(Index));
         }
 
@@ -66,25 +66,20 @@ namespace Webadmin.Controllers
         // GET /Staffs/
         public IActionResult Edit(int id)
         {
-            ViewBag.StaffId = id;
+            ViewBag.staffId = id;
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(string StaffName, string StaffContactNum, string StaffPosition, int StaffId)
+        public IActionResult Edit(string staffName, string staffContactNum, string staffPosition, int staffId)
         {
-            CallEditStaffSP(StaffName, StaffContactNum, StaffPosition, StaffId);
+            CallEditStaffSP(staffName, staffContactNum, staffPosition, staffId);
             return RedirectToAction(nameof(Index));
         }
 
         // Delete staff details
 
         //GET /Staffs/Delete/ID
-        //public IActionResult Delete(int? id)
-        //{
-        //    ViewBag.StaffID = id;
-        //    return View();
-        //}
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -101,7 +96,6 @@ namespace Webadmin.Controllers
 
             return View(staff);
         }
-        // POST
         [HttpPost] // /Staffs/Delete/ID
         public IActionResult Delete(int staffId)
         {

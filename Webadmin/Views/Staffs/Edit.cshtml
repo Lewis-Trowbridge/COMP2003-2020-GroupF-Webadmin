@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";
-    int StaffId = ViewBag.StaffId;
+    int staffId = ViewBag.staffId;
 }
 
 <h1>Edit</h1>
@@ -29,7 +29,7 @@
                 <span asp-validation-for="StaffPosition" class="text-danger"></span>
             </div>
             <div class=" form-group">
-                <input value="@StaffId" name="staffId" type="hidden">
+                <input value="@staffId" name="staffId" type="hidden">
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
