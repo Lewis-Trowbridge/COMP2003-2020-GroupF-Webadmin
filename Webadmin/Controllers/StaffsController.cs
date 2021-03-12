@@ -106,24 +106,24 @@ namespace Webadmin.Controllers
         /*  DATABASE LINKED CODE  */
 
         // Execute add_staff stored procedure on SQL Database
-        private void CallAddSaffSP(string StaffName, string StaffContactNum, string StaffPosition, int VenueId)
+        private void CallAddSaffSP(string staffName, string staffContactNum, string staffPosition, int venueId)
         {
             SqlParameter[] parameters = new SqlParameter[4];
-            parameters[0] = new SqlParameter("@staff_name", StaffName);
-            parameters[1] = new SqlParameter("@staff_contact_num", StaffContactNum);
-            parameters[2] = new SqlParameter("@staff_position", StaffPosition);
-            parameters[3] = new SqlParameter("@venue_id", VenueId);
+            parameters[0] = new SqlParameter("@staff_name", staffName);
+            parameters[1] = new SqlParameter("@staff_contact_num", staffContactNum);
+            parameters[2] = new SqlParameter("@staff_position", staffPosition);
+            parameters[3] = new SqlParameter("@venue_id", venueId);
             _context.Database.ExecuteSqlRaw("EXEC add_staff @staff_name, @staff_contact_num, @staff_position, @venue_id", parameters);
         }
 
         // Execute edit_staff stored procedure on SQL Database
-        private void CallEditStaffSP(string StaffName, string StaffContactNum, string StaffPosition, int StaffId)
+        private void CallEditStaffSP(string staffName, string staffContactNum, string staffPosition, int staffId)
         {
             SqlParameter[] parameters = new SqlParameter[4];
-            parameters[0] = new SqlParameter("@staff_name", StaffName);
-            parameters[1] = new SqlParameter("@staff_contact_num", StaffContactNum);
-            parameters[2] = new SqlParameter("@staff_position", StaffPosition);
-            parameters[3] = new SqlParameter("@staff_id", StaffId);
+            parameters[0] = new SqlParameter("@staff_name", staffName);
+            parameters[1] = new SqlParameter("@staff_contact_num", staffContactNum);
+            parameters[2] = new SqlParameter("@staff_position", staffPosition);
+            parameters[3] = new SqlParameter("@staff_id", staffId);
             _context.Database.ExecuteSqlRaw("EXEC edit_staff @staff_id, @staff_name, @staff_contact_num, @staff_position", parameters);
         }
 
