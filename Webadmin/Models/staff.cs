@@ -17,7 +17,7 @@ namespace Webadmin.Models
 
         public int StaffId { get; set; }
         public string StaffName { get; set; }
-        public int StaffContactNum { get; set; }
+        public string StaffContactNum { get; set; }
         public string StaffPosition { get; set; }
 
         public virtual ICollection<Employment> Employment { get; set; }
