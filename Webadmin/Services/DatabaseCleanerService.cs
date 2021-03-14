@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,11 @@ namespace Webadmin.Services
     public class DatabaseCleanerService : IHostedService, IDisposable
     {
         private Timer timer;
-        private cleanTableDbContext cleanTableDbContext;
+        private IServiceScopeFactory scopeFactory;
 
-        public DatabaseCleanerService(cleanTableDbContext cleanTableDb)
+        public DatabaseCleanerService(IServiceScopeFactory scopeFactory)
         {
-            cleanTableDbContext = cleanTableDb;
+            this.scopeFactory = scopeFactory;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -30,7 +31,11 @@ namespace Webadmin.Services
 
         public async void DoWork(object state)
         { 
-            await cleanTableDbContext.Database.ExecuteSqlRawAsync("EXEC deleteTimer");
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<cleanTableDbContext>();
+                await dbContext.Database.ExecuteSqlRawAsync("EXEC deleteTimer");
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
