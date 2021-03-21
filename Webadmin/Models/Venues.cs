@@ -10,6 +10,7 @@ namespace Webadmin.Models
             AdminLocations = new HashSet<AdminLocations>();
             BookingLocations = new HashSet<BookingLocations>();
             Employment = new HashSet<Employment>();
+            VenueTables = new HashSet<VenueTables>();
         }
 
         public int VenueId { get; set; }
@@ -23,5 +24,6 @@ namespace Webadmin.Models
         public virtual ICollection<AdminLocations> AdminLocations { get; set; }
         public virtual ICollection<BookingLocations> BookingLocations { get; set; }
         public virtual ICollection<Employment> Employment { get; set; }
+        public virtual ICollection<VenueTables> VenueTables { get; set; }
     }
 }

@@ -380,13 +380,6 @@ namespace Webadmin.Models
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
-        public void staff_delete (int staffID)
-        {
-            cleanTableDbContext delete_context = new cleanTableDbContext();
-            delete_context.Database.ExecuteSqlRaw("EXEC delete_staff @staff_id",
-                new SqlParameter("@staff_id", staffID));
-        }
-
-        
+        public DbSet<Webadmin.Models.VenueTables> VenueTables { get; set; }
     }
 }

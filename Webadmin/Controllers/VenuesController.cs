@@ -236,13 +236,5 @@ namespace Webadmin.Controllers
         {
             return _context.Venues.Any(e => e.VenueId == id);
         }
-
-        [HttpPut]
-        public async Task<IActionResult> table_update(int venueID, int newTable)
-        {
-            _context.Database.ExecuteSqlRaw("EXEC edit_tables @venue_id, @new_tables",
-                new SqlParameter("@venue_id", venueID),
-                new SqlParameter("@new_tables", newTable)};
-        }
     }
 }

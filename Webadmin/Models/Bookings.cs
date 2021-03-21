@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Webadmin.Models
 {
@@ -10,6 +11,7 @@ namespace Webadmin.Models
             BookingLocations = new HashSet<BookingLocations>();
         }
 
+        [Key]
         public int BookingId { get; set; }
         public DateTime BookingTime { get; set; }
         public int BookingSize { get; set; }
