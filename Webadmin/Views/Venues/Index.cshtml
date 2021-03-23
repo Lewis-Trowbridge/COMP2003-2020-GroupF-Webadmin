@@ -13,22 +13,22 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.VenueName)
+                Venue Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VenuePostcode)
+                Postcode
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AddLineOne)
+                Address Line One
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AddLineTwo)
+                Address Line Two
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.City)
+                City
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.County)
+                County
             </th>
             <th></th>
         </tr>
@@ -56,7 +56,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.VenueId">Edit</a> |
-                <a asp-action="Dashboard" asp-route-id="@item.VenueId">Details</a> |
+                <a asp-action="Details" asp-route-id="@item.VenueId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.VenueId">Delete</a>
             </td>
         </tr>
