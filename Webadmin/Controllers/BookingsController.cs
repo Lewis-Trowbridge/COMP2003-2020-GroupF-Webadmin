@@ -4,18 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Webadmin.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace Webadmin.Controllers
 {
     public class BookingsController : Controller
     {
         private readonly cleanTableDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public BookingsController(cleanTableDbContext context)
+        public BookingsController(cleanTableDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: Bookings
@@ -23,6 +27,16 @@ namespace Webadmin.Controllers
         {
             return View(await _context.Bookings.ToListAsync());
         }
+
+        //public IActionResult Attended(int venue_id)
+        //{
+        //    if (venue_id != null)
+        //    {
+
+        //    }
+        //}
+
+
 
         // GET: Bookings/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -48,9 +62,35 @@ namespace Webadmin.Controllers
             return View();
         }
 
+        //public Task<IActionResult> create_booking (string customer_name, int customer_contact_num, int venue_id, int venue_table_id, int booking_size, DateTime booking_time)
+        //{
+        //    if (customer_name == null)
+        //    {
+        //        string query = "add_bookings";
+
+        //        SqlConnection connection = new SqlConnection();
+        //        SqlCommand cmd = new SqlCommand(query, cleanTableDbContext)
+        //    }
+        //}
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Attended (int bookingId)
+        {
+            CallAttended(bookingId);
+            return RedirectToAction(nameof(Index));
+        }
+
+        private void CallAttended(int bookingId)
+        {
+            SqlParameter[] parameters = new SqlParameter[1];
+            parameters[0] = new SqlParameter("@booking_id", bookingId);
+            _context.Database.ExecuteSqlRaw("EXEC attended_bookings @booking_id", parameters);
+        }
+
         // POST: Bookings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BookingId,BookingTime,BookingSize")] Bookings bookings)
@@ -81,8 +121,8 @@ namespace Webadmin.Controllers
         }
 
         // POST: Bookings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("BookingId,BookingTime,BookingSize")] Bookings bookings)
@@ -115,6 +155,29 @@ namespace Webadmin.Controllers
             return View(bookings);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit (int bookingSize, int customerId, int venueId, int venueTableId, DateTime bookingTime)
+        {
+            CallEditSP(bookingSize, customerId, venueId, venueTableId, bookingTime);
+            return RedirectToAction(nameof(Index));
+        }
+
+        private void CallEditSP (int bookingSize, int customerId, int venueId, int venueTableId, DateTime bookingTime)
+        {
+            SqlParameter[] parameters = new SqlParameter[5];
+            parameters[0] = new SqlParameter("@booking_size", bookingSize);
+            parameters[1] = new SqlParameter("@customer_id", customerId);
+            parameters[2] = new SqlParameter("@venue_id", venueId);
+            parameters[3] = new SqlParameter("@venue_table_id", venueTableId);
+            parameters[4] = new SqlParameter("@booking_time", bookingTime);
+            _context.Database.ExecuteSqlRaw("EXEC edit_bookings @booking_size, @customer_id, @venue_id, @venue_table_id, @booking_time", parameters);
+        }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Edit ()
+
         // GET: Bookings/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -142,6 +205,20 @@ namespace Webadmin.Controllers
             _context.Bookings.Remove(bookings);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public IActionResult Cancel (int bookingId)
+        {
+            CallCancelSP(bookingId);
+            return RedirectToAction(nameof(Index));
+        }
+
+        private void CallCancelSP (int bookingId)
+        {
+            SqlParameter[] parameters = new SqlParameter[1];
+            parameters[0] = new SqlParameter("@booking_id", bookingId);
+            _context.Database.ExecuteSqlRaw("EXEC cancel_bookings @booking_id", parameters);
         }
 
         private bool BookingsExists(int id)
