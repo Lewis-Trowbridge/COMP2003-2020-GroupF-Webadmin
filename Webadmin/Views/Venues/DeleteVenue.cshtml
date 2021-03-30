@@ -1,0 +1,19 @@
+﻿@model Webadmin.Models.Venues
+
+@{
+    ViewData["Title"] = "View";
+}
+<div class="text-center justify-content-center">
+    <h1>Delete a venue</h1>
+    <p>This will allow you to remove one of your bookings.</p>
+</div>
+<form asp-controller="Venues" asp-action="Delete">
+    <div class="form-group">
+        <label asp-for="vID">ID</label>
+        <input asp-for="vID" class="form-control" required />
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary justify-content-center">Submit</button>
+    </div>
+</form>
