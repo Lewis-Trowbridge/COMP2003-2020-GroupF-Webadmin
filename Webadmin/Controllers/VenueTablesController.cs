@@ -12,9 +12,9 @@ namespace Webadmin.Controllers
 {
     public class VenueTablesController : Controller
     {
-        private readonly cleanTableDbContext _context;
+        private readonly COMP2003_FContext _context;
 
-        public VenueTablesController(cleanTableDbContext context)
+        public VenueTablesController(COMP2003_FContext context)
         {
             _context = context;
         }

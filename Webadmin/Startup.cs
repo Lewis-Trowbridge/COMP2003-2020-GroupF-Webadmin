@@ -29,7 +29,7 @@ namespace Webadmin
         {
             services.AddControllersWithViews();
 
-            services.AddDbContext<cleanTableDbContext>(
+            services.AddDbContext<COMP2003_FContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("cleanTableDb")));
 
             services.AddHostedService<DatabaseCleanerService>();

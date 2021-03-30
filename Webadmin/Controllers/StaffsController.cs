@@ -12,9 +12,9 @@ namespace Webadmin.Controllers
 {
     public class StaffsController : Controller
     {
-        private readonly cleanTableDbContext _context;
+        private readonly COMP2003_FContext _context;
 
-        public StaffsController(cleanTableDbContext context)
+        public StaffsController(COMP2003_FContext context)
         {
             _context = context;
         }
