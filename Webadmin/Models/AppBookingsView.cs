@@ -7,15 +7,19 @@ using System.Collections.Generic;
 
 namespace Webadmin.Models
 {
-    public partial class Bookings
+    public partial class AppBookingsView
     {
         public int BookingId { get; set; }
         public DateTime BookingTime { get; set; }
         public int BookingSize { get; set; }
+        public bool BookingAttended { get; set; }
+        public int CustomerId { get; set; }
         public int VenueId { get; set; }
-        public int VenueTableId { get; set; }
-
-        public virtual Venues Venue { get; set; }
-        public virtual VenueTables VenueTable { get; set; }
+        public string VenueName { get; set; }
+        public string VenuePostcode { get; set; }
+        public string AddLineOne { get; set; }
+        public string AddLineTwo { get; set; }
+        public string City { get; set; }
+        public string County { get; set; }
     }
 }

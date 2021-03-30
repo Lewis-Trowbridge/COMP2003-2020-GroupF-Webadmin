@@ -12,9 +12,9 @@ namespace Webadmin.Controllers
 {
     public class FlagsController : Controller
     {
-        private readonly cleanTableDbContext _context;
+        private readonly COMP2003_FContext _context;
 
-        public FlagsController(cleanTableDbContext context)
+        public FlagsController(COMP2003_FContext context)
         {
             _context = context;
         }

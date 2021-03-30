@@ -11,7 +11,7 @@ namespace Webadmin.Models
     {
         public int CustomerId { get; set; }
         public string CustomerName { get; set; }
-        public int CustomerContactNumber { get; set; }
+        public string CustomerContactNumber { get; set; }
         public string CustomerUsername { get; set; }
         public string CustomerPassword { get; set; }
     }

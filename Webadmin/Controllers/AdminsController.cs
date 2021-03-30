@@ -13,9 +13,9 @@ namespace Webadmin.Views
 {
     public class AdminsController : Controller
     {
-        private readonly cleanTableDbContext _context;
+        private readonly COMP2003_FContext _context;
 
-        public AdminsController(cleanTableDbContext context)
+        public AdminsController(COMP2003_FContext context)
         {
             _context = context;
         }
