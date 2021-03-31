@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Login</h1>
+
+<h4>Admin</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Index">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Admin Id</label>
+                <input class="form-control" />
+                <span  class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Login" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
