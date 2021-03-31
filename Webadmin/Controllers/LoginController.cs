@@ -17,6 +17,7 @@ namespace Webadmin.Controllers
         [HttpPost]
         public IActionResult Login(int adminId)
         {
+            HttpContext.Session.SetInt32(Webadminhelper.AdminIdKey, adminId);
             return RedirectToAction("Index", "Venues");
         }
     }
