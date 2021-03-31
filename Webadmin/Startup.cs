@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Webadmin.Services;
 using Microsoft.Extensions.Caching.SqlServer;
+using Microsoft.AspNetCore.Http;
 
 namespace Webadmin
 {
@@ -48,6 +49,15 @@ namespace Webadmin
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential 
+                // cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                // requires using Microsoft.AspNetCore.Http;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
         }
 
 
@@ -73,6 +83,8 @@ namespace Webadmin
             app.UseAuthorization();
 
             app.UseSession();
+
+            app.UseCookiePolicy();
 
             app.UseEndpoints(endpoints =>
             {
