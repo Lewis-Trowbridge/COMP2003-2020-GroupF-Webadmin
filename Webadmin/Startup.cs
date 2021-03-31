@@ -12,6 +12,7 @@ using Webadmin.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Webadmin.Services;
+using Microsoft.Extensions.Caching.SqlServer;
 
 namespace Webadmin
 {
@@ -33,6 +34,13 @@ namespace Webadmin
                 options => options.UseSqlServer(Configuration.GetConnectionString("cleanTableDb")));
 
             services.AddHostedService<DatabaseCleanerService>();
+
+            services.AddDistributedSqlServerCache(options =>
+            {
+                options.ConnectionString = Configuration.GetConnectionString("cleanTableDb");
+                options.SchemaName = "dbo";
+                options.TableName = "session_cache";
+            });
 
         }
 
@@ -64,6 +72,8 @@ namespace Webadmin
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
         }
     }
 }
