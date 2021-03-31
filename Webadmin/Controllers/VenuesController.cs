@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using Webadmin.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Webadmin.Controllers
 {
@@ -20,12 +21,18 @@ namespace Webadmin.Controllers
         }
 
         // GET: Venues
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index()
         {
-            // Set admin ID - hardcoded temporarily
-            //_context.Interceptor.SetAdminId(1);
-            ViewBag.adminId = id;
-            return View(await _context.Venues.ToListAsync());
+            var adminId = HttpContext.Session.GetInt32(Webadminhelper.AdminIdKey);
+            return View(await _context.Venues
+                .Join(_context.AdminLocations, venue => venue.VenueId, location => location.VenueId, (venue, location) => new
+                {
+                    Location = location,
+                    Venue = venue
+                })
+                .Where(venueAndLocation => venueAndLocation.Location.AdminId.Equals(adminId))
+                .Select(venue => venue.Venue)
+                .ToListAsync());
         }
 
         // GET: Venues/Details/5
@@ -50,13 +57,13 @@ namespace Webadmin.Controllers
 
         public IActionResult Create(int id)
         {
-            ViewBag.adminId = id;
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string venueName, string venuePostcode, string addLineOne, string addLineTwo, string city, string county, int adminId)
         {
+            adminId = HttpContext.Session.GetInt32(Webadminhelper.AdminIdKey).Value;
             int venueId = await CallAddVenueSP(venueName, addLineOne, addLineTwo, city, county, venuePostcode, adminId);
             return RedirectToAction(nameof(Index), new { id = venueId });
         }
