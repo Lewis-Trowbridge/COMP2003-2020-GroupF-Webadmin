@@ -24,7 +24,7 @@ namespace Webadmin.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var adminId = HttpContext.Session.GetInt32(Webadminhelper.AdminIdKey);
+            var adminId = WebadminHelper.GetAdminId(HttpContext.Session);
             return View(await _context.Venues
                 .Join(_context.AdminLocations, venue => venue.VenueId, location => location.VenueId, (venue, location) => new
                 {
@@ -44,7 +44,7 @@ namespace Webadmin.Controllers
                 return NotFound();
             }
 
-            if (Webadminhelper.AdminPermissionVenue(HttpContext.Session, id.Value, _context))
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, id.Value, _context))
             {
                 var venues = await _context.Venues
                     .FirstOrDefaultAsync(m => m.VenueId == id);
@@ -68,14 +68,14 @@ namespace Webadmin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string venueName, string venuePostcode, string addLineOne, string addLineTwo, string city, string county, int adminId)
         {
-            adminId = HttpContext.Session.GetInt32(Webadminhelper.AdminIdKey).Value;
+            adminId = WebadminHelper.GetAdminId(HttpContext.Session).Value;
             int venueId = await CallAddVenueSP(venueName, addLineOne, addLineTwo, city, county, venuePostcode, adminId);
             return RedirectToAction(nameof(Index), new { id = venueId });
         }
 
         public IActionResult Edit(int id)
         {
-            if (Webadminhelper.AdminPermissionVenue(HttpContext.Session, id, _context))
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, id, _context))
             {
                 ViewBag.venueId = id;
                 return View();
@@ -87,7 +87,7 @@ namespace Webadmin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(string venueName, string addLineOne, string addLineTwo, string city, string county, string venuePostcode, int venueId)
         {
-            if (Webadminhelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
             {
                 CallEditVenueSP(venueName, addLineOne, addLineTwo, city, county, venuePostcode, venueId);
             return RedirectToAction(nameof(Index));
@@ -103,7 +103,7 @@ namespace Webadmin.Controllers
             {
                 return NotFound();
             }
-            if (Webadminhelper.AdminPermissionVenue(HttpContext.Session, id.Value, _context))
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, id.Value, _context))
             {
                 var venues = await _context.Venues
                 .FirstOrDefaultAsync(m => m.VenueId == id);
@@ -120,7 +120,7 @@ namespace Webadmin.Controllers
         [HttpPost]
         public IActionResult Delete(int venueId)
         {
-            if (Webadminhelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
             {
                 CallDeteteVenueSP(venueId);
                 return RedirectToAction(nameof(Index));
@@ -134,8 +134,6 @@ namespace Webadmin.Controllers
 
         private async Task<int> CallAddVenueSP(string venueName, string venueAddressLineOne, string venueAddressLineTwo, string venueCity, string venueCounty, string venuePostcode, int adminId)
         {
-            //TODO: Replace this once retrieval of admin ID is possible
-            //adminId = 1;
             // Initialisation of parameters - long and monotonous but necessary
             SqlParameter[] parameters = new SqlParameter[8];
             parameters[0] = new SqlParameter("@venue_name", venueName);

@@ -7,14 +7,19 @@ using Webadmin.Models;
 
 namespace Webadmin
 {
-    public class Webadminhelper
+    public class WebadminHelper
     {
-        public static string AdminIdKey = "_adminId";
-        public static string StaffIdKey = "_staffId";
+        public const string AdminIdKey = "_adminId";
+        public const string StaffIdKey = "_staffId";
+
+        public static int? GetAdminId(ISession sessionContext)
+        {
+            return sessionContext.GetInt32(AdminIdKey);
+        }
 
         public static bool AdminPermissionVenue(ISession sessionContext, int venueId, COMP2003_FContext dbContext)
         {
-            int? adminId = sessionContext.GetInt32(AdminIdKey);
+            int? adminId = GetAdminId(sessionContext);
             if (adminId != null)
             {
                 bool exists = dbContext.Admins
@@ -31,6 +36,32 @@ namespace Webadmin
             // If admin ID is not set, then no permission should be given
             return false;
             
+        }
+
+        public static bool AdminPermissionStaff(ISession sessionContext, int staffId, COMP2003_FContext dbContext)
+        {
+            int? adminId = GetAdminId(sessionContext);
+            if (adminId != null)
+            {
+                bool exists = dbContext.Admins
+                    // Filter out all other admins, ensures that we return false when admin ID is not set
+                    .Where(admin => admin.AdminId.Equals(adminId))
+                    // Join admins with admin_locations on admin ID
+                    .Join(dbContext.AdminLocations, admin => admin.AdminId, location => location.AdminId, (admin, location) => new
+                    {
+                        Admin = admin,
+                        Location = location
+                    })
+                    // Join location with employment on venue ID
+                    .Join(dbContext.Employment, adminAndLocation => adminAndLocation.Location.Venue.VenueId, employment => employment.VenueId, (adminAndLocation, employment) => new
+                    {
+                        Employment = employment
+                    })
+                    // Return true if the member of staff is employed at any of the venues that the current admin manages, if not returns false
+                    .Any(employment => employment.Employment.StaffId.Equals(staffId));
+                return exists;
+            }
+            return false;
         }
     }
 }
