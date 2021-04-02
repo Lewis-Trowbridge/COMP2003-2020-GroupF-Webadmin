@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -18,9 +19,20 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Log In</a> <!-- Should link to log in page -->
-                        </li>
+                        @{
+                            if (Context.Session.GetInt32(WebadminHelper.AdminIdKey) == null && Context.Session.GetInt32(WebadminHelper.StaffIdKey) == null)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Log In</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Log out</a>
+                                </li>
+                            }
+                        }
                     </ul>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">

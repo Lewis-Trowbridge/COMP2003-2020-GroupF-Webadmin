@@ -17,13 +17,20 @@ namespace Webadmin.Controllers
         [HttpPost]
         public IActionResult LoginAdmin(int adminId)
         {
-            HttpContext.Session.SetInt32(Webadminhelper.AdminIdKey, adminId);
+            HttpContext.Session.SetInt32(WebadminHelper.AdminIdKey, adminId);
             return RedirectToAction("Index", "Venues");
         }
 
         public IActionResult LoginStaff(int staffId)
         {
-            HttpContext.Session.SetInt32(Webadminhelper.StaffIdKey, staffId);
+            HttpContext.Session.SetInt32(WebadminHelper.StaffIdKey, staffId);
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove(WebadminHelper.AdminIdKey);
+            HttpContext.Session.Remove(WebadminHelper.StaffIdKey);
             return RedirectToAction("Index", "Home");
         }
     }
