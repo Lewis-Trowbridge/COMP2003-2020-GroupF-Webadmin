@@ -10,6 +10,7 @@ namespace Webadmin
     public class Webadminhelper
     {
         public static string AdminIdKey = "_adminId";
+        public static string StaffIdKey = "_staffId";
 
         public static bool AdminPermissionVenue(ISession sessionContext, int venueId, COMP2003_FContext dbContext)
         {

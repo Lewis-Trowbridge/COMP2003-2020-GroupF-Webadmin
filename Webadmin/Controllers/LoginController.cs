@@ -15,10 +15,16 @@ namespace Webadmin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(int adminId)
+        public IActionResult LoginAdmin(int adminId)
         {
             HttpContext.Session.SetInt32(Webadminhelper.AdminIdKey, adminId);
             return RedirectToAction("Index", "Venues");
+        }
+
+        public IActionResult LoginStaff(int staffId)
+        {
+            HttpContext.Session.SetInt32(Webadminhelper.StaffIdKey, staffId);
+            return RedirectToAction("Index", "Home");
         }
     }
 }
