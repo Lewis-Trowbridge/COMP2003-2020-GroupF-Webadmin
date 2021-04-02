@@ -23,6 +23,7 @@ namespace Webadmin.Controllers
         // GET: Venues
         public async Task<IActionResult> Index()
         {
+
             var adminId = HttpContext.Session.GetInt32(Webadminhelper.AdminIdKey);
             return View(await _context.Venues
                 .Join(_context.AdminLocations, venue => venue.VenueId, location => location.VenueId, (venue, location) => new
@@ -43,14 +44,21 @@ namespace Webadmin.Controllers
                 return NotFound();
             }
 
-            var venues = await _context.Venues
-                .FirstOrDefaultAsync(m => m.VenueId == id);
-            if (venues == null)
+            if (Webadminhelper.AdminPermissionVenue(HttpContext.Session, id.Value, _context))
             {
-                return NotFound();
+                var venues = await _context.Venues
+                    .FirstOrDefaultAsync(m => m.VenueId == id);
+                if (venues == null)
+                {
+                    return NotFound();
+                }
+
+                return View(venues);
             }
 
-            return View(venues);
+            return Unauthorized();
+
+
         }
 
         /*   NON GENERATED CODE   */
