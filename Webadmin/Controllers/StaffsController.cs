@@ -20,9 +20,31 @@ namespace Webadmin.Controllers
         }
 
         // GET: Staffs/Indext/id
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int venueId)
         {
-            return View(await _context.Staff.ToListAsync());
+            ViewBag.venueId = venueId;
+            var adminId = WebadminHelper.GetAdminId(HttpContext.Session);
+            return View(await _context.Staff
+                // Joining the staffId from Emplyment table
+                .Join(_context.Employment, staff => staff.StaffId, employment => employment.StaffId, (staff, employment) => new
+                {
+                    Employment = employment,
+                    Staff = staff
+                })
+                // Filters the staff depending on the veuneId selected
+                .Where(staffAndEmployment => staffAndEmployment.Employment.VenueId.Equals(venueId))
+                // Joining the AdminLocations to Emplyment using the selected VenueId
+                .Join(_context.AdminLocations, venue => venue.Employment.VenueId, location => location.VenueId, (venue, location) => new
+                {
+                    Staff = venue.Staff,
+                    Locations = location
+                })
+                // Checking Admin has permission to view staff within venue
+                .Where(locationAndStaff => locationAndStaff.Locations.AdminId.Equals(adminId))
+                // Getting the remaining staff
+                .Select(staff => staff.Staff)
+                // Putting it into a list view
+                .ToListAsync());
         }
 
         // GET: Staffs/Details/5
@@ -32,24 +54,31 @@ namespace Webadmin.Controllers
             {
                 return NotFound();
             }
-
-            var staff = await _context.Staff
-                .FirstOrDefaultAsync(m => m.StaffId == id);
-            if (staff == null)
+            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, id.Value, _context))
             {
-                return NotFound();
-            }
+                var staff = await _context.Staff
+                .FirstOrDefaultAsync(m => m.StaffId == id);
+                if (staff == null)
+                {
+                    return NotFound();
+                }
 
-            return View(staff);
+                return View(staff);
+            }
+            return Unauthorized();
         }
 
         // Create new staff details
-        
+
         // GET /Staffs/Create/5
         public IActionResult Create(int id) //venue id
         {
-            ViewBag.venueId = id;
-            return View();
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, id, _context))
+            {
+                ViewBag.venueId = id;
+                return View();
+            }
+            return Unauthorized();
         }
 
         // Post: Allows you to add new staff 
@@ -57,8 +86,12 @@ namespace Webadmin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(string staffName, string staffContactNum, string staffPosition, int venueId)
         {
-            CallAddSaffSP(staffName, staffContactNum, staffPosition, venueId);
-            return RedirectToAction(nameof(Index));
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            {
+                CallAddSaffSP(staffName, staffContactNum, staffPosition, venueId);
+                return RedirectToAction(nameof(Index));
+            }
+            return Unauthorized();
         }
 
         // Edit staff details
@@ -66,15 +99,23 @@ namespace Webadmin.Controllers
         // GET /Staffs/
         public IActionResult Edit(int id)
         {
-            ViewBag.staffId = id;
-            return View();
+            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, id, _context))
+            {
+                ViewBag.staffId = id;
+                return View();
+            }
+            return Unauthorized();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(string staffName, string staffContactNum, string staffPosition, int staffId)
         {
-            CallEditStaffSP(staffName, staffContactNum, staffPosition, staffId);
-            return RedirectToAction(nameof(Index));
+            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
+            {
+                CallEditStaffSP(staffName, staffContactNum, staffPosition, staffId);
+                return RedirectToAction(nameof(Index));
+            }
+            return Unauthorized();
         }
 
         // Delete staff details
@@ -86,21 +127,28 @@ namespace Webadmin.Controllers
             {
                 return NotFound();
             }
-
-            var staff = await _context.Staff
-                .FirstOrDefaultAsync(m => m.StaffId == id);
-            if (staff == null)
+            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, id.Value, _context))
             {
-                return NotFound();
-            }
+                var staff = await _context.Staff
+                .FirstOrDefaultAsync(m => m.StaffId == id);
+                if (staff == null)
+                {
+                    return NotFound();
+                }
 
-            return View(staff);
+                return View(staff);
+            }
+            return Unauthorized();
         }
         [HttpPost] // /Staffs/Delete/ID
         public IActionResult Delete(int staffId)
         {
-            CallDeleteStaffSP(staffId);
-            return RedirectToAction(nameof(Index));
+            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
+            {
+                CallDeleteStaffSP(staffId);
+                return RedirectToAction(nameof(Index));
+            }
+            return Unauthorized();
         }
 
         /*  DATABASE LINKED CODE  */
