@@ -73,12 +73,19 @@ namespace Webadmin.Controllers
             return RedirectToAction(nameof(Index), new { id = venueId });
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, id, _context))
             {
                 ViewBag.venueId = id;
-                return View();
+                var venues = await _context.Venues
+                .FirstOrDefaultAsync(m => m.VenueId == id);
+                if (venues == null)
+                {
+                    return NotFound();
+                }
+
+                return View(venues);
             }
 
             return Unauthorized();
