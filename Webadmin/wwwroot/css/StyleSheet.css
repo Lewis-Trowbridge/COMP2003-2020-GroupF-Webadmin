@@ -1,0 +1,26 @@
+﻿
+.bntLarge {
+    box-sizing: border-box;
+    border-radius: 8px;
+    margin: 0px 0px 0px 60px;
+    width: 300px;
+    height: 150px;
+    font-size: 20px;
+    text-align: center;
+    line-height: 130px;
+    background-color: #203060;
+    color: white;
+}
+.bntLarge:hover .bntLarge:hover {
+    background-color: lightgray;
+}
+.shareLine {
+    display: flex;
+    justify-content: space-between;
+}
+.bntSmall {
+    width: 70px;
+    height: 38px;
+    background-color: #203060;
+    color: white;
+}

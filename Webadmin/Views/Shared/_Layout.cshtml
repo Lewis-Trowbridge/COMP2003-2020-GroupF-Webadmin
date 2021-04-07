@@ -1,18 +1,19 @@
 ﻿@using Microsoft.AspNetCore.Http;
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head background-color: #203060">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Webadmin</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/StyleSheet.css" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-#203060 border-bottom box-shadow mb-3" style="background-color: #203060">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Clean Table</a>
+                <a class="navbar-brand text-light" asp-area="" asp-controller="Home" asp-action="Index">Clean Table</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -23,20 +24,20 @@
                             if (Context.Session.GetInt32(WebadminHelper.AdminIdKey) == null && Context.Session.GetInt32(WebadminHelper.StaffIdKey) == null)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Log In</a>
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Login" asp-action="Index">Log In</a>
                                 </li>
                             }
                             else
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Log out</a>
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Login" asp-action="Logout">Log out</a>
                                 </li>
                             }
                         }
                     </ul>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Venues" asp-action="Index">My Venues</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Venues" asp-action="Index">My Venues</a>
                         </li>
                     </ul>
                 </div>
@@ -50,7 +51,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted bg-#203060" style="background-color: #203060">
         <div class="container">
             <p>Produced by COMP2003 - 2020 - F - 2020/2021</p>
         </div>
