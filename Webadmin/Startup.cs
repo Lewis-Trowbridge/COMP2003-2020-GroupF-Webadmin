@@ -12,6 +12,8 @@ using Webadmin.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Webadmin.Services;
+using Microsoft.Extensions.Caching.SqlServer;
+using Microsoft.AspNetCore.Http;
 
 namespace Webadmin
 {
@@ -34,6 +36,28 @@ namespace Webadmin
 
             services.AddHostedService<DatabaseCleanerService>();
 
+            services.AddDistributedSqlServerCache(options =>
+            {
+                options.ConnectionString = Configuration.GetConnectionString("cleanTableDb");
+                options.SchemaName = "dbo";
+                options.TableName = "session_cache";
+            });
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(2000);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential 
+                // cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                // requires using Microsoft.AspNetCore.Http;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
         }
 
 
@@ -58,12 +82,18 @@ namespace Webadmin
 
             app.UseAuthorization();
 
+            app.UseSession();
+
+            app.UseCookiePolicy();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
         }
     }
 }
