@@ -158,12 +158,19 @@ namespace Webadmin.Controllers
         }
 
         [HttpPost]
-        public Task<IActionResult> Table_update(int venueID, int newTable)
+        public async Task<IActionResult> Edit (int venuteTableID, int venuteTableNumber, int numberOfSeats)
         {
-            _context.Database.ExecuteSqlRaw("EXEC edit_tables @venue_id, @new_tables",
-                new SqlParameter("@venue_id", venueID),
-                new SqlParameter("@new_tables", newTable));
-            return null;
+            CallEditTableSP(venuteTableID,venuteTableNumber, numberOfSeats);
+            return RedirectToAction(nameof(Index));
+        }
+
+        private void CallEditTableSP(int venueTableID, int venueTableNumber, int numberOfSeats)
+        {
+            SqlParameter[] parameters = new SqlParameter[3];
+            parameters[0] = new SqlParameter("@venue_table_id", venueTableID);
+            parameters[1] = new SqlParameter("@venue_table_number", venueTableNumber);
+            parameters[2] = new SqlParameter("@venue_table_capacity", numberOfSeats);
+            _context.Database.ExecuteSqlRaw("EXEC edit_venue_tables @venue_table_id, @venue_table_number, @venue_table_capacity", parameters);
         }
     }
 }
