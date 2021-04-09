@@ -5,7 +5,7 @@
 }
 <div class="shareLine">
     <h1>Index</h1>
-    <a asp-action="Create" class="btn bntSmall" style="float: right">Create New</a>
+    <a asp-action="Create" class="btn bntMedium" style="float: right">Create New</a>
 </div>
 
 <table class="table">
@@ -30,7 +30,7 @@
                     @Html.DisplayFor(modelItem => item.VenuePostcode)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.VenueId" class="btn bntSmall">Details</a>
+                    <a asp-action="Details" asp-route-id="@item.VenueId" class="btn bntMedium">Details</a>
                 </td>
             </tr>
     }

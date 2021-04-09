@@ -5,11 +5,13 @@
     int VenueId = ViewBag.venueId;
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create" asp-route-id="@VenueId">Create New</a>
-</p>
+<div class="shareLine">
+    <h1>Index</h1>
+    <div>
+        <a asp-action="Create" asp-route-id="@VenueId" class="btn bntMedium">Create New</a>
+        <a asp-action="Index" asp-route-id="@VenueId" class="btn bntMedium">Back </a>
+    </div>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -26,23 +28,24 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StaffName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StaffContactNum)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StaffPosition)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.StaffId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.StaffId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.StaffId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StaffName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StaffContactNum)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StaffPosition)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.StaffId" class="btn bntMedium">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.StaffId" class="btn bntMedium">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
