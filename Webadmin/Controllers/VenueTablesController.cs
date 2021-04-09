@@ -108,7 +108,7 @@ namespace Webadmin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create (int venueId, int venueTableNum, int venueTableCapacity)
+        public async Task<IActionResult> Edit (int venuteTableID, int venuteTableNumber, int numberOfSeats)
         {
             CallCreateTableSP(venueId, venueTableNum, venueTableCapacity);
             return RedirectToAction(nameof(Index));
