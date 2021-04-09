@@ -3,12 +3,11 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div class="shareLine">
+    <h1>Index</h1>
+    <a asp-action="Create" class="btn bntSmall" style="float: right">Create New</a>
+</div>
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -17,18 +16,6 @@
             </th>
             <th>
                 Postcode
-            </th>
-            <th>
-                Address Line One
-            </th>
-            <th>
-                Address Line Two
-            </th>
-            <th>
-                City
-            </th>
-            <th>
-                County
             </th>
             <th></th>
         </tr>
@@ -43,21 +30,7 @@
                 @Html.DisplayFor(modelItem => item.VenuePostcode)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AddLineOne)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AddLineTwo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.County)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.VenueId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.VenueId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.VenueId">Delete</a>
+                <a asp-action="Details" asp-route-id="@item.VenueId" class="btn bntSmall">Details</a>
             </td>
         </tr>
 }
