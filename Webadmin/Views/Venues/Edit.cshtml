@@ -5,62 +5,62 @@
     int venueId = ViewBag.venueId;
 }
 
-<h1>Edit</h1>
+<div class="borderBody">
+        <div class="titleMargin">
+            <br />
+            <h1>Edit</h1>
+            <div class="shareLine">
+                <h4>Venues</h4>
+                <a asp-action="Details" asp-route-id="@Model.VenueId" class="btn bntSmall">Back</a>
+            </div>
+            <hr />
+        </div>
 
-<h4>Venues</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="VenueName" class="control-label">Venue Name</label>
-                <input asp-for="VenueName " class="form-control" value="@Model.VenueName" />
-                <span asp-validation-for="VenueName" class="text-danger"></span>
+        <div class="row" style="margin-left:100px">
+            <div class="col-md-4">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="VenueName" class="control-label">Venue Name</label>
+                        <input asp-for="VenueName " class="form-control" value="@Model.VenueName" />
+                        <span asp-validation-for="VenueName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="VenuePostcode" class="control-label"> Postcode</label>
+                        <input asp-for="VenuePostcode" class="form-control" />
+                        <span asp-validation-for="VenuePostcode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddLineOne" class="control-label"> Address Line One</label>
+                        <input asp-for="AddLineOne" class="form-control" />
+                        <span asp-validation-for="AddLineOne" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddLineTwo" class="control-label">Address Line Two</label>
+                        <input asp-for="AddLineTwo" class="form-control" />
+                        <span asp-validation-for="AddLineTwo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="City" class="control-label">City</label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="County" class="control-label">County</label>
+                        <input asp-for="County" class="form-control" />
+                        <span asp-validation-for="County" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input value="@venueId" name="venueId" type="hidden">
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn bntSmall" />
+                    </div>
+                </form>
             </div>
-            @*<div class="form-group">
-                <label asp-for="VenueTables" class="control-label"></label>
-                <input asp-for="VenueTables" class="form-control" />
-                <span asp-validation-for="VenueTables" class="text-danger"></span>
-            </div>*@
-            <div class="form-group">
-                <label asp-for="VenuePostcode" class="control-label"> Postcode</label>
-                <input asp-for="VenuePostcode" class="form-control" />
-                <span asp-validation-for="VenuePostcode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AddLineOne" class="control-label"> Address Line One</label>
-                <input asp-for="AddLineOne" class="form-control" />
-                <span asp-validation-for="AddLineOne" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AddLineTwo" class="control-label">Address Line Two</label>
-                <input asp-for="AddLineTwo" class="form-control" />
-                <span asp-validation-for="AddLineTwo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="City" class="control-label">City</label>
-                <input asp-for="City" class="form-control" />
-                <span asp-validation-for="City" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="County" class="control-label">County</label>
-                <input asp-for="County" class="form-control" />
-                <span asp-validation-for="County" class="text-danger"></span>
-            </div>
-            <div class=" form-group">
-                <input value="@venueId" name="venueId" type="hidden">
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

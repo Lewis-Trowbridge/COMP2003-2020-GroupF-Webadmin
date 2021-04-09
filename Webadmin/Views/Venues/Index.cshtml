@@ -9,30 +9,30 @@
 </div>
 
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                Venue Name
-            </th>
-            <th>
-                Postcode
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.VenueName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VenuePostcode)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.VenueId" class="btn bntSmall">Details</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <thead>
+            <tr>
+                <th>
+                    Venue Name
+                </th>
+                <th>
+                    Postcode
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VenueName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VenuePostcode)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.VenueId" class="btn bntSmall">Details</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>

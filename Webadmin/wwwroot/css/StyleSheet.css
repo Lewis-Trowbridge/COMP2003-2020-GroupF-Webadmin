@@ -14,13 +14,33 @@
 .bntLarge:hover .bntLarge:hover {
     background-color: lightgray;
 }
-.shareLine {
-    display: flex;
-    justify-content: space-between;
-}
 .bntSmall {
     width: 70px;
     height: 38px;
     background-color: #203060;
     color: white;
+}
+.shareLine {
+    display: flex;
+    justify-content: space-between;
+}
+.midContainer {
+    justify-content: center;
+}
+.placeRight {
+    float: right;
+}
+.titleMargin {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+.borderBody {
+    width: 800px;
+    border: 1px solid black;
+    box-sizing: border-box;
+    border-radius: 8px;
+    position: absolute;
+    margin-left: 180px;
 }
