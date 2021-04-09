@@ -158,6 +158,20 @@ namespace Webadmin.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> Delete (int venuteTableID)
+        {
+            CallDeleteTableSP(venuteTableID);
+            return RedirectToAction(nameof(Index));
+        }
+
+        private void CallDeleteTableSP(int venueTableID)
+        {
+            SqlParameter[] parameters = new SqlParameter[1];
+            parameters[0] = new SqlParameter("@venue_table_id", venueTableID);
+            _context.Database.ExecuteSqlRaw("EXEC delete_venue_tables @venue_table_id", parameters);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> Edit (int venuteTableID, int venuteTableNumber, int numberOfSeats)
         {
             CallEditTableSP(venuteTableID,venuteTableNumber, numberOfSeats);
