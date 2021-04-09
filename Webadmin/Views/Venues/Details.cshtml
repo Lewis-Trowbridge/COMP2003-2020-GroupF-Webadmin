@@ -3,10 +3,11 @@
 @{
     ViewData["Title"] = "Details";
 }
+
 <h1>Details</h1>
 <div class="shareLine">
     <h4>@Html.DisplayFor(model => model.VenueName)</h4>
-    <a asp-action="Index" class="btn bntSmall" >Back</a>
+    <a asp-action="Index" class="btn bntSmall">Back</a>
 </div>
 <hr />
 <div class="row">
@@ -40,5 +41,31 @@
 <br />
 <div style="float: right">
     <a asp-action="Edit" asp-route-id="@Model.VenueId" class="btn bntSmall">Edit</a>
-    <a asp-action="Delete" asp-route-id="@Model.VenueId" class="btn btn-danger">Delete</a>
+    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete</button>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTitle">Delete Venue</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <b>Are you sure you want to delete this venue?</b>
+                <br />
+                This will remove all data related to the venue
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn bntSmall" data-dismiss="modal">Close</button>
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="VenueId" />
+                    <input type="submit" value="Delete" class="btn btn-danger"/>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
