@@ -157,9 +157,9 @@ namespace Webadmin.Controllers
             return _context.VenueTables.Any(e => e.VenueTableId == id);
         }
 
-        public async Task<IActionResult> Delete (int venuteTableID)
+        public async Task<IActionResult> Delete (int venueTableID)
         {
-            CallDeleteTableSP(venuteTableID);
+            CallDeleteTableSP(venueTableID);
             return RedirectToAction(nameof(Index));
         }
 
@@ -171,9 +171,9 @@ namespace Webadmin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add (int venueID, int venuteTableNumber, int numberOfSeats)
+        public async Task<IActionResult> Add (int venueID, int venueTableNumber, int numberOfSeats)
         {
-            CallAddTableSP(venueID, venuteTableNumber, numberOfSeats);
+            CallAddTableSP(venueID, venueTableNumber, numberOfSeats);
             return RedirectToAction(nameof(Index));
         }
 
@@ -187,9 +187,9 @@ namespace Webadmin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit (int venuteTableID, int venuteTableNumber, int numberOfSeats)
+        public async Task<IActionResult> Edit (int venueTableID, int venueTableNumber, int numberOfSeats)
         {
-            CallEditTableSP(venuteTableID,venuteTableNumber, numberOfSeats);
+            CallEditTableSP(venueTableID, venueTableNumber, numberOfSeats);
             return RedirectToAction(nameof(Index));
         }
 
