@@ -103,7 +103,7 @@ namespace Webadmin.Controllers
         {
             SqlParameter[] parameters = new SqlParameter[1];
             parameters[0] = new SqlParameter("@venue_table_id", venueTableID);
-            _context.Database.ExecuteSqlRaw("EXEC delete_venue_tables @venue_table_id", parameters);
+            _context.Database.ExecuteSqlRaw("EXEC delete_venue_table @venue_table_id", parameters);
         }
 
         [HttpPost]
@@ -135,7 +135,7 @@ namespace Webadmin.Controllers
             parameters[0] = new SqlParameter("@venue_table_id", venueTableID);
             parameters[1] = new SqlParameter("@venue_table_number", venueTableNumber);
             parameters[2] = new SqlParameter("@venue_table_capacity", numberOfSeats);
-            _context.Database.ExecuteSqlRaw("EXEC edit_venue_tables @venue_table_id, @venue_table_number, @venue_table_capacity", parameters);
+            _context.Database.ExecuteSqlRaw("EXEC edit_venue_table @venue_table_id, @venue_table_number, @venue_table_capacity", parameters);
         }
     }
 }
