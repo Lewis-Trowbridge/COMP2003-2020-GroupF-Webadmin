@@ -119,7 +119,7 @@ namespace Webadmin.Controllers
             parameters[0] = new SqlParameter("@venue_id", venueID);
             parameters[1] = new SqlParameter("@venue_table_number", venueTableNumber);
             parameters[2] = new SqlParameter("@venue_table_capacity", numberOfSeats);
-            _context.Database.ExecuteSqlRaw("EXEC add_venue_tables @venue_id, @venue_table_number, @venue_table_capacity", parameters);
+            _context.Database.ExecuteSqlRaw("EXEC add_venue_table @venue_id, @venue_table_number, @venue_table_capacity", parameters);
         }
 
         [HttpPost]
