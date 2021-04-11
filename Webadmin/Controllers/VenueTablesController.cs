@@ -45,6 +45,49 @@ namespace Webadmin.Controllers
             return View(venueTables);
         }
 
+        // GET: VenueTables/Create
+        public IActionResult Create()
+        {
+            ViewData["VenueId"] = new SelectList(_context.Venues, "VenueId", "AddLineOne");
+            return View();
+        }
+
+        // GET: VenueTables/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var venueTables = await _context.VenueTables.FindAsync(id);
+            if (venueTables == null)
+            {
+                return NotFound();
+            }
+            ViewData["VenueId"] = new SelectList(_context.Venues, "VenueId", "AddLineOne", venueTables.VenueId);
+            return View(venueTables);
+        }
+
+        // GET: VenueTables/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var venueTables = await _context.VenueTables
+                .Include(v => v.Venue)
+                .FirstOrDefaultAsync(m => m.VenueTableId == id);
+            if (venueTables == null)
+            {
+                return NotFound();
+            }
+
+            return View(venueTables);
+        }
+
         private bool VenueTablesExists(int id)
         {
             return _context.VenueTables.Any(e => e.VenueTableId == id);
