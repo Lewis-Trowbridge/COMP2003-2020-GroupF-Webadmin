@@ -12,6 +12,7 @@ using Microsoft.Data.SqlClient;
 using Webadmin.Models;
 using Microsoft.AspNetCore.Http;
 using CsvHelper;
+using Webadmin.Requests;
 
 namespace Webadmin.Controllers
 {
@@ -155,9 +156,9 @@ namespace Webadmin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Export(int venueId, DateTime exportFrom, DateTime exportTo)
+        public async Task<IActionResult> Export(ExportRequest request)
         {
-            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, request.VenueId, _context))
             {
                 using var stream = new StringWriter();
                 using var writer = new CsvWriter(stream, CultureInfo.InvariantCulture);
