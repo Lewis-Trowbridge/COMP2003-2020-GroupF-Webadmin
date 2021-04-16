@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
+using System.Text;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using Webadmin.Models;
 using Microsoft.AspNetCore.Http;
+using CsvHelper;
 
 namespace Webadmin.Controllers
 {
@@ -134,6 +138,42 @@ namespace Webadmin.Controllers
             }
 
             return Unauthorized();
+        }
+
+        [HttpGet]
+        public IActionResult Export(int venueId)
+        {
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            {
+                ViewBag.venueId = venueId;
+                return View();
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Export(int venueId, DateTime exportFrom, DateTime exportTo)
+        {
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            {
+                using var stream = new StringWriter();
+                using var writer = new CsvWriter(stream, CultureInfo.InvariantCulture);
+
+                // Grabbing of models, conversion to CSV
+
+                byte[] csvBytes = Encoding.Unicode.GetBytes(stream.ToString());
+
+                return File(csvBytes, "text/csv", "export.csv");
+            }
+
+            else
+            {
+                return Unauthorized();
+            }
+
         }
 
 
