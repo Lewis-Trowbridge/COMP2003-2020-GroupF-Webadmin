@@ -7,19 +7,11 @@ using System.Collections.Generic;
 
 namespace Webadmin.Models
 {
-    public partial class Customers
+    public partial class WebBookingsView
     {
-        public Customers()
-        {
-            BookingAttendees = new HashSet<BookingAttendees>();
-        }
-
-        public int CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string CustomerContactNumber { get; set; }
-        public string CustomerUsername { get; set; }
-        public string CustomerPassword { get; set; }
-
-        public virtual ICollection<BookingAttendees> BookingAttendees { get; set; }
+        public DateTime BookingTime { get; set; }
+        public string StaffName { get; set; }
     }
 }

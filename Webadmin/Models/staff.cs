@@ -11,6 +11,7 @@ namespace Webadmin.Models
     {
         public Staff()
         {
+            Bookings = new HashSet<Bookings>();
             Employment = new HashSet<Employment>();
             StaffShifts = new HashSet<StaffShifts>();
         }
@@ -20,6 +21,7 @@ namespace Webadmin.Models
         public string StaffContactNum { get; set; }
         public string StaffPosition { get; set; }
 
+        public virtual ICollection<Bookings> Bookings { get; set; }
         public virtual ICollection<Employment> Employment { get; set; }
         public virtual ICollection<StaffShifts> StaffShifts { get; set; }
     }
