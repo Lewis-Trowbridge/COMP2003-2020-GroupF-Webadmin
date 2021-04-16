@@ -560,6 +560,8 @@ namespace Webadmin.Models
                     .HasColumnName("staff_name")
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.VenueId).HasColumnName("venue_id");
             });
 
             OnModelCreatingPartial(modelBuilder);

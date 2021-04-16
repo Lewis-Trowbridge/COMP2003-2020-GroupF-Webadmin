@@ -10,6 +10,8 @@ namespace Webadmin.Models
 {
     public partial class WebBookingsView
     {
+        [Ignore]
+        public int VenueId { get; set; }
         [Index(0)]
         public string CustomerName { get; set; }
         [Index(1)]
