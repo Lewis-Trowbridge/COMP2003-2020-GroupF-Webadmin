@@ -29,10 +29,12 @@ namespace Webadmin.Models
         public virtual DbSet<Employment> Employment { get; set; }
         public virtual DbSet<Flags> Flags { get; set; }
         public virtual DbSet<OpeningTimes> OpeningTimes { get; set; }
+        public virtual DbSet<SessionCache> SessionCache { get; set; }
         public virtual DbSet<Staff> Staff { get; set; }
         public virtual DbSet<StaffShifts> StaffShifts { get; set; }
         public virtual DbSet<VenueTables> VenueTables { get; set; }
         public virtual DbSet<Venues> Venues { get; set; }
+        public virtual DbSet<WebBookingsView> WebBookingsView { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -159,6 +161,12 @@ namespace Webadmin.Models
                     .HasColumnName("venue_postcode")
                     .HasMaxLength(10)
                     .IsUnicode(false);
+
+                entity.Property(e => e.VenueTableCapacity).HasColumnName("venue_table_capacity");
+
+                entity.Property(e => e.VenueTableId).HasColumnName("venue_table_id");
+
+                entity.Property(e => e.VenueTableNum).HasColumnName("venue_table_num");
             });
 
             modelBuilder.Entity<AppVenueView>(entity =>
@@ -209,23 +217,23 @@ namespace Webadmin.Models
 
             modelBuilder.Entity<BookingAttendees>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => new { e.BookingId, e.CustomerId });
 
                 entity.ToTable("booking_attendees");
-
-                entity.Property(e => e.BookingAttended).HasColumnName("booking_attended");
 
                 entity.Property(e => e.BookingId).HasColumnName("booking_id");
 
                 entity.Property(e => e.CustomerId).HasColumnName("customer_id");
 
+                entity.Property(e => e.BookingAttended).HasColumnName("booking_attended");
+
                 entity.HasOne(d => d.Booking)
-                    .WithMany()
+                    .WithMany(p => p.BookingAttendees)
                     .HasForeignKey(d => d.BookingId)
                     .HasConstraintName("FK__booking_a__booki__36B12243");
 
                 entity.HasOne(d => d.Customer)
-                    .WithMany()
+                    .WithMany(p => p.BookingAttendees)
                     .HasForeignKey(d => d.CustomerId)
                     .HasConstraintName("FK__booking_a__custo__37A5467C");
             });
@@ -245,9 +253,16 @@ namespace Webadmin.Models
                     .HasColumnName("booking_time")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.StaffId).HasColumnName("staff_id");
+
                 entity.Property(e => e.VenueId).HasColumnName("venue_id");
 
                 entity.Property(e => e.VenueTableId).HasColumnName("venue_table_id");
+
+                entity.HasOne(d => d.Staff)
+                    .WithMany(p => p.Bookings)
+                    .HasForeignKey(d => d.StaffId)
+                    .HasConstraintName("FK__bookings__staff___6D0D32F4");
 
                 entity.HasOne(d => d.Venue)
                     .WithMany(p => p.Bookings)
@@ -388,6 +403,18 @@ namespace Webadmin.Models
                     .HasConstraintName("FK__opening_t__venue__4222D4EF");
             });
 
+            modelBuilder.Entity<SessionCache>(entity =>
+            {
+                entity.ToTable("session_cache");
+
+                entity.HasIndex(e => e.ExpiresAtTime)
+                    .HasName("Index_ExpiresAtTime");
+
+                entity.Property(e => e.Id).HasMaxLength(449);
+
+                entity.Property(e => e.Value).IsRequired();
+            });
+
             modelBuilder.Entity<Staff>(entity =>
             {
                 entity.ToTable("staff");
@@ -503,6 +530,35 @@ namespace Webadmin.Models
                     .IsRequired()
                     .HasColumnName("venue_postcode")
                     .HasMaxLength(10)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<WebBookingsView>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("web_bookings_view");
+
+                entity.Property(e => e.BookingTime)
+                    .HasColumnName("booking_time")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.CustomerContactNumber)
+                    .IsRequired()
+                    .HasColumnName("customer_contact_number")
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerName)
+                    .IsRequired()
+                    .HasColumnName("customer_name")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.StaffName)
+                    .IsRequired()
+                    .HasColumnName("staff_name")
+                    .HasMaxLength(50)
                     .IsUnicode(false);
             });
 
