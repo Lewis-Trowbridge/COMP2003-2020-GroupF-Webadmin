@@ -163,7 +163,13 @@ namespace Webadmin.Controllers
                 using var stream = new StringWriter();
                 using var writer = new CsvWriter(stream, CultureInfo.InvariantCulture);
 
-                // Grabbing of models, conversion to CSV
+                var views = await _context.WebBookingsView
+                    .Where(view => view.VenueId.Equals(request.VenueId))
+                    .Where(view => view.BookingTime.Date >= request.ExportFrom.Date)
+                    .Where(view => view.BookingTime.Date <= request.ExportTo.Date)
+                    .ToListAsync();
+
+                await writer.WriteRecordsAsync(views);
 
                 byte[] csvBytes = Encoding.Unicode.GetBytes(stream.ToString());
 
