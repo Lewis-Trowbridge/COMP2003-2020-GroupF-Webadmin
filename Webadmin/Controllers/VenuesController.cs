@@ -155,7 +155,7 @@ namespace Webadmin.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Export(ExportRequest request)
         {
             if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, request.VenueId, _context))

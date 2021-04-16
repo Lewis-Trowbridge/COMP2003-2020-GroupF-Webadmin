@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Webadmin.Requests
 {
-    public struct ExportRequest
+    public class ExportRequest
     {
         public int VenueId { get; set; }
         public DateTime ExportFrom { get; set; }
