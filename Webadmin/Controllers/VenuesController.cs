@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
+using System.Text;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using Webadmin.Models;
 using Microsoft.AspNetCore.Http;
+using CsvHelper;
+using Webadmin.Requests;
 
 namespace Webadmin.Controllers
 {
@@ -134,6 +139,48 @@ namespace Webadmin.Controllers
             }
 
             return Unauthorized();
+        }
+
+        [HttpGet]
+        public IActionResult Export(int venueId)
+        {
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            {
+                ViewBag.venueId = venueId;
+                return View();
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Export(ExportRequest request)
+        {
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, request.VenueId, _context))
+            {
+                using var stream = new StringWriter();
+                using var writer = new CsvWriter(stream, CultureInfo.InvariantCulture);
+
+                var views = await _context.WebBookingsView
+                    .Where(view => view.VenueId.Equals(request.VenueId))
+                    .Where(view => view.BookingTime.Date >= request.ExportFrom.Date)
+                    .Where(view => view.BookingTime.Date <= request.ExportTo.Date)
+                    .ToListAsync();
+
+                await writer.WriteRecordsAsync(views);
+
+                byte[] csvBytes = Encoding.Unicode.GetBytes(stream.ToString());
+
+                return File(csvBytes, "text/csv", "export.csv");
+            }
+
+            else
+            {
+                return Unauthorized();
+            }
+
         }
 
 

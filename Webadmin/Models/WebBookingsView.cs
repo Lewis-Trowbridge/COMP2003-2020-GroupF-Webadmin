@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CsvHelper.Configuration.Attributes;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -7,19 +8,17 @@ using System.Collections.Generic;
 
 namespace Webadmin.Models
 {
-    public partial class Customers
+    public partial class WebBookingsView
     {
-        public Customers()
-        {
-            BookingAttendees = new HashSet<BookingAttendees>();
-        }
-
-        public int CustomerId { get; set; }
+        [Ignore]
+        public int VenueId { get; set; }
+        [Index(0)]
         public string CustomerName { get; set; }
+        [Index(1)]
         public string CustomerContactNumber { get; set; }
-        public string CustomerUsername { get; set; }
-        public string CustomerPassword { get; set; }
-
-        public virtual ICollection<BookingAttendees> BookingAttendees { get; set; }
+        [Index(2)]
+        public DateTime BookingTime { get; set; }
+        [Index(3)]
+        public string StaffName { get; set; }
     }
 }

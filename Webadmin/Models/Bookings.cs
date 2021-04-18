@@ -9,13 +9,21 @@ namespace Webadmin.Models
 {
     public partial class Bookings
     {
+        public Bookings()
+        {
+            BookingAttendees = new HashSet<BookingAttendees>();
+        }
+
         public int BookingId { get; set; }
         public DateTime BookingTime { get; set; }
         public int BookingSize { get; set; }
         public int VenueId { get; set; }
         public int VenueTableId { get; set; }
+        public int? StaffId { get; set; }
 
+        public virtual Staff Staff { get; set; }
         public virtual Venues Venue { get; set; }
         public virtual VenueTables VenueTable { get; set; }
+        public virtual ICollection<BookingAttendees> BookingAttendees { get; set; }
     }
 }

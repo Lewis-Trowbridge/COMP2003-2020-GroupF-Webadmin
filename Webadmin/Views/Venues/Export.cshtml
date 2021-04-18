@@ -1,0 +1,44 @@
+﻿@model Webadmin.Requests.ExportRequest
+
+@{
+    ViewData["Title"] = "Export";
+    int venueId = ViewBag.venueId;
+    string currentDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
+    string limitDate = DateTime.Now.Date.AddDays(-21).ToString("yyyy-MM-dd");
+}
+
+<h1>Export</h1>
+
+<h4>Venues</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Export">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ExportFrom" class="control-label">Export From</label>
+                <input asp-for="ExportFrom" type="date" max="@currentDate" min="@limitDate" class="form-control" />
+                <span asp-validation-for="ExportFrom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ExportTo" class="control-label">Export To</label>
+                <input asp-for="ExportTo" type="date" max="@currentDate" min="@limitDate" class="form-control" />
+                <span asp-validation-for="ExportTo" class="text-danger"></span>
+            </div>
+            <div class=" form-group">
+                <input value="@venueId" name="venueId" type="hidden">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Export" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
