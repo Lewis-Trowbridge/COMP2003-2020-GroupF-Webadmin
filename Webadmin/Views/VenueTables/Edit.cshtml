@@ -1,0 +1,44 @@
+﻿@model Webadmin.Models.VenueTables
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>VenueTables</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="VenueTableId" />
+            <div class="form-group">
+                <label asp-for="VenueId" class="control-label"></label>
+                <select asp-for="VenueId" class="form-control" asp-items="ViewBag.VenueId"></select>
+                <span asp-validation-for="VenueId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VenueTableNum" class="control-label"></label>
+                <input asp-for="VenueTableNum" class="form-control" />
+                <span asp-validation-for="VenueTableNum" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VenueTableCapacity" class="control-label"></label>
+                <input asp-for="VenueTableCapacity" class="form-control" />
+                <span asp-validation-for="VenueTableCapacity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

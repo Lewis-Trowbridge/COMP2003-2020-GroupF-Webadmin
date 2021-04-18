@@ -52,23 +52,6 @@ namespace Webadmin.Controllers
             return View();
         }
 
-        // POST: VenueTables/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VenueTableId,VenueId,VenueTableNum,VenueTableCapacity")] VenueTables venueTables)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(venueTables);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["VenueId"] = new SelectList(_context.Venues, "VenueId", "AddLineOne", venueTables.VenueId);
-            return View(venueTables);
-        }
-
         // GET: VenueTables/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -81,42 +64,6 @@ namespace Webadmin.Controllers
             if (venueTables == null)
             {
                 return NotFound();
-            }
-            ViewData["VenueId"] = new SelectList(_context.Venues, "VenueId", "AddLineOne", venueTables.VenueId);
-            return View(venueTables);
-        }
-
-        // POST: VenueTables/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("VenueTableId,VenueId,VenueTableNum,VenueTableCapacity")] VenueTables venueTables)
-        {
-            if (id != venueTables.VenueTableId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(venueTables);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VenueTablesExists(venueTables.VenueTableId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "VenueId", "AddLineOne", venueTables.VenueId);
             return View(venueTables);
@@ -141,29 +88,56 @@ namespace Webadmin.Controllers
             return View(venueTables);
         }
 
-        // POST: VenueTables/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var venueTables = await _context.VenueTables.FindAsync(id);
-            _context.VenueTables.Remove(venueTables);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
         private bool VenueTablesExists(int id)
         {
             return _context.VenueTables.Any(e => e.VenueTableId == id);
         }
 
         [HttpPost]
-        public Task<IActionResult> Table_update(int venueID, int newTable)
+        public async Task<IActionResult> Delete (int venueTableId)
         {
-            _context.Database.ExecuteSqlRaw("EXEC edit_tables @venue_id, @new_tables",
-                new SqlParameter("@venue_id", venueID),
-                new SqlParameter("@new_tables", newTable));
-            return null;
+            CallDeleteTableSP(venueTableId);
+            return RedirectToAction(nameof(Index));
+        }
+
+        private void CallDeleteTableSP(int venueTableId)
+        {
+            SqlParameter[] parameters = new SqlParameter[1];
+            parameters[0] = new SqlParameter("@venue_table_id", venueTableId);
+            _context.Database.ExecuteSqlRaw("EXEC delete_venue_table @venue_table_id", parameters);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create (int venueId, int venueTableNum, int venueTableCapacity)
+        {
+            CallCreateTableSP(venueId, venueTableNum, venueTableCapacity);
+            return RedirectToAction(nameof(Index));
+        }
+
+        private void CallCreateTableSP(int venueId, int venueTableNum, int venueTableCapacity)
+        {
+            SqlParameter[] parameters = new SqlParameter[3];
+            parameters[0] = new SqlParameter("@venue_id", venueId);
+            parameters[1] = new SqlParameter("@venue_table_number", venueTableNum);
+            parameters[2] = new SqlParameter("@venue_table_capacity", venueTableCapacity);
+            _context.Database.ExecuteSqlRaw("EXEC add_venue_table @venue_id, @venue_table_number, @venue_table_capacity", parameters);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int venueTableId, int venueId, int venueTableNum, int venueTableCapacity)
+        {
+            CallEditTableSP(venueTableId, venueId, venueTableNum, venueTableCapacity);
+            return RedirectToAction(nameof(Index));
+        }
+
+        private void CallEditTableSP(int venueTableId, int venueId, int venueTableNum, int venueTableCapacity)
+        {
+            SqlParameter[] parameters = new SqlParameter[4];
+            parameters[0] = new SqlParameter("@venue_table_id", venueTableId);
+            parameters[1] = new SqlParameter("@venue_id", venueId);
+            parameters[2] = new SqlParameter("@venue_table_number", venueTableNum);
+            parameters[3] = new SqlParameter("@venue_table_capacity", venueTableCapacity);
+            _context.Database.ExecuteSqlRaw("EXEC update_venue_table @venue_table_id, @venue_id, @venue_table_number, @venue_table_capacity", parameters);
         }
     }
 }
