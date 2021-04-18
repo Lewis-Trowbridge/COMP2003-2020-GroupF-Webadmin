@@ -31,8 +31,15 @@
                             }
                             else
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Log out</a>
+                                <li class="nav-item dropdown">
+                                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        My account
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="Admins" asp-action="Details" asp-route-id="@Context.Session.GetInt32(WebadminHelper.AdminIdKey)">Profile</a>
+                                        <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="Login" asp-action="Logout">Log out</a>
+
+                                    </div>
                                 </li>
                             }
                         }
