@@ -32,13 +32,12 @@
                             else
                             {
                                 <li class="nav-item dropdown">
-                                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         My account
-                                    </button>
+                                    </a>
                                     <div class="dropdown-menu">
                                         <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="Admins" asp-action="Details" asp-route-id="@Context.Session.GetInt32(WebadminHelper.AdminIdKey)">Profile</a>
                                         <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="Login" asp-action="Logout">Log out</a>
-
                                     </div>
                                 </li>
                             }
