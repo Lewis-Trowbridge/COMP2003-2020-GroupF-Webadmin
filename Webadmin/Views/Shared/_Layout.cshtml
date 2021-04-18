@@ -23,6 +23,9 @@
                             if (Context.Session.GetInt32(WebadminHelper.AdminIdKey) == null && Context.Session.GetInt32(WebadminHelper.StaffIdKey) == null)
                             {
                                 <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Admins" asp-action="Create">Create account</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Log In</a>
                                 </li>
                             }
