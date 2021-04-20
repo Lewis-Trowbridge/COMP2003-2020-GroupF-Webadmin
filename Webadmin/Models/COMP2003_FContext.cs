@@ -555,6 +555,12 @@ namespace Webadmin.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.StaffContactNum)
+                    .IsRequired()
+                    .HasColumnName("staff_contact_num")
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.StaffName)
                     .IsRequired()
                     .HasColumnName("staff_name")

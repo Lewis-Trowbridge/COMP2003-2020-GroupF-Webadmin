@@ -20,5 +20,7 @@ namespace Webadmin.Models
         public DateTime BookingTime { get; set; }
         [Index(3)]
         public string StaffName { get; set; }
+        [Index(4)]
+        public string StaffContactNum { get; set; }
     }
 }
