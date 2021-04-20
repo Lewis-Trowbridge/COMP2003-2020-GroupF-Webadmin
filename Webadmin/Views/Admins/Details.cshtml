@@ -3,28 +3,57 @@
 @{
     ViewData["Title"] = "Details";
 }
+<div class="borderBody">
+    <br />
+    <div class="titleMargin">
+        <h1>Details</h1>
+        <div class="shareLine">
+            <h4>Admins</h4>
+            <a asp-controller="Venues" asp-action="Index" class="btn bntMedium">Venues</a>
+        </div>
+        <hr />
+    </div>
 
-<h1>Details</h1>
-
-<div>
-    <h4>Admins</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AdminUsername)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AdminUsername)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AdminPassword)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AdminPassword)
-        </dd>
-    </dl>
+    <div style="margin-left: 100px">
+        <dl class="row">
+            <dt class="col-sm-2"><b>Username</b></dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.AdminUsername)
+            </dd>
+            <dt class="col-sm-2"><b>Password</b></dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.AdminPassword)
+            </dd>
+        </dl>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.AdminId" class="btn bntSmall">Edit</a>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAdmin">Delete</button>
+            <br /><br /><br /><br />
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.AdminId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="modal fade" id="deleteAdmin" tabindex="-1" role="dialog" aria-labelledby="deleteTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTitle">Delete Account</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <b>Are you sure you want to delete your account?</b>
+                <br />
+                This will remove all data related to this account
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn bntSmall" data-dismiss="modal">Close</button>
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="AdminId" />
+                    <input type="submit" value="Delete" class="btn btn-danger" />
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
