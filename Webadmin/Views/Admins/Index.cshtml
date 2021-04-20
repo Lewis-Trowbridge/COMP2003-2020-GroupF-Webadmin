@@ -18,13 +18,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.AdminPassword)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AdminSalt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AdminLevel)
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -35,12 +28,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AdminPassword)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AdminSalt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AdminLevel)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.AdminId">Edit</a> |
