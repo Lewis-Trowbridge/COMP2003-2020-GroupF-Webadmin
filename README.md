@@ -1,5 +1,19 @@
 # COMP2003-2020-GroupF-Webadmin
 
+## Other repositories in this project
+
+- [API](https://github.com/Lewis-Trowbridge/COMP2003-2020-GroupF-API)
+- [Mobile app](https://github.com/Lewis-Trowbridge/COMP2003-2020-GroupF-Mobile)
+- [Database](https://github.com/Lewis-Trowbridge/COMP2003-2020-GroupF-Database)
+
+## What is this?
+
+This repository contains the code for our CleanTable administration web application (Webadmin for short) intended to be used by the owners of venues in order to register and manage their venues in the CleanTable system.
+
+## Attributions
+
+- [CsvHelper](https://joshclose.github.io/CsvHelper/)
+
 ## Team  
 
 ### Product owners

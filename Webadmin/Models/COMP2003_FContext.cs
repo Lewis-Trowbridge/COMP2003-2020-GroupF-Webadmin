@@ -82,21 +82,9 @@ namespace Webadmin.Models
 
                 entity.Property(e => e.AdminId).HasColumnName("admin_id");
 
-                entity.Property(e => e.AdminLevel)
-                    .IsRequired()
-                    .HasColumnName("admin_level")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.AdminPassword)
                     .IsRequired()
                     .HasColumnName("admin_password")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.AdminSalt)
-                    .IsRequired()
-                    .HasColumnName("admin_salt")
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
@@ -553,6 +541,12 @@ namespace Webadmin.Models
                     .IsRequired()
                     .HasColumnName("customer_name")
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.StaffContactNum)
+                    .IsRequired()
+                    .HasColumnName("staff_contact_num")
+                    .HasMaxLength(15)
                     .IsUnicode(false);
 
                 entity.Property(e => e.StaffName)

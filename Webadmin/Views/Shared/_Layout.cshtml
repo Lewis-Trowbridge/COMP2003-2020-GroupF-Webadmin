@@ -24,14 +24,22 @@
                             if (Context.Session.GetInt32(WebadminHelper.AdminIdKey) == null && Context.Session.GetInt32(WebadminHelper.StaffIdKey) == null)
                             {
                                 <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Admins" asp-action="Create">Create account</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link text-light" asp-area="" asp-controller="Login" asp-action="Index">Log In</a>
                                 </li>
                             }
                             else
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link text-light" asp-area="" asp-controller="Login" asp-action="Logout">Log out</a>
-                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        My account
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="nav-link text-light dropdown-item" asp-area="" asp-controller="Admins" asp-action="Details" asp-route-id="@Context.Session.GetInt32(WebadminHelper.AdminIdKey)">Profile</a>
+                                        <a class="nav-link text-light dropdown-item" asp-area="" asp-controller="Login" asp-action="Logout">Log out</a>
+                                    </div>
                             }
                         }
                     </ul>
