@@ -97,11 +97,12 @@ namespace Webadmin.Controllers
         // Edit staff details
 
         // GET /Staffs/
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int staffId, int venueId)
         {
-            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, id, _context))
+            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
             {
-                ViewBag.staffId = id;
+                ViewBag.staffId = staffId;
+                ViewBag.VenueId = venueId;
                 return View();
             }
             return Unauthorized();
@@ -121,7 +122,7 @@ namespace Webadmin.Controllers
         // Delete staff details
 
         //GET /Staffs/Delete/ID
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, int venueId)
         {
             if (id == null)
             {
@@ -129,13 +130,13 @@ namespace Webadmin.Controllers
             }
             if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, id.Value, _context))
             {
+                ViewBag.VenueId = venueId;
                 var staff = await _context.Staff
                 .FirstOrDefaultAsync(m => m.StaffId == id);
                 if (staff == null)
                 {
                     return NotFound();
                 }
-
                 return View(staff);
             }
             return Unauthorized();

@@ -2,45 +2,46 @@
 
 @{
     ViewData["Title"] = "Create";
-    int venuesId = ViewBag.venueId;
+    int VenueId = ViewBag.venueId;
 }
-
-<h1>Create</h1>
-
-<h4>Staff</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="StaffName" class="control-label">Staff Name</label>
-                <input asp-for="StaffName" class="form-control" />
-                <span asp-validation-for="StaffName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StaffContactNum" class="control-label">Contact Number</label>
-                <input asp-for="StaffContactNum" class="form-control" />
-                <span asp-validation-for="StaffContactNum" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StaffPosition" class="control-label">Position</label>
-                <input asp-for="StaffPosition" class="form-control" />
-                <span asp-validation-for="StaffPosition" class="text-danger"></span>
-            </div>
-            <div class=" form-group">
-                <input value="@venuesId" name="venueId" type="hidden">
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="borderBody">
+    <div class="titleMargin">
+        <h1>Create</h1>
+        <div class="shareLine">
+            <h4>Staff</h4>
+            <a asp-action="Index" asp-route-venueId="@VenueId" class="btn bntSmall">Back</a>
+        </div>
+        <hr />
     </div>
-</div>
+    <div class="row" style="margin-left:100px">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="StaffName" class="control-label">Staff Name</label>
+                    <input asp-for="StaffName" class="form-control" />
+                    <span asp-validation-for="StaffName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StaffContactNum" class="control-label">Contact Number</label>
+                    <input asp-for="StaffContactNum" class="form-control" />
+                    <span asp-validation-for="StaffContactNum" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StaffPosition" class="control-label">Position</label>
+                    <input asp-for="StaffPosition" class="form-control" />
+                    <span asp-validation-for="StaffPosition" class="text-danger"></span>
+                </div>
+                <div class=" form-group">
+                    <input value="@VenueId" name="venueId" type="hidden">
+                </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn bntSmall" />
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
