@@ -106,7 +106,7 @@ namespace Webadmin.Views
             {
                 return NotFound();
             }
-
+            ViewBag.adminId = id;
             var admins = await _context.Admins.FindAsync(id);
             if (admins == null)
             {
