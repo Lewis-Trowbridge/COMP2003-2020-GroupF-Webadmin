@@ -2,36 +2,43 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Login</h1>
+<div class="borderBody">
+    <div class="titleMargin">
+        <h1>Login</h1>
+        <div class="shareLine">
+            <h4>Admin</h4>
+            <a asp-controller="Home" asp-action="Index" class="btn bntSmall">Back</a>
+        </div>
+        <hr />
+    </div>
 
-<h4>Admin</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="LoginAdmin">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label for="admin-id" class="control-label">Admin Id</label>
-                <input id="admin-id" name="adminId" class="form-control" />
-                <span class="text-danger"></span>
-            </div>
+    <div class="row" style="margin-left:100px">
+        <div class="col-md-4">
+            <form asp-action="LoginAdmin">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label for="admin-id" class="control-label"><b>Admin ID:</b></label>
+                    <input id="admin-id" name="adminId" class="form-control" />
+                    <span class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-primary" />
-            </div>
-        </form>
-        <br /><hr /><br />
-        <form asp-action="LoginStaff">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label for="staff-id" class="control-label">Staff Id</label>
-                <input id="staff-id" name="staffId" class="form-control" />
-                <span class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <input type="submit" value="Login" class="btn bntSmall" />
+                </div>
+            </form>
+            <br /><hr /><br />
+            <form asp-action="LoginStaff">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label for="staff-id" class="control-label"><b>Staff ID:</b></label>
+                    <input id="staff-id" name="staffId" class="form-control" />
+                    <span class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="form-group">
+                    <input type="submit" value="Login" class="btn bntSmall" />
+                </div>
+            </form>
+        </div>
     </div>
 </div>
