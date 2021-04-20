@@ -10,6 +10,10 @@
 
 This repository contains the code for our CleanTable administration web application (Webadmin for short) intended to be used by the owners of venues in order to register and manage their venues in the CleanTable system.
 
+## Attributions
+
+- [CsvHelper](https://joshclose.github.io/CsvHelper/)
+
 ## Team  
 
 ### Product owners
