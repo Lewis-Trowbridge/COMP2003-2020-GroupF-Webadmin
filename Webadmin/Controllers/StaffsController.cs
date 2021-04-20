@@ -97,11 +97,12 @@ namespace Webadmin.Controllers
         // Edit staff details
 
         // GET /Staffs/
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int staffId, int venueId)
         {
-            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, id, _context))
+            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
             {
-                ViewBag.staffId = id;
+                ViewBag.staffId = staffId;
+                ViewBag.VenueId = venueId;
                 return View();
             }
             return Unauthorized();

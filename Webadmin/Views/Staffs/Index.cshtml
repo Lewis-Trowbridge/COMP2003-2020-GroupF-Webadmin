@@ -9,7 +9,7 @@
     <h1>Index</h1>
     <div>
         <a asp-action="Create" asp-route-id="@VenueId" class="btn bntMedium">Create New</a>
-        <a asp-action="Index" asp-route-id="@VenueId" class="btn bntMedium">Back </a>
+        <a asp-controller="Venues" asp-action="Details" asp-route-id="@VenueId" class="btn bntMedium">Back </a>
     </div>
 </div>
 <table class="table">
@@ -41,7 +41,7 @@
                     @Html.DisplayFor(modelItem => item.StaffPosition)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.StaffId" class="btn bntMedium">Edit</a>
+                    <a asp-action="Edit" asp-route-staffId="@item.StaffId" asp-route-venueId="@VenueId" class="btn bntMedium">Edit</a>
                     <a asp-action="Delete" asp-route-id="@item.StaffId" class="btn bntMedium">Delete</a>
                 </td>
             </tr>
