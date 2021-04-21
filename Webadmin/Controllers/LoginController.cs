@@ -1,24 +1,46 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Webadmin.Models;
+using Webadmin.Requests;
+using BCrypt.Net;
 
 namespace Webadmin.Controllers
 {
     public class LoginController : Controller
     {
+        private readonly COMP2003_FContext _context;
+
+        public LoginController(COMP2003_FContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult LoginAdmin(int adminId)
+        public async Task<IActionResult> LoginAdmin(LoginRequest request)
         {
-            HttpContext.Session.SetInt32(WebadminHelper.AdminIdKey, adminId);
-            return RedirectToAction("Index", "Venues");
+            Admins storedAdmin = await _context.Admins
+                .Where(admin => admin.AdminUsername.Equals(request.Username))
+                .SingleAsync();
+            if (BCrypt.Net.BCrypt.Verify(request.Password, storedAdmin.AdminPassword)) 
+            {
+                HttpContext.Session.SetInt32(WebadminHelper.AdminIdKey, storedAdmin.AdminId);
+                return RedirectToAction("Index", "Venues");
+            }
+            else
+            {
+                ModelState.AddModelError("Password", "Password is incorrect.");
+                return View("Index");
+            }
         }
 
         public IActionResult LoginStaff(int staffId)

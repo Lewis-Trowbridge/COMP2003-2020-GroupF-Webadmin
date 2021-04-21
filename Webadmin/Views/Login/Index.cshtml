@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Webadmin.Requests.LoginRequest;
+
+@{
     ViewData["Title"] = "Index";
 }
 
@@ -17,9 +19,14 @@
             <form asp-action="LoginAdmin">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
-                    <label for="admin-id" class="control-label"><b>Admin ID:</b></label>
-                    <input id="admin-id" name="adminId" class="form-control" />
-                    <span class="text-danger"></span>
+                    <label asp-for="Username" class="control-label"><b>Username</b></label>
+                    <input asp-for="Username" class="form-control" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"><b>Password</b></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
@@ -42,3 +49,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
