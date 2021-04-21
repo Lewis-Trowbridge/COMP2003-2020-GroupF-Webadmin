@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Webadmin.Controllers;
 using Webadmin.Models;
+using BCrypt.Net;
 
 namespace Webadmin.Views
 {
@@ -56,48 +58,27 @@ namespace Webadmin.Views
        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string adminUsername, string adminPassword, int adminLevel, string adminSalt)
+        public async Task<IActionResult> Create(string adminUsername, string adminPassword)
         {
-            string salt = CreateSalt(10);
-            string hashedpassword = GenerateHash(adminPassword, salt);
-            adminPassword = hashedpassword;
-            adminSalt = salt;
+            // Hash password using BCrypt using OWASP's recommended work factor of 12
 
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(adminPassword, workFactor: 12);
 
-            SqlParameter[] parameters = new SqlParameter[4];
-
-            parameters[0] = new SqlParameter(" @admin_username", adminUsername);
-            parameters[1] = new SqlParameter(" @admin_password", adminPassword);
-            parameters[2] = new SqlParameter(" @admin_level", adminLevel);
-            parameters[3] = new SqlParameter(" @admin_salt", adminSalt);
-
-            // Executes the stored procedure
-            await _context.Database.ExecuteSqlRawAsync("EXEC add_admin @admin_username, @admin_password, @admin_level, @admin_salt", parameters);
-
-            return RedirectToAction(nameof(Index));
+            string response = await CallCreateAdminSP(adminUsername, hashedPassword);
+            if (response.Substring(0, 3) == "200")
+            {
+                // Get new ID
+                int newId = Convert.ToInt32(response.Substring(3));
+                // Log new user in
+                HttpContext.Session.SetInt32(WebadminHelper.AdminIdKey, newId);
+                // Redirect to details page
+                return RedirectToAction(nameof(Details), new { Id = newId });
+            }
+            else
+            {
+                return View();
+            }
         }
-
-        private string GenerateHash(object input, string salt)
-        {
-            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(input + salt);
-
-            System.Security.Cryptography.SHA256Managed hashString = new System.Security.Cryptography.SHA256Managed();
-            byte[] hash = hashString.ComputeHash(bytes);
-            return Convert.ToBase64String(hash);
-        }
-
-        private string CreateSalt(int size)
-        {
-            var rng = new System.Security.Cryptography.RNGCryptoServiceProvider();
-            var buff = new byte[size];
-            rng.GetBytes(buff);
-
-            return Convert.ToBase64String(buff);
-        }
-
-
-
-
 
         // GET: Admins/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -182,6 +163,25 @@ namespace Webadmin.Views
         private bool AdminsExists(int id)
         {
             return _context.Admins.Any(e => e.AdminId == id);
+        }
+
+        private async Task<string> CallCreateAdminSP(string adminUsername, string adminPassword)
+        {
+            SqlParameter[] parameters = new SqlParameter[3];
+
+            parameters[0] = new SqlParameter("@admin_username", adminUsername);
+            parameters[1] = new SqlParameter("@admin_password", adminPassword);
+            parameters[2] = new SqlParameter
+            {
+                ParameterName = "@response",
+                Direction = System.Data.ParameterDirection.Output,
+                Size = 100
+            };
+
+            // Executes the stored procedure
+            await _context.Database.ExecuteSqlRawAsync("EXEC add_admin @admin_username, @admin_password, @response OUTPUT", parameters);
+
+            return (string)parameters[2].Value;
         }
     }
 }
