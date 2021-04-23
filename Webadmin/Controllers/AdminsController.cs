@@ -9,6 +9,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Webadmin.Controllers;
 using Webadmin.Models;
+using Webadmin.Requests;
 using BCrypt.Net;
 
 namespace Webadmin.Views
@@ -88,9 +89,14 @@ namespace Webadmin.Views
                 return NotFound();
             }
             ViewBag.adminId = id;
-            var admins = await _context.Admins.FindAsync(id);
-            // Remove password to avoid sending it to the view
-            admins.AdminPassword = null;
+            var admins = await _context.Admins
+                .Where(admin => admin.AdminId.Equals(id))
+                .Select(admin => new EditAdminRequest
+                {
+                    AdminUsername = admin.AdminUsername
+                }
+                )
+                .SingleAsync();
             if (admins == null)
             {
                 return NotFound();
@@ -103,34 +109,25 @@ namespace Webadmin.Views
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AdminId,AdminUsername,AdminPassword,AdminLevel")] Admins admins)
+        public async Task<IActionResult> Edit(int id, EditAdminRequest admin)
         {
-            if (id != admins.AdminId)
+            if (admin.AdminPassword != null)
             {
-                return NotFound();
+                // Hash password using BCrypt using OWASP's recommended work factor of 12
+                admin.AdminPassword = BCrypt.Net.BCrypt.HashPassword(admin.AdminPassword, workFactor: 12);
             }
 
-            if (ModelState.IsValid)
+            string response = await CallEditAdminSP(id, admin.AdminUsername, admin.AdminPassword);
+            switch (response.Substring(0, 3))
             {
-                try
-                {
-                    _context.Update(admins);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AdminsExists(admins.AdminId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                case "200":
+                    return RedirectToAction(nameof(Details), new { Id = id });
+                case "404":
+                    return NotFound();
+                default:
+                    return StatusCode(500);
             }
-            return View(admins);
+            
         }
 
         // GET: Admins/Delete/5
@@ -184,6 +181,38 @@ namespace Webadmin.Views
             await _context.Database.ExecuteSqlRawAsync("EXEC add_admin @admin_username, @admin_password, @response OUTPUT", parameters);
 
             return (string)parameters[2].Value;
+        }
+
+        private async Task<string> CallEditAdminSP(int adminId, string adminUsername, string adminPassword)
+        {
+            SqlParameter[] parameters = new SqlParameter[4];
+
+            parameters[0] = new SqlParameter("@admin_id", adminId);
+            parameters[1] = CheckIfNull("@admin_username", adminUsername);
+            parameters[2] = CheckIfNull("@admin_password", adminPassword);
+            parameters[3] = new SqlParameter
+            {
+                ParameterName = "@response",
+                Direction = System.Data.ParameterDirection.Output,
+                Size = 100
+            };
+
+            // Executes the stored procedure
+            await _context.Database.ExecuteSqlRawAsync("EXEC edit_admin @admin_id, @admin_username, @admin_password, @response OUTPUT", parameters);
+
+            return (string)parameters[3].Value;
+        }
+
+        private SqlParameter CheckIfNull(string parameterName, string stringToCheck)
+        {
+            if (stringToCheck != null)
+            {
+                return new SqlParameter(parameterName, stringToCheck);
+            }
+            else
+            {
+                return new SqlParameter(parameterName, DBNull.Value);
+            }
         }
     }
 }
