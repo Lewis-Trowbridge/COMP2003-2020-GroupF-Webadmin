@@ -89,6 +89,8 @@ namespace Webadmin.Views
             }
             ViewBag.adminId = id;
             var admins = await _context.Admins.FindAsync(id);
+            // Remove password to avoid sending it to the view
+            admins.AdminPassword = null;
             if (admins == null)
             {
                 return NotFound();
