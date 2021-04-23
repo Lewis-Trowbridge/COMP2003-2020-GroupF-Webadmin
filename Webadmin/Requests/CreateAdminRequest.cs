@@ -8,10 +8,10 @@ namespace Webadmin.Requests
 {
     public class CreateAdminRequest
     {
-        [Required]
+        [Required(AllowEmptyStrings = false)]
         [StringLength(50)]
         public string AdminUsername { get; set; }
-        [Required]
+        [Required(AllowEmptyStrings = false)]
         public string AdminPassword { get; set; }
     }
 }

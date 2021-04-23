@@ -61,6 +61,11 @@ namespace Webadmin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateAdminRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             // Hash password using BCrypt using OWASP's recommended work factor of 12
 
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.AdminPassword, workFactor: 12);

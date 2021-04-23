@@ -1,4 +1,4 @@
-﻿@model Webadmin.Models.Admins
+﻿@model Webadmin.Requests.CreateAdminRequest;
 
 @{
     ViewData["Title"] = "Create";
@@ -33,3 +33,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
