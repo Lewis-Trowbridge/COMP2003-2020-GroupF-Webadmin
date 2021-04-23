@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Webadmin.Models;
 using Webadmin.Controllers;
 using Webadmin.Tests.Helpers;
@@ -44,8 +45,30 @@ namespace Webadmin.Tests.Controllers
             Assert.Equal(testAdmin.AdminUsername, realAdmin.AdminUsername);
             // Test that password has been correctly hashed
             Assert.True(BCrypt.Net.BCrypt.Verify(testAdmin.AdminPassword, realAdmin.AdminPassword));
-            
+
 
         }
+
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("uj34s1V7DrUF0gjmKQh0yjysx89LEHPgBOWTD5cuRmPtLGJS1q4thSWZgoNsNJQuIFrCPjCrOdYkcHYJ", "no length limit because of hashing")]
+        public async void Create_WithInvalidInputs_Fails(string username, string password)
+        {
+            // Arrange
+            Admins testAdmin = new Admins
+            {
+                AdminUsername = username,
+                AdminPassword = password
+            };
+            CreateAdminRequest testRequest = AdminsControllerTestHelper.GetCreateAdminRequest(testAdmin);
+            controller.ModelState.AddModelError("invalid parameters", "Invalid parameters supplied.");
+
+            // Act
+            var actionResult = await controller.Create(testRequest);
+
+            // Assert
+            Assert.DoesNotContain(testAdmin, dbContext.Admins);
+        }
+
     }
 }
