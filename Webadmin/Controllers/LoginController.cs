@@ -46,7 +46,7 @@ namespace Webadmin.Controllers
             }
             catch (InvalidOperationException)
             {
-                ModelState.AddModelError("Username", "User not found.");
+                ModelState.AddModelError("Username", "Account not found.");
                 return View(nameof(Index));
             }
         }
