@@ -28,18 +28,26 @@ namespace Webadmin.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginAdmin(LoginRequest request)
         {
-            Admins storedAdmin = await _context.Admins
+            try
+            {
+                Admins storedAdmin = await _context.Admins
                 .Where(admin => admin.AdminUsername.Equals(request.Username))
                 .SingleAsync();
-            if (BCrypt.Net.BCrypt.Verify(request.Password, storedAdmin.AdminPassword)) 
-            {
-                HttpContext.Session.SetInt32(WebadminHelper.AdminIdKey, storedAdmin.AdminId);
-                return RedirectToAction("Index", "Venues");
+                if (BCrypt.Net.BCrypt.Verify(request.Password, storedAdmin.AdminPassword))
+                {
+                    HttpContext.Session.SetInt32(WebadminHelper.AdminIdKey, storedAdmin.AdminId);
+                    return RedirectToAction("Index", "Venues");
+                }
+                else
+                {
+                    ModelState.AddModelError("Password", "Password is incorrect.");
+                    return View(nameof(Index));
+                }
             }
-            else
+            catch (InvalidOperationException)
             {
-                ModelState.AddModelError("Password", "Password is incorrect.");
-                return View("Index");
+                ModelState.AddModelError("Username", "User not found.");
+                return View(nameof(Index));
             }
         }
 
