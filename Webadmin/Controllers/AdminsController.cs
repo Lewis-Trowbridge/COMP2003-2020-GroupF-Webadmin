@@ -12,7 +12,7 @@ using Webadmin.Models;
 using Webadmin.Requests;
 using BCrypt.Net;
 
-namespace Webadmin.Views
+namespace Webadmin.Controllers
 {
     public class AdminsController : Controller
     {
