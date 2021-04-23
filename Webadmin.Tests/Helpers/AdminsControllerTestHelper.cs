@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 using Webadmin.Models;
+using Webadmin.Requests;
 
 namespace Webadmin.Tests.Helpers
 {
     class AdminsControllerTestHelper
     {
-        public static Admins GetTestAdmin(int id)
+        public static CreateAdminRequest GetCreateAdminRequest(Admins admin)
         {
-            Admins admin = new Admins
+            CreateAdminRequest request = new CreateAdminRequest
             {
-                AdminId = id,
-                AdminUsername = "testadmin01",
-                AdminPassword = "testpassword"
+                AdminUsername = admin.AdminUsername,
+                AdminPassword = admin.AdminPassword
             };
-            return admin;
+            return request;
         }
     }
 }

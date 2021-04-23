@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Webadmin.Models;
 using Webadmin.Controllers;
 using Webadmin.Tests.Helpers;
+using Webadmin.Requests;
 using BCrypt;
 using HttpContextSubs;
 using Xunit;
@@ -30,10 +31,11 @@ namespace Webadmin.Tests.Controllers
         {
             // Arrange
             using var transaction = await dbContext.Database.BeginTransactionAsync();
-            Admins testAdmin = AdminsControllerTestHelper.GetTestAdmin(0);
+            Admins testAdmin = WebadminTestHelper.GetTestAdmin(0);
+            CreateAdminRequest testRequest = AdminsControllerTestHelper.GetCreateAdminRequest(testAdmin);
 
             // Act
-            var actionResult = await controller.Create(testAdmin.AdminUsername, testAdmin.AdminPassword);
+            var actionResult = await controller.Create(testRequest);
             Admins realAdmin = await dbContext.Admins
                 .Where(admin => admin.AdminUsername.Equals(testAdmin.AdminUsername))
                 .SingleAsync();

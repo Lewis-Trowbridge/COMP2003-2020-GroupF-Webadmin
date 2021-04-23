@@ -12,5 +12,16 @@ namespace Webadmin.Tests.Helpers
             var dbContext = new COMP2003_FContext();
             return dbContext;
         }
+
+        public static Admins GetTestAdmin(int id)
+        {
+            Admins admin = new Admins
+            {
+                AdminId = id,
+                AdminUsername = "testadmin01",
+                AdminPassword = "testpassword"
+            };
+            return admin;
+        }
     }
 }

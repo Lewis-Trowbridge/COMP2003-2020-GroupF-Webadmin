@@ -59,13 +59,13 @@ namespace Webadmin.Controllers
        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string adminUsername, string adminPassword)
+        public async Task<IActionResult> Create(CreateAdminRequest request)
         {
             // Hash password using BCrypt using OWASP's recommended work factor of 12
 
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(adminPassword, workFactor: 12);
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.AdminPassword, workFactor: 12);
 
-            string response = await CallCreateAdminSP(adminUsername, hashedPassword);
+            string response = await CallCreateAdminSP(request.AdminUsername, hashedPassword);
             if (response.Substring(0, 3) == "200")
             {
                 // Get new ID
