@@ -14,12 +14,10 @@ namespace Webadmin.Controllers
     public class BookingsController : Controller
     {
         private readonly COMP2003_FContext _context;
-        private readonly IConfiguration _configuration;
 
-        public BookingsController(COMP2003_FContext context, IConfiguration configuration)
+        public BookingsController(COMP2003_FContext context)
         {
             _context = context;
-            _configuration = configuration;
         }
 
         // GET: Bookings
