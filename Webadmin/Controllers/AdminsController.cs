@@ -179,6 +179,19 @@ namespace Webadmin.Views
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> GetAttendees (string start_time)
+        {
+            CallGetAttendeesSP(start_time);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public static Customers[] CallGetAttendeesSP (string start_time)
+        {
+            SqlParameter[] parameters = new SqlParameter[1];
+            parameters[0] = new SqlParameter("@time_start", start_time);
+            _context.Database.ExecuteSqlRaw("EXEC get_attendees @time_start", parameters);
+        }
+
         private bool AdminsExists(int id)
         {
             return _context.Admins.Any(e => e.AdminId == id);
