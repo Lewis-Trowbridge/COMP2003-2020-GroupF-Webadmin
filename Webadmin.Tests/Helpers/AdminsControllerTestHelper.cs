@@ -17,5 +17,15 @@ namespace Webadmin.Tests.Helpers
             };
             return request;
         }
+
+        public static EditAdminRequest GetEditAdminRequest(Admins admin)
+        {
+            EditAdminRequest request = new EditAdminRequest
+            {
+                AdminUsername = admin.AdminUsername + "edit",
+                AdminPassword = "Edited password"
+            };
+            return request;
+        }
     }
 }

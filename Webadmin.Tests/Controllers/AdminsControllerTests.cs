@@ -74,5 +74,38 @@ namespace Webadmin.Tests.Controllers
             Assert.False(await dbContext.Admins.AnyAsync(admin => admin.AdminUsername.Equals(username)));
         }
 
+        [Fact]
+        public async void Edit_WithValidInputs_EditsSuccessfully()
+        {
+            // Arrange
+            using var transaction = await dbContext.Database.BeginTransactionAsync();
+            Admins testAdmin = WebadminTestHelper.GetTestAdmin(0);
+            EditAdminRequest testRequest = AdminsControllerTestHelper.GetEditAdminRequest(testAdmin);
+            await dbContext.Admins.AddAsync(testAdmin);
+            await dbContext.SaveChangesAsync();
+
+            // Act
+            var actionResult = await controller.Edit(testAdmin.AdminId, testRequest);
+
+            // Assert
+            Assert.IsType<RedirectToActionResult>(actionResult);
+        }
+
+        [Fact]
+        public async void Edit_NonexistentAdmin_Fails()
+        {
+            // Arrange
+            using var transaction = await dbContext.Database.BeginTransactionAsync();
+            Admins testAdmin = WebadminTestHelper.GetTestAdmin(0);
+            EditAdminRequest testRequest = AdminsControllerTestHelper.GetEditAdminRequest(testAdmin);
+            await dbContext.Admins.AddAsync(testAdmin);
+            await dbContext.SaveChangesAsync();
+
+            // Act
+            var actionResult = await controller.Edit(testAdmin.AdminId + 1, testRequest);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(actionResult);
+        }
     }
 }
