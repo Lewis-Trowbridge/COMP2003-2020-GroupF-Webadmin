@@ -13,6 +13,7 @@ This repository contains the code for our CleanTable administration web applicat
 ## Attributions
 
 - [CsvHelper](https://joshclose.github.io/CsvHelper/)
+- [BCrypt.Net-Next](https://www.nuget.org/packages/BCrypt.Net-Next/)
 - [Xunit](https://github.com/xunit/xunit)
 - [HttpContextStubs](https://github.com/andrecarlucci/HttpContextStubs)
 
