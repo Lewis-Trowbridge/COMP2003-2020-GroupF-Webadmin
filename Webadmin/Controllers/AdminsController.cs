@@ -78,7 +78,7 @@ namespace Webadmin.Controllers
                 // Log new user in
                 HttpContext.Session.SetInt32(WebadminHelper.AdminIdKey, newId);
                 // Redirect to details page
-                return RedirectToAction(nameof(Details), new { Id = newId });
+                return CreatedAtAction(nameof(Details), new { Id = newId });
             }
             else
             {

@@ -4,6 +4,7 @@ using System.Text;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc;
 using Webadmin.Models;
 using Webadmin.Controllers;
 using Webadmin.Tests.Helpers;
@@ -42,6 +43,7 @@ namespace Webadmin.Tests.Controllers
                 .SingleAsync();
 
             // Assert
+            Assert.IsType<CreatedAtActionResult>(actionResult);
             Assert.Equal(testAdmin.AdminUsername, realAdmin.AdminUsername);
             // Test that password has been correctly hashed
             Assert.True(BCrypt.Net.BCrypt.Verify(testAdmin.AdminPassword, realAdmin.AdminPassword));
@@ -66,8 +68,10 @@ namespace Webadmin.Tests.Controllers
             // Act
             var actionResult = await controller.Create(testRequest);
 
+
             // Assert
-            Assert.DoesNotContain(testAdmin, dbContext.Admins);
+            Assert.IsType<BadRequestResult>(actionResult);
+            Assert.False(await dbContext.Admins.AnyAsync(admin => admin.AdminUsername.Equals(username)));
         }
 
     }
