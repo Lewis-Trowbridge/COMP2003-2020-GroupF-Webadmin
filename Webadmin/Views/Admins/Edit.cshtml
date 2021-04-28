@@ -1,8 +1,8 @@
-﻿@model Webadmin.Models.Admins
+﻿@model Webadmin.Requests.EditAdminRequest
 
 @{
     ViewData["Title"] = "Edit";
-    int AdminId = ViewBag.adminId;
+    int adminId = ViewBag.adminId;
 }
 <div class="borderBody">
     <br />
@@ -10,7 +10,7 @@
         <h1>Edit</h1>
         <div class="shareLine">
             <h4>Admins</h4>
-            <a asp-action="Details" asp-route-id="@Model.AdminId" class="btn bntSmall">Back</a>
+            <a asp-action="Details" asp-route-id="@adminId" class="btn bntSmall">Back</a>
         </div>
         <hr />
     </div>
@@ -18,7 +18,6 @@
         <div class="col-md-4">
             <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="AdminId" />
                 <div class="form-group">
                     <label asp-for="AdminUsername" class="control-label"></label>
                     <input asp-for="AdminUsername" class="form-control" />
@@ -30,7 +29,7 @@
                     <span asp-validation-for="AdminPassword" class="text-danger"></span>
                 </div>
                 <div>
-                    <input value="@AdminId" name="adminId" type="hidden" />
+                    <input value="@adminId" name="adminId" type="hidden" />
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn bntSmall" />
@@ -40,4 +39,8 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
 

@@ -4,12 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Webadmin.Controllers;
 using Webadmin.Models;
+using Webadmin.Requests;
+using BCrypt.Net;
 
-namespace Webadmin.Views
+namespace Webadmin.Controllers
 {
     public class AdminsController : Controller
     {
@@ -56,48 +59,32 @@ namespace Webadmin.Views
        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string adminUsername, string adminPassword, int adminLevel, string adminSalt)
+        public async Task<IActionResult> Create(CreateAdminRequest request)
         {
-            string salt = CreateSalt(10);
-            string hashedpassword = GenerateHash(adminPassword, salt);
-            adminPassword = hashedpassword;
-            adminSalt = salt;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
+            // Hash password using BCrypt using OWASP's recommended work factor of 12
 
-            SqlParameter[] parameters = new SqlParameter[4];
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.AdminPassword, workFactor: 12);
 
-            parameters[0] = new SqlParameter(" @admin_username", adminUsername);
-            parameters[1] = new SqlParameter(" @admin_password", adminPassword);
-            parameters[2] = new SqlParameter(" @admin_level", adminLevel);
-            parameters[3] = new SqlParameter(" @admin_salt", adminSalt);
-
-            // Executes the stored procedure
-            await _context.Database.ExecuteSqlRawAsync("EXEC add_admin @admin_username, @admin_password, @admin_level, @admin_salt", parameters);
-
-            return RedirectToAction(nameof(Index));
+            string response = await CallCreateAdminSP(request.AdminUsername, hashedPassword);
+            if (response.Substring(0, 3) == "200")
+            {
+                // Get new ID
+                int newId = Convert.ToInt32(response.Substring(3));
+                // Log new user in
+                HttpContext.Session.SetInt32(WebadminHelper.AdminIdKey, newId);
+                // Redirect to details page
+                return CreatedAtAction(nameof(Details), new { Id = newId });
+            }
+            else
+            {
+                return View();
+            }
         }
-
-        private string GenerateHash(object input, string salt)
-        {
-            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(input + salt);
-
-            System.Security.Cryptography.SHA256Managed hashString = new System.Security.Cryptography.SHA256Managed();
-            byte[] hash = hashString.ComputeHash(bytes);
-            return Convert.ToBase64String(hash);
-        }
-
-        private string CreateSalt(int size)
-        {
-            var rng = new System.Security.Cryptography.RNGCryptoServiceProvider();
-            var buff = new byte[size];
-            rng.GetBytes(buff);
-
-            return Convert.ToBase64String(buff);
-        }
-
-
-
-
 
         // GET: Admins/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -107,7 +94,14 @@ namespace Webadmin.Views
                 return NotFound();
             }
             ViewBag.adminId = id;
-            var admins = await _context.Admins.FindAsync(id);
+            var admins = await _context.Admins
+                .Where(admin => admin.AdminId.Equals(id))
+                .Select(admin => new EditAdminRequest
+                {
+                    AdminUsername = admin.AdminUsername
+                }
+                )
+                .SingleAsync();
             if (admins == null)
             {
                 return NotFound();
@@ -120,34 +114,25 @@ namespace Webadmin.Views
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AdminId,AdminUsername,AdminPassword,AdminLevel")] Admins admins)
+        public async Task<IActionResult> Edit(int id, EditAdminRequest admin)
         {
-            if (id != admins.AdminId)
+            if (admin.AdminPassword != null)
             {
-                return NotFound();
+                // Hash password using BCrypt using OWASP's recommended work factor of 12
+                admin.AdminPassword = BCrypt.Net.BCrypt.HashPassword(admin.AdminPassword, workFactor: 12);
             }
 
-            if (ModelState.IsValid)
+            string response = await CallEditAdminSP(id, admin.AdminUsername, admin.AdminPassword);
+            switch (response.Substring(0, 3))
             {
-                try
-                {
-                    _context.Update(admins);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AdminsExists(admins.AdminId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                case "200":
+                    return RedirectToAction(nameof(Details), new { Id = id });
+                case "404":
+                    return NotFound();
+                default:
+                    return StatusCode(500);
             }
-            return View(admins);
+            
         }
 
         // GET: Admins/Delete/5
@@ -182,6 +167,57 @@ namespace Webadmin.Views
         private bool AdminsExists(int id)
         {
             return _context.Admins.Any(e => e.AdminId == id);
+        }
+
+        private async Task<string> CallCreateAdminSP(string adminUsername, string adminPassword)
+        {
+            SqlParameter[] parameters = new SqlParameter[3];
+
+            parameters[0] = new SqlParameter("@admin_username", adminUsername);
+            parameters[1] = new SqlParameter("@admin_password", adminPassword);
+            parameters[2] = new SqlParameter
+            {
+                ParameterName = "@response",
+                Direction = System.Data.ParameterDirection.Output,
+                Size = 100
+            };
+
+            // Executes the stored procedure
+            await _context.Database.ExecuteSqlRawAsync("EXEC add_admin @admin_username, @admin_password, @response OUTPUT", parameters);
+
+            return (string)parameters[2].Value;
+        }
+
+        private async Task<string> CallEditAdminSP(int adminId, string adminUsername, string adminPassword)
+        {
+            SqlParameter[] parameters = new SqlParameter[4];
+
+            parameters[0] = new SqlParameter("@admin_id", adminId);
+            parameters[1] = CheckIfNull("@admin_username", adminUsername);
+            parameters[2] = CheckIfNull("@admin_password", adminPassword);
+            parameters[3] = new SqlParameter
+            {
+                ParameterName = "@response",
+                Direction = System.Data.ParameterDirection.Output,
+                Size = 100
+            };
+
+            // Executes the stored procedure
+            await _context.Database.ExecuteSqlRawAsync("EXEC edit_admin @admin_id, @admin_username, @admin_password, @response OUTPUT", parameters);
+
+            return (string)parameters[3].Value;
+        }
+
+        private SqlParameter CheckIfNull(string parameterName, string stringToCheck)
+        {
+            if (stringToCheck != null)
+            {
+                return new SqlParameter(parameterName, stringToCheck);
+            }
+            else
+            {
+                return new SqlParameter(parameterName, DBNull.Value);
+            }
         }
     }
 }

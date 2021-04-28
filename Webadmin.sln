@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webadmin", "Webadmin\Webadmin.csproj", "{C690AFAC-6E56-4354-BF4E-E7F7F2345F47}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webadmin.Tests", "Webadmin.Tests\Webadmin.Tests.csproj", "{F2FED5CB-3DF5-4219-8BA5-D71F690C5A48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C690AFAC-6E56-4354-BF4E-E7F7F2345F47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C690AFAC-6E56-4354-BF4E-E7F7F2345F47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C690AFAC-6E56-4354-BF4E-E7F7F2345F47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2FED5CB-3DF5-4219-8BA5-D71F690C5A48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2FED5CB-3DF5-4219-8BA5-D71F690C5A48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2FED5CB-3DF5-4219-8BA5-D71F690C5A48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2FED5CB-3DF5-4219-8BA5-D71F690C5A48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

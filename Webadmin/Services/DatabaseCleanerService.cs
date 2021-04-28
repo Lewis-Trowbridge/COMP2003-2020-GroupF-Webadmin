@@ -34,6 +34,7 @@ namespace Webadmin.Services
             using (var scope = scopeFactory.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<COMP2003_FContext>();
+                
                 await dbContext.Database.ExecuteSqlRawAsync("EXEC delete_old_bookings");
             }
         }
