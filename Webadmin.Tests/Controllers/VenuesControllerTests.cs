@@ -54,5 +54,29 @@ namespace Webadmin.Tests.Controllers
 
         }
 
+        [Fact]
+        public async void Edit_WithValidInputs_EditsSuccessfully()
+        {
+            // Arrange
+            using var transaction = await dbContext.Database.BeginTransactionAsync();
+            Admins testAdmin = WebadminTestHelper.GetTestAdmin(0);
+            Venues testVenue = WebadminTestHelper.GetTestVenue(0);
+            AdminLocations testLocation = WebadminTestHelper.GetTestAdminLocation(testVenue, testAdmin);
+            await dbContext.AddAsync(testAdmin);
+            await dbContext.AddAsync(testVenue);
+            await dbContext.AddAsync(testLocation);
+            await dbContext.SaveChangesAsync();
+            controller.ControllerContext.HttpContext.Session.SetInt32(WebadminHelper.AdminIdKey, testAdmin.AdminId);
+
+            EditVenueRequest testRequest = VenuesControllerTestHelper.GetEditVenueRequest(testVenue);
+
+            // Act
+            var actionResult = await controller.Edit(testRequest);
+
+            // Assert
+            Assert.IsType<RedirectToActionResult>(actionResult);
+
+        }
+
     }
 }

@@ -20,5 +20,19 @@ namespace Webadmin.Tests.Helpers
                 VenuePostcode = "PL4 8AA"
             };
         }
+
+        public static EditVenueRequest GetEditVenueRequest(Venues venue)
+        {
+            return new EditVenueRequest
+            {
+                VenueId = venue.VenueId,
+                VenueName = venue.VenueName + "ed",
+                VenueAddLineOne = venue.AddLineOne + "ed",
+                VenueAddLineTwo = venue.AddLineTwo + "ed",
+                VenueCity = venue.City + "ed",
+                VenueCounty = venue.County + "ed",
+                VenuePostcode = "ed"
+            };
+        }
     }
 }
