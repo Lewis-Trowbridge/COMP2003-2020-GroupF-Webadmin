@@ -71,10 +71,10 @@ namespace Webadmin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string venueName, string venuePostcode, string addLineOne, string addLineTwo, string city, string county, int adminId)
+        public async Task<IActionResult> Create(CreateVenueRequest request)
         {
-            adminId = WebadminHelper.GetAdminId(HttpContext.Session).Value;
-            int venueId = await CallAddVenueSP(venueName, addLineOne, addLineTwo, city, county, venuePostcode, adminId);
+            int adminId = WebadminHelper.GetAdminId(HttpContext.Session).Value;
+            int venueId = await CallAddVenueSP(request.VenueName, request.VenueAddLineOne, request.VenueAddLineTwo, request.VenueCity, request.VenueCounty, request.VenuePostcode, adminId);
             return RedirectToAction(nameof(Index), new { id = venueId });
         }
 
