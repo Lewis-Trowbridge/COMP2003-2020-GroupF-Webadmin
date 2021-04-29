@@ -84,7 +84,18 @@ namespace Webadmin.Controllers
             {
                 ViewBag.venueId = id;
                 var venues = await _context.Venues
-                .FirstOrDefaultAsync(m => m.VenueId == id);
+                .Where(venue => venue.VenueId.Equals(id))
+                .Select(venue => new EditVenueRequest
+                {
+                    VenueId = venue.VenueId,
+                    VenueName = venue.VenueName,
+                    VenueAddLineOne = venue.AddLineOne,
+                    VenueAddLineTwo = venue.AddLineTwo,
+                    VenueCity = venue.City,
+                    VenueCounty = venue.County,
+                    VenuePostcode = venue.VenuePostcode
+                })
+                .SingleAsync();
                 if (venues == null)
                 {
                     return NotFound();
@@ -97,11 +108,11 @@ namespace Webadmin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(string venueName, string addLineOne, string addLineTwo, string city, string county, string venuePostcode, int venueId)
+        public IActionResult Edit(EditVenueRequest request)
         {
-            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, request.VenueId, _context))
             {
-                CallEditVenueSP(venueName, addLineOne, addLineTwo, city, county, venuePostcode, venueId);
+                CallEditVenueSP(request.VenueName, request.VenueAddLineOne, request.VenueAddLineTwo, request.VenueCity, request.VenueCounty, request.VenuePostcode, request.VenueId);
             return RedirectToAction(nameof(Index));
             }
 
