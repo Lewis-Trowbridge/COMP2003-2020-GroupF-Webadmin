@@ -108,11 +108,11 @@ namespace Webadmin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(EditVenueRequest request)
+        public async Task<IActionResult> Edit(EditVenueRequest request)
         {
             if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, request.VenueId, _context))
             {
-                CallEditVenueSP(request.VenueName, request.VenueAddLineOne, request.VenueAddLineTwo, request.VenueCity, request.VenueCounty, request.VenuePostcode, request.VenueId);
+                await CallEditVenueSP(request.VenueName, request.VenueAddLineOne, request.VenueAddLineTwo, request.VenueCity, request.VenueCounty, request.VenuePostcode, request.VenueId);
             return RedirectToAction(nameof(Index));
             }
 
@@ -218,7 +218,7 @@ namespace Webadmin.Controllers
             return (int)parameters[7].Value;
         }
 
-        private void CallEditVenueSP(string venueName, string venueAddressLineOne, string venueAddressLineTwo, string venueCity, string venueCounty, string venuePostcode, int venueId)
+        private async Task CallEditVenueSP(string venueName, string venueAddressLineOne, string venueAddressLineTwo, string venueCity, string venueCounty, string venuePostcode, int venueId)
         {
             SqlParameter[] parameters = new SqlParameter[7];
             parameters[0] = new SqlParameter("@venue_name", venueName);
@@ -228,7 +228,7 @@ namespace Webadmin.Controllers
             parameters[4] = new SqlParameter("@city", venueCity);
             parameters[5] = new SqlParameter("@county", venueCounty);
             parameters[6] = new SqlParameter("@venue_id", venueId);
-            _context.Database.ExecuteSqlRaw("EXEC edit_venue @venue_id, @venue_name, @venue_postcode, @add_line_one, @add_line_two, @city, @county", parameters);
+            await _context.Database.ExecuteSqlRawAsync("EXEC edit_venue @venue_id, @venue_name, @venue_postcode, @add_line_one, @add_line_two, @city, @county", parameters);
         }
 
         private void CallDeteteVenueSP(int venueId)
