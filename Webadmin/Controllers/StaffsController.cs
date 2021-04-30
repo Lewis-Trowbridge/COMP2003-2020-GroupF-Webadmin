@@ -94,6 +94,19 @@ namespace Webadmin.Controllers
             return Unauthorized();
         }
 
+        // ClockIn staff 
+        
+        public IActionResult ClockIn(int staffId, int venueId)
+        {
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            {
+                CallClockInSP(venueId);
+                return RedirectToAction(nameof(Index));
+            }
+            return Unauthorized();
+
+        }
+
         // Edit staff details
 
         // GET /Staffs/
@@ -182,6 +195,14 @@ namespace Webadmin.Controllers
             SqlParameter[] parameters = new SqlParameter[1];
             parameters[0] = new SqlParameter("@staff_id", staffId);
             _context.Database.ExecuteSqlRaw("EXEC delete_staff @staff_id", parameters);
+        }
+
+
+        private void CallClockInSP(int staffId)
+        {
+            SqlParameter[] parameters = new SqlParameter[1];
+            parameters[0] = new SqlParameter("@staff_id", staffId);
+            _context.Database.ExecuteSqlRaw("EXEC clock_in_staff @staff_id", parameters);
         }
     }
 }
