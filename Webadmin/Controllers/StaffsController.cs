@@ -43,6 +43,8 @@ namespace Webadmin.Controllers
                 .Where(locationAndStaff => locationAndStaff.Locations.AdminId.Equals(adminId))
                 // Getting the remaining staff
                 .Select(staff => staff.Staff)
+                // Load related shifts
+                .Include(staff => staff.StaffShifts)
                 // Putting it into a list view
                 .ToListAsync());
         }
