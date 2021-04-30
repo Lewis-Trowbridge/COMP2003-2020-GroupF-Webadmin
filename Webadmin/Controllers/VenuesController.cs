@@ -141,11 +141,11 @@ namespace Webadmin.Controllers
             return Unauthorized();
         }
         [HttpPost]
-        public IActionResult Delete(int venueId)
+        public async Task<IActionResult> Delete(int venueId)
         {
             if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
             {
-                CallDeteteVenueSP(venueId);
+                await CallDeteteVenueSP(venueId);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -231,11 +231,11 @@ namespace Webadmin.Controllers
             await _context.Database.ExecuteSqlRawAsync("EXEC edit_venue @venue_id, @venue_name, @venue_postcode, @add_line_one, @add_line_two, @city, @county", parameters);
         }
 
-        private void CallDeteteVenueSP(int venueId)
+        private async Task CallDeteteVenueSP(int venueId)
         {
             SqlParameter[] parameters = new SqlParameter[1];
             parameters[0] = new SqlParameter("@venue_id", venueId);
-            _context.Database.ExecuteSqlRaw("EXEC delete_venue @venue_id", parameters);
+            await _context.Database.ExecuteSqlRawAsync("EXEC delete_venue @venue_id", parameters);
         }
 
         /*   GENERATED CODE   */
