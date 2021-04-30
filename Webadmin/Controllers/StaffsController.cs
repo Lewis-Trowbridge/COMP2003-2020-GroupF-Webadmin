@@ -97,11 +97,12 @@ namespace Webadmin.Controllers
         // ClockIn staff 
         
         public IActionResult ClockIn(int staffId, int venueId)
-        {
-            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+        {            
+            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
             {
                 CallClockInSP(staffId);
                 return RedirectToAction(nameof(Index));
+
             }
             return Unauthorized();
 
