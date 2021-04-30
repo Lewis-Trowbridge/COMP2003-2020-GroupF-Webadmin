@@ -43,6 +43,15 @@
                 <td>
                     <a asp-action="Edit" asp-route-staffId="@item.StaffId" asp-route-venueId="@VenueId" class="btn bntMedium">Edit</a>
                     <a asp-action="Delete" asp-route-id="@item.StaffId" asp-route-venueId="@VenueId" class="btn bntMedium">Delete</a>
+                    @if (WebadminHelper.StaffIsClockedIn(item))
+                    {
+                        <a asp-action="ClockIn" asp-route-staffId="@item.StaffId" asp-route-venueId="@VenueId" class="btn bntMedium" style="background-color: red;">Clock Out</a>
+                    }
+                    else
+                    {
+                        <a asp-action="ClockIn" asp-route-staffId="@item.StaffId" asp-route-venueId="@VenueId" class="btn bntMedium" style="background-color: green;">Clock In</a>
+                    }
+
                 </td>
             </tr>
         }

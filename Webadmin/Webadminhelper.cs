@@ -63,5 +63,12 @@ namespace Webadmin
             }
             return false;
         }
+
+        public static bool StaffIsClockedIn(Staff staffToCheck)
+        {
+            bool clockedIn = staffToCheck.StaffShifts
+                .Any(shift => shift.StaffEndTime.Equals(default(DateTime)));
+            return clockedIn;
+        }
     }
 }

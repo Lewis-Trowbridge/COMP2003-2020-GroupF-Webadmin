@@ -43,6 +43,8 @@ namespace Webadmin.Controllers
                 .Where(locationAndStaff => locationAndStaff.Locations.AdminId.Equals(adminId))
                 // Getting the remaining staff
                 .Select(staff => staff.Staff)
+                // Load related shifts
+                .Include(staff => staff.StaffShifts)
                 // Putting it into a list view
                 .ToListAsync());
         }
@@ -92,6 +94,20 @@ namespace Webadmin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return Unauthorized();
+        }
+
+        // ClockIn staff 
+        
+        public IActionResult ClockIn(int staffId, int venueId)
+        {            
+            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
+            {
+                CallClockInSP(staffId);
+                return RedirectToAction(nameof(Index), new { venueId = venueId });
+
+            }
+            return Unauthorized();
+
         }
 
         // Edit staff details
@@ -182,6 +198,14 @@ namespace Webadmin.Controllers
             SqlParameter[] parameters = new SqlParameter[1];
             parameters[0] = new SqlParameter("@staff_id", staffId);
             _context.Database.ExecuteSqlRaw("EXEC delete_staff @staff_id", parameters);
+        }
+
+
+        private void CallClockInSP(int staffId)
+        {
+            SqlParameter[] parameters = new SqlParameter[1];
+            parameters[0] = new SqlParameter("@staff_id", staffId);
+            _context.Database.ExecuteSqlRaw("EXEC clock_in_staff @staff_id", parameters);
         }
     }
 }
