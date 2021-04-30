@@ -101,7 +101,7 @@ namespace Webadmin.Controllers
             if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
             {
                 CallClockInSP(staffId);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { venueId = venueId });
 
             }
             return Unauthorized();
