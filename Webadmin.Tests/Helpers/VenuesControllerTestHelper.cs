@@ -34,13 +34,5 @@ namespace Webadmin.Tests.Helpers
                 VenuePostcode = "ed"
             };
         }
-
-        public static DeleteRequest GetDeleteVenueRequest(Venues venue)
-        {
-            return new DeleteRequest
-            {
-                Id = venue.VenueId
-            };
-        }
     }
 }

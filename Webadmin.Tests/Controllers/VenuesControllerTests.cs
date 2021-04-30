@@ -37,7 +37,7 @@ namespace Webadmin.Tests.Controllers
             controller.ControllerContext.HttpContext.Session.SetInt32(WebadminHelper.AdminIdKey, testAdmin.AdminId);
 
             Venues testVenue = WebadminTestHelper.GetTestVenue(0);
-            var testRequest = VenuesControllerTestHelper.GetCreateVenueRequest();
+            CreateVenueRequest testRequest = VenuesControllerTestHelper.GetCreateVenueRequest();
 
             // Act
             var actionResult = await controller.Create(testRequest);
@@ -68,7 +68,7 @@ namespace Webadmin.Tests.Controllers
             await dbContext.SaveChangesAsync();
             controller.ControllerContext.HttpContext.Session.SetInt32(WebadminHelper.AdminIdKey, testAdmin.AdminId);
 
-            var testRequest = VenuesControllerTestHelper.GetEditVenueRequest(testVenue);
+            EditVenueRequest testRequest = VenuesControllerTestHelper.GetEditVenueRequest(testVenue);
 
             // Act
             var actionResult = await controller.Edit(testRequest);
@@ -76,30 +76,6 @@ namespace Webadmin.Tests.Controllers
             // Assert
             Assert.IsType<RedirectToActionResult>(actionResult);
 
-        }
-
-        [Fact]
-        public async void Delete_WithValidInputs_DeletesSuccessfully()
-        {
-            // Arrange
-            using var transaction = await dbContext.Database.BeginTransactionAsync();
-            Admins testAdmin = WebadminTestHelper.GetTestAdmin(0);
-            Venues testVenue = WebadminTestHelper.GetTestVenue(0);
-            AdminLocations testLocation = WebadminTestHelper.GetTestAdminLocation(testVenue, testAdmin);
-            await dbContext.AddAsync(testAdmin);
-            await dbContext.AddAsync(testVenue);
-            await dbContext.AddAsync(testLocation);
-            await dbContext.SaveChangesAsync();
-            controller.ControllerContext.HttpContext.Session.SetInt32(WebadminHelper.AdminIdKey, testAdmin.AdminId);
-
-            var testRequest = VenuesControllerTestHelper.GetDeleteVenueRequest(testVenue);
-
-            // Act
-            var actionResult = await controller.Delete(testRequest);
-
-            // Assert
-            Assert.IsType<RedirectToActionResult>(actionResult);
-            Assert.DoesNotContain(testVenue, dbContext.Venues);
         }
 
     }
