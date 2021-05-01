@@ -29,9 +29,18 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.VenuePostcode)
                 </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.VenueId" class="btn bntMedium">Details</a>
-                </td>
+                @if (WebadminHelper.GetAdminId(Context.Session) != null)
+                {
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.VenueId" class="btn bntMedium">Details</a>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a asp-controller="Bookings" asp-action="Index" asp-route-venueId="@item.VenueId" class="btn bntMedium">Bookings</a>
+                    </td>
+                }
             </tr>
     }
         </tbody>
