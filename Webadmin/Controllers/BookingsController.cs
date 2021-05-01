@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Webadmin.Models;
@@ -21,9 +22,18 @@ namespace Webadmin.Controllers
         }
 
         // GET: Bookings
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int venueId)
         {
-            return View(await _context.Bookings.ToListAsync());
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context) || WebadminHelper.StaffPermissionVenue(HttpContext.Session, venueId, _context))
+            {
+                return View(await _context.Bookings
+                .Where(booking => booking.VenueId.Equals(venueId))
+                .ToListAsync());
+            }
+            else
+            {
+                return Unauthorized();
+            }
         }
 
         // GET: Bookings/Details/5
@@ -54,7 +64,7 @@ namespace Webadmin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Attended (int bookingId)
         {
-            int sID = Int32.Parse(HttpContext.Session.GetInt32(WebadminHelper.StaffIdKey));
+            int sID = WebadminHelper.GetStaffId(HttpContext.Session).Value;
             CallAttended(bookingId, sID);
             return RedirectToAction(nameof(Index));
         }
