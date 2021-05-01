@@ -26,16 +26,6 @@ namespace Webadmin.Controllers
             return View(await _context.Bookings.ToListAsync());
         }
 
-        //public IActionResult Attended(int venue_id)
-        //{
-        //    if (venue_id != null)
-        //    {
-
-        //    }
-        //}
-
-
-
         // GET: Bookings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -60,30 +50,21 @@ namespace Webadmin.Controllers
             return View();
         }
 
-        //public Task<IActionResult> create_booking (string customer_name, int customer_contact_num, int venue_id, int venue_table_id, int booking_size, DateTime booking_time)
-        //{
-        //    if (customer_name == null)
-        //    {
-        //        string query = "add_bookings";
-
-        //        SqlConnection connection = new SqlConnection();
-        //        SqlCommand cmd = new SqlCommand(query, cleanTableDbContext)
-        //    }
-        //}
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Attended (int bookingId)
         {
-            CallAttended(bookingId);
+            int sID = Int32.Parse(HttpContext.Session.GetInt32(WebadminHelper.StaffIdKey));
+            CallAttended(bookingId, sID);
             return RedirectToAction(nameof(Index));
         }
 
-        private void CallAttended(int bookingId)
+        private void CallAttended(int bookingId, int staffId)
         {
-            SqlParameter[] parameters = new SqlParameter[1];
+            SqlParameter[] parameters = new SqlParameter[2];
             parameters[0] = new SqlParameter("@booking_id", bookingId);
-            _context.Database.ExecuteSqlRaw("EXEC attended_bookings @booking_id", parameters);
+            parameters[1] = new SqlParameter("@staff_id", staffId);
+            _context.Database.ExecuteSqlRaw("EXEC attended_bookings @booking_id, @staff_id", parameters);
         }
 
         // POST: Bookings/Create
