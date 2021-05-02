@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    int venueId = ViewBag.venueId;
 }
 
 <h1>Index</h1>
@@ -33,6 +34,7 @@
             <td>
                 <form asp-action="Attended">
                     <input name="bookingId" value="@item.BookingId" hidden />
+                    <input name="venueId" value="@venueId" hidden />
                     <button type="submit" class="btn bntMedium" asp-action="Attended">Attended</button>
                 </form>
             </td>

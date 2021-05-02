@@ -26,6 +26,7 @@ namespace Webadmin.Controllers
         {
             if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context) || WebadminHelper.StaffPermissionVenue(HttpContext.Session, venueId, _context))
             {
+                ViewBag.venueId = venueId;
                 return View(await _context.Bookings
                 .Where(booking => booking.VenueId.Equals(venueId))
                 .ToListAsync());
@@ -62,11 +63,11 @@ namespace Webadmin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Attended (int bookingId)
+        public IActionResult Attended (int bookingId, int venueId)
         {
             int staffId = WebadminHelper.GetStaffId(HttpContext.Session).Value;
             CallAttended(bookingId, staffId);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { venueId = venueId });
         }
 
         private void CallAttended(int bookingId, int staffId)
