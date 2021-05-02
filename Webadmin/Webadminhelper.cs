@@ -17,6 +17,11 @@ namespace Webadmin
             return sessionContext.GetInt32(AdminIdKey);
         }
 
+        public static int? GetStaffId(ISession sessionContext)
+        {
+            return sessionContext.GetInt32(StaffIdKey);
+        }
+
         public static bool AdminPermissionVenue(ISession sessionContext, int venueId, COMP2003_FContext dbContext)
         {
             int? adminId = GetAdminId(sessionContext);
