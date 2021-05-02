@@ -29,6 +29,7 @@ namespace Webadmin.Controllers
                 ViewBag.venueId = venueId;
                 return View(await _context.Bookings
                 .Where(booking => booking.VenueId.Equals(venueId))
+                .Where(booking => booking.BookingAttendees.Any(attendees => attendees.BookingAttended.Equals(false)))
                 .ToListAsync());
             }
             else
