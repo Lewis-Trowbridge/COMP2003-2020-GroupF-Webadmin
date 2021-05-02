@@ -31,9 +31,10 @@
                 @Html.DisplayFor(modelItem => item.BookingSize)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.BookingId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookingId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookingId">Delete</a>
+                <form asp-action="Attended">
+                    <input name="bookingId" value="@item.BookingId" hidden />
+                    <button type="submit" class="btn bntMedium" asp-action="Attended">Attended</button>
+                </form>
             </td>
         </tr>
 }

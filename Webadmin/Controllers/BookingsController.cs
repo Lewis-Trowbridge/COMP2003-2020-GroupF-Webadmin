@@ -64,8 +64,8 @@ namespace Webadmin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Attended (int bookingId)
         {
-            int sID = WebadminHelper.GetStaffId(HttpContext.Session).Value;
-            CallAttended(bookingId, sID);
+            int staffId = WebadminHelper.GetStaffId(HttpContext.Session).Value;
+            CallAttended(bookingId, staffId);
             return RedirectToAction(nameof(Index));
         }
 
