@@ -30,6 +30,7 @@ namespace Webadmin.Controllers
                 return View(await _context.Bookings
                 .Where(booking => booking.VenueId.Equals(venueId))
                 .Where(booking => booking.BookingAttendees.Any(attendees => attendees.BookingAttended.Equals(false)))
+                .OrderBy(booking => booking.BookingTime)
                 .ToListAsync());
             }
             else
