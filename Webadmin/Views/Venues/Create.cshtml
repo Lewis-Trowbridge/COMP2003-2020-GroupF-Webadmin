@@ -1,4 +1,4 @@
-﻿@model Webadmin.Models.Venues
+﻿@model Webadmin.Requests.CreateVenueRequest
 
 @{
     ViewData["Title"] = "Create";
@@ -27,24 +27,24 @@
                     <span asp-validation-for="VenuePostcode" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="AddLineOne" class="control-label">Address Line One</label>
-                    <input asp-for="AddLineOne" class="form-control" />
-                    <span asp-validation-for="AddLineOne" class="text-danger"></span>
+                    <label asp-for="VenueAddLineOne" class="control-label">Address Line One</label>
+                    <input asp-for="VenueAddLineOne" class="form-control" />
+                    <span asp-validation-for="VenueAddLineOne" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="AddLineTwo" class="control-label">Address Line Two</label>
-                    <input asp-for="AddLineTwo" class="form-control" />
-                    <span asp-validation-for="AddLineTwo" class="text-danger"></span>
+                    <label asp-for="VenueAddLineTwo" class="control-label">Address Line Two</label>
+                    <input asp-for="VenueAddLineTwo" class="form-control" />
+                    <span asp-validation-for="VenueAddLineTwo" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="City" class="control-label">City</label>
-                    <input asp-for="City" class="form-control" />
-                    <span asp-validation-for="City" class="text-danger"></span>
+                    <label asp-for="VenueCity" class="control-label">City</label>
+                    <input asp-for="VenueCity" class="form-control" />
+                    <span asp-validation-for="VenueCity" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="County" class="control-label">County</label>
-                    <input asp-for="County" class="form-control" />
-                    <span asp-validation-for="County" class="text-danger"></span>
+                    <label asp-for="VenueCounty" class="control-label">County</label>
+                    <input asp-for="VenueCounty" class="form-control" />
+                    <span asp-validation-for="VenueCounty" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn bntSmall" />

@@ -71,10 +71,10 @@ namespace Webadmin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string venueName, string venuePostcode, string addLineOne, string addLineTwo, string city, string county, int adminId)
+        public async Task<IActionResult> Create(CreateVenueRequest request)
         {
-            adminId = WebadminHelper.GetAdminId(HttpContext.Session).Value;
-            int venueId = await CallAddVenueSP(venueName, addLineOne, addLineTwo, city, county, venuePostcode, adminId);
+            int adminId = WebadminHelper.GetAdminId(HttpContext.Session).Value;
+            int venueId = await CallAddVenueSP(request.VenueName, request.VenueAddLineOne, request.VenueAddLineTwo, request.VenueCity, request.VenueCounty, request.VenuePostcode, adminId);
             return RedirectToAction(nameof(Index), new { id = venueId });
         }
 
@@ -84,7 +84,18 @@ namespace Webadmin.Controllers
             {
                 ViewBag.venueId = id;
                 var venues = await _context.Venues
-                .FirstOrDefaultAsync(m => m.VenueId == id);
+                .Where(venue => venue.VenueId.Equals(id))
+                .Select(venue => new EditVenueRequest
+                {
+                    VenueId = venue.VenueId,
+                    VenueName = venue.VenueName,
+                    VenueAddLineOne = venue.AddLineOne,
+                    VenueAddLineTwo = venue.AddLineTwo,
+                    VenueCity = venue.City,
+                    VenueCounty = venue.County,
+                    VenuePostcode = venue.VenuePostcode
+                })
+                .SingleAsync();
                 if (venues == null)
                 {
                     return NotFound();
@@ -97,11 +108,11 @@ namespace Webadmin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(string venueName, string addLineOne, string addLineTwo, string city, string county, string venuePostcode, int venueId)
+        public async Task<IActionResult> Edit(EditVenueRequest request)
         {
-            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, request.VenueId, _context))
             {
-                CallEditVenueSP(venueName, addLineOne, addLineTwo, city, county, venuePostcode, venueId);
+                await CallEditVenueSP(request.VenueName, request.VenueAddLineOne, request.VenueAddLineTwo, request.VenueCity, request.VenueCounty, request.VenuePostcode, request.VenueId);
             return RedirectToAction(nameof(Index));
             }
 
@@ -130,11 +141,11 @@ namespace Webadmin.Controllers
             return Unauthorized();
         }
         [HttpPost]
-        public IActionResult Delete(int venueId)
+        public async Task<IActionResult> Delete(int venueId)
         {
             if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
             {
-                CallDeteteVenueSP(venueId);
+                await CallDeteteVenueSP(venueId);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -207,7 +218,7 @@ namespace Webadmin.Controllers
             return (int)parameters[7].Value;
         }
 
-        private void CallEditVenueSP(string venueName, string venueAddressLineOne, string venueAddressLineTwo, string venueCity, string venueCounty, string venuePostcode, int venueId)
+        private async Task CallEditVenueSP(string venueName, string venueAddressLineOne, string venueAddressLineTwo, string venueCity, string venueCounty, string venuePostcode, int venueId)
         {
             SqlParameter[] parameters = new SqlParameter[7];
             parameters[0] = new SqlParameter("@venue_name", venueName);
@@ -217,14 +228,14 @@ namespace Webadmin.Controllers
             parameters[4] = new SqlParameter("@city", venueCity);
             parameters[5] = new SqlParameter("@county", venueCounty);
             parameters[6] = new SqlParameter("@venue_id", venueId);
-            _context.Database.ExecuteSqlRaw("EXEC edit_venue @venue_id, @venue_name, @venue_postcode, @add_line_one, @add_line_two, @city, @county", parameters);
+            await _context.Database.ExecuteSqlRawAsync("EXEC edit_venue @venue_id, @venue_name, @venue_postcode, @add_line_one, @add_line_two, @city, @county", parameters);
         }
 
-        private void CallDeteteVenueSP(int venueId)
+        private async Task CallDeteteVenueSP(int venueId)
         {
             SqlParameter[] parameters = new SqlParameter[1];
             parameters[0] = new SqlParameter("@venue_id", venueId);
-            _context.Database.ExecuteSqlRaw("EXEC delete_venue @venue_id", parameters);
+            await _context.Database.ExecuteSqlRawAsync("EXEC delete_venue @venue_id", parameters);
         }
 
         /*   GENERATED CODE   */

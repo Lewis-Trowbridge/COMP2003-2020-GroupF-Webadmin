@@ -23,5 +23,28 @@ namespace Webadmin.Tests.Helpers
             };
             return admin;
         }
+
+        public static AdminLocations GetTestAdminLocation(Venues venue, Admins admin)
+        {
+            return new AdminLocations
+            {
+                Admin = admin,
+                Venue = venue
+            };
+        }
+
+        public static Venues GetTestVenue(int id)
+        {
+            return new Venues
+            {
+                VenueId = id,
+                VenueName = "Test Venue",
+                AddLineOne = "Test line one",
+                AddLineTwo = "Test line two",
+                County = "Test county",
+                City = "Test city",
+                VenuePostcode = "PL4 8AA"
+            };
+        }
     }
 }
