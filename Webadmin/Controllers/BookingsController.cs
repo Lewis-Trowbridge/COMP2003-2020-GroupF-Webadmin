@@ -57,10 +57,10 @@ namespace Webadmin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Cancel (int bookingId)
+        public IActionResult Cancel (int bookingId, int venueId)
         {
             CallCancelSP(bookingId);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { venueId = venueId});
         }
 
         private void CallCancelSP (int bookingId)
