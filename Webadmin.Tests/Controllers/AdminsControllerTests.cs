@@ -43,7 +43,7 @@ namespace Webadmin.Tests.Controllers
                 .SingleAsync();
 
             // Assert
-            Assert.IsType<CreatedAtActionResult>(actionResult);
+            Assert.IsType<RedirectToActionResult>(actionResult);
             Assert.Equal(testAdmin.AdminUsername, realAdmin.AdminUsername);
             // Test that password has been correctly hashed
             Assert.True(BCrypt.Net.BCrypt.Verify(testAdmin.AdminPassword, realAdmin.AdminPassword));
