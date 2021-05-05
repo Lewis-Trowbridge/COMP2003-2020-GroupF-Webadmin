@@ -132,28 +132,38 @@ namespace Webadmin.Controllers
             {
                 ViewBag.staffId = staffId;
                 ViewBag.VenueId = venueId;
-                var staff = await _context.Staff.FindAsync(staffId);
+                var staff = await _context.Staff
+                    .Where(staff => staff.StaffId.Equals(staffId))
+                    .Select(staff => new EditStaffRequest 
+                    { 
+                        StaffId = staff.StaffId,
+                        StaffName = staff.StaffName,
+                        StaffContactNum = staff.StaffContactNum,
+                        StaffPosition = staff.StaffPosition,
+                        VenueId = venueId
+                    })
+                    .SingleAsync();
                 return View(staff);
             }
             return Unauthorized();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(string staffName, string staffContactNum, string staffPosition, int staffId, int venueId)
+        public IActionResult Edit(EditStaffRequest request)
         {
-            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
+            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, request.StaffId, _context))
             {
-                string formattedContactNumber = TryConvertContactNumber(staffContactNum);
+                string formattedContactNumber = TryConvertContactNumber(request.StaffContactNum);
                 if (formattedContactNumber != null)
                 {
-                    CallEditStaffSP(staffName, staffContactNum, staffPosition, staffId);
+                    CallEditStaffSP(request.StaffName, request.StaffContactNum, request.StaffPosition, request.StaffId);
                 }
                 else
                 {
                     ModelState.AddModelError("staffContactNum", "Please input a valid UK phone number.");
                     return View();
                 }
-                return RedirectToAction(nameof(Index), new { venueId = venueId });
+                return RedirectToAction(nameof(Index), new { venueId = request.VenueId });
             }
             return Unauthorized();
         }
