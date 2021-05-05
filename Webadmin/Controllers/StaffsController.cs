@@ -125,19 +125,20 @@ namespace Webadmin.Controllers
         // Edit staff details
 
         // GET /Staffs/
-        public IActionResult Edit(int staffId, int venueId)
+        public async Task<IActionResult> Edit(int staffId, int venueId)
         {
             if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
             {
                 ViewBag.staffId = staffId;
                 ViewBag.VenueId = venueId;
-                return View();
+                var staff = await _context.Staff.FindAsync(staffId);
+                return View(staff);
             }
             return Unauthorized();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(string staffName, string staffContactNum, string staffPosition, int staffId)
+        public IActionResult Edit(string staffName, string staffContactNum, string staffPosition, int staffId, int venueId)
         {
             if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
             {
@@ -151,7 +152,7 @@ namespace Webadmin.Controllers
                     ModelState.AddModelError("staffContactNum", "Please input a valid UK phone number.");
                     return View();
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { venueId = venueId });
             }
             return Unauthorized();
         }
