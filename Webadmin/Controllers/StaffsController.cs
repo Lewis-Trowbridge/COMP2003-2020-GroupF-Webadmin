@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Webadmin.Models;
+using Webadmin.Requests;
 using PhoneNumbers;
 
 namespace Webadmin.Controllers
@@ -87,20 +88,20 @@ namespace Webadmin.Controllers
         // Post: Allows you to add new staff 
         [HttpPost] // /Staffs/Create/id
         [ValidateAntiForgeryToken]
-        public IActionResult Create(string staffName, string staffContactNum, string staffPosition, int venueId)
+        public IActionResult Create(CreateStaffRequest request)
         {
-            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, request.VenueId, _context))
             {
-                string formattedContactNumber = TryConvertContactNumber(staffContactNum);
+                string formattedContactNumber = TryConvertContactNumber(request.StaffContactNum);
                 if (formattedContactNumber != null)
                 {
-                    CallAddStaffSP(staffName, staffContactNum, staffPosition, venueId);
-                    return RedirectToAction(nameof(Index), new { venueId = venueId });
+                    CallAddStaffSP(request.StaffName, request.StaffContactNum, request.StaffPosition,request.VenueId);
+                    return RedirectToAction(nameof(Index), new { venueId = request.VenueId });
                 }
                 else
                 {
                     ModelState.AddModelError("staffContactNum", "Please input a valid UK phone number.");
-                    ViewBag.venueId = venueId;
+                    ViewBag.venueId = request.VenueId;
                     return View();
                 }
                 

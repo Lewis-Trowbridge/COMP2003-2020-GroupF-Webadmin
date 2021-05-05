@@ -1,4 +1,4 @@
-﻿@model Webadmin.Models.Staff
+﻿@model Webadmin.Requests.CreateStaffRequest
 
 @{
     ViewData["Title"] = "Create";
@@ -33,7 +33,7 @@
                     <span asp-validation-for="StaffPosition" class="text-danger"></span>
                 </div>
                 <div class=" form-group">
-                    <input value="@VenueId" name="venueId" type="hidden">
+                    <input asp-for="VenueId" value="@VenueId" type="hidden">
                 </div>
 
                 <div class="form-group">
