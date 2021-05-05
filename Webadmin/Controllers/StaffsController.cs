@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Webadmin.Models;
+using PhoneNumbers;
 
 namespace Webadmin.Controllers
 {
@@ -90,8 +91,19 @@ namespace Webadmin.Controllers
         {
             if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
             {
-                CallAddStaffSP(staffName, staffContactNum, staffPosition, venueId);
-                return RedirectToAction(nameof(Index));
+                string formattedContactNumber = TryConvertContactNumber(staffContactNum);
+                if (formattedContactNumber != null)
+                {
+                    CallAddStaffSP(staffName, staffContactNum, staffPosition, venueId);
+                    return RedirectToAction(nameof(Index), new { venueId = venueId });
+                }
+                else
+                {
+                    ModelState.AddModelError("staffContactNum", "Please input a valid UK phone number.");
+                    ViewBag.venueId = venueId;
+                    return View();
+                }
+                
             }
             return Unauthorized();
         }
@@ -129,7 +141,16 @@ namespace Webadmin.Controllers
         {
             if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
             {
-                CallEditStaffSP(staffName, staffContactNum, staffPosition, staffId);
+                string formattedContactNumber = TryConvertContactNumber(staffContactNum);
+                if (formattedContactNumber != null)
+                {
+                    CallEditStaffSP(staffName, staffContactNum, staffPosition, staffId);
+                }
+                else
+                {
+                    ModelState.AddModelError("staffContactNum", "Please input a valid UK phone number.");
+                    return View();
+                }
                 return RedirectToAction(nameof(Index));
             }
             return Unauthorized();
@@ -158,14 +179,39 @@ namespace Webadmin.Controllers
             return Unauthorized();
         }
         [HttpPost] // /Staffs/Delete/ID
-        public IActionResult Delete(int staffId)
+        public IActionResult Delete(int staffId, int venueId)
         {
             if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
             {
                 CallDeleteStaffSP(staffId);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { venueId = venueId });
             }
             return Unauthorized();
+        }
+
+        private string TryConvertContactNumber(string contactNumber)
+        {
+            var phoneNumberUtil = PhoneNumberUtil.GetInstance();
+            try
+            {
+                var phoneNumber = phoneNumberUtil.Parse(contactNumber, "GB");
+                if (phoneNumberUtil.IsValidNumberForRegion(phoneNumber, "GB"))
+                {
+                    // If the phone number if a valid UK number, return the formatted string
+                    return phoneNumberUtil.Format(phoneNumber, PhoneNumberFormat.E164);
+                }
+                // If the phone number is not a valid UK number, signal this with a null
+                else
+                {
+                    return null;
+                }
+            }
+            // If there are any general issues with the formatting of the phone number, signal this with a null
+            catch (NumberParseException)
+            {
+                return null;
+            }
+
         }
 
         /*  DATABASE LINKED CODE  */
