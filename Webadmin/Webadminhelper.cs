@@ -17,6 +17,11 @@ namespace Webadmin
             return sessionContext.GetInt32(AdminIdKey);
         }
 
+        public static int? GetStaffId(ISession sessionContext)
+        {
+            return sessionContext.GetInt32(StaffIdKey);
+        }
+
         public static bool AdminPermissionVenue(ISession sessionContext, int venueId, COMP2003_FContext dbContext)
         {
             int? adminId = GetAdminId(sessionContext);
@@ -62,6 +67,22 @@ namespace Webadmin
                 return exists;
             }
             return false;
+        }
+
+        public static bool StaffPermissionVenue(ISession sessionContext, int venueId, COMP2003_FContext dbContext)
+        {
+            int? staffId = GetStaffId(sessionContext);
+            if (staffId != null)
+            {
+                bool exists = dbContext.Employment
+                    .Where(employment => employment.StaffId.Equals(staffId))
+                    .Any(venue => venue.VenueId.Equals(venueId));
+                return exists;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static bool StaffIsClockedIn(Staff staffToCheck)

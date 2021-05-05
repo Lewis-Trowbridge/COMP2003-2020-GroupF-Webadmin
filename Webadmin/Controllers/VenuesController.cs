@@ -30,7 +30,11 @@ namespace Webadmin.Controllers
         {
 
             var adminId = WebadminHelper.GetAdminId(HttpContext.Session);
-            return View(await _context.Venues
+            var staffId = WebadminHelper.GetStaffId(HttpContext.Session);
+            if (adminId != null)
+            {
+                // Grab all of the venues this admin manages
+                return View(await _context.Venues
                 .Join(_context.AdminLocations, venue => venue.VenueId, location => location.VenueId, (venue, location) => new
                 {
                     Location = location,
@@ -39,6 +43,25 @@ namespace Webadmin.Controllers
                 .Where(venueAndLocation => venueAndLocation.Location.AdminId.Equals(adminId))
                 .Select(venue => venue.Venue)
                 .ToListAsync());
+            }
+            else if (staffId != null)
+            {
+                // Grab all of the venues this staff member works at
+                return View(await _context.Venues
+                    .Join(_context.Employment, venue => venue.VenueId, employment => employment.VenueId, (venue, employment) => new
+                    {
+                        Employment = employment,
+                        Venue = venue
+                    })
+                    .Where(venueAndEmployment => venueAndEmployment.Employment.StaffId.Equals(staffId))
+                    .Select(venue => venue.Venue)
+                    .ToListAsync());
+            }
+            else
+            {
+                // Throw the user to the login page if they are not logged in as either an admin or member of staff
+                return RedirectToAction("Index", "Login");
+            }
         }
 
         // GET: Venues/Details/5
