@@ -19,7 +19,7 @@ namespace Webadmin.Controllers
             _context = context;
         }
 
-        // GET: Staffs/Indext/id
+        // GET: Staffs/Index/id
         public async Task<IActionResult> Index(int venueId)
         {
             ViewBag.venueId = venueId;
@@ -90,7 +90,7 @@ namespace Webadmin.Controllers
         {
             if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
             {
-                CallAddSaffSP(staffName, staffContactNum, staffPosition, venueId);
+                CallAddStaffSP(staffName, staffContactNum, staffPosition, venueId);
                 return RedirectToAction(nameof(Index));
             }
             return Unauthorized();
@@ -171,7 +171,7 @@ namespace Webadmin.Controllers
         /*  DATABASE LINKED CODE  */
 
         // Execute add_staff stored procedure on SQL Database
-        private void CallAddSaffSP(string staffName, string staffContactNum, string staffPosition, int venueId)
+        private void CallAddStaffSP(string staffName, string staffContactNum, string staffPosition, int venueId)
         {
             SqlParameter[] parameters = new SqlParameter[4];
             parameters[0] = new SqlParameter("@staff_name", staffName);
