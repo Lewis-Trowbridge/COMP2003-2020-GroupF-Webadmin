@@ -56,7 +56,7 @@ namespace Webadmin.Controllers
             {
                 return NotFound();
             }
-            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, id.Value, _context))
+            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, id.Value, _context) || WebadminHelper.GetStaffId(HttpContext.Session) == id)
             {
                 var staff = await _context.Staff
                 .FirstOrDefaultAsync(m => m.StaffId == id);
