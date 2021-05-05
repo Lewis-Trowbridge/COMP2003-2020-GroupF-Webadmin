@@ -55,5 +55,36 @@ namespace Webadmin.Tests.Controllers
             Assert.True(await dbContext.Staff.AnyAsync(staff => staff.StaffPosition.Equals(testRequest.StaffPosition)));
 
         }
+
+        [Fact]
+        public async void Edit_WithValidInputs_EditSuccessfully()
+        {
+            // Arrange
+            using var transaction = await dbContext.Database.BeginTransactionAsync();
+            Admins testAdmin = WebadminTestHelper.GetTestAdmin(0);
+            Venues testVenue = WebadminTestHelper.GetTestVenue(0);
+            AdminLocations testLocation = WebadminTestHelper.GetTestAdminLocation(testVenue, testAdmin);
+            Staff testStaff = StaffControllerTestHelper.GetTestStaff(0);
+            Employment testEmployment = StaffControllerTestHelper.GetTestEmployment(testVenue, testStaff);
+            await dbContext.AddAsync(testAdmin);
+            await dbContext.AddAsync(testVenue);
+            await dbContext.AddAsync(testLocation);
+            await dbContext.AddAsync(testStaff);
+            await dbContext.AddAsync(testEmployment);
+            await dbContext.SaveChangesAsync();
+            controller.ControllerContext.HttpContext.Session.SetInt32(WebadminHelper.AdminIdKey, testAdmin.AdminId);
+
+            EditStaffRequest testRequest = StaffControllerTestHelper.GetEditStaffRequest(testStaff, testVenue);
+
+            // Act
+            var actionResult = controller.Edit(testRequest);
+
+            // Assert
+            Assert.IsType<RedirectToActionResult>(actionResult);
+
+            Assert.True(await dbContext.Staff.AnyAsync(staff => staff.StaffName.Equals(testRequest.StaffName)));
+            Assert.True(await dbContext.Staff.AnyAsync(staff => staff.StaffContactNum.Equals(testRequest.StaffContactNum)));
+            Assert.True(await dbContext.Staff.AnyAsync(staff => staff.StaffPosition.Equals(testRequest.StaffPosition)));
+        }
     }
 }

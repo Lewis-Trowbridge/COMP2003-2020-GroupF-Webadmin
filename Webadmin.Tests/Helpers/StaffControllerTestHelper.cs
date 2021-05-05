@@ -19,6 +19,15 @@ namespace Webadmin.Tests.Helpers
             };
         }
 
+        public static Employment GetTestEmployment(Venues venue, Staff staff)
+        {
+            return new Employment
+            {
+                Staff = staff,
+                Venue = venue
+            };
+        }
+
         public static CreateStaffRequest GetCreateStaffRequest(Staff staff, Venues venue)
         {
             return new CreateStaffRequest
@@ -27,6 +36,18 @@ namespace Webadmin.Tests.Helpers
                 StaffName = staff.StaffName,
                 StaffContactNum = staff.StaffContactNum,
                 StaffPosition = staff.StaffPosition
+            };
+        }
+
+        public static EditStaffRequest GetEditStaffRequest(Staff staff, Venues venue)
+        {
+            return new EditStaffRequest
+            {
+                VenueId = venue.VenueId,
+                StaffId = staff.StaffId,
+                StaffName = staff.StaffName + "e",
+                StaffContactNum = staff.StaffContactNum + "e",
+                StaffPosition = staff.StaffPosition + "e"
             };
         }
     }
