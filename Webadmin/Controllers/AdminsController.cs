@@ -142,7 +142,7 @@ namespace Webadmin.Controllers
             {
                 return NotFound();
             }
-
+            //ViewBag.adminId = id;
             var admins = await _context.Admins
                 .FirstOrDefaultAsync(m => m.AdminId == id);
             if (admins == null)
@@ -154,14 +154,11 @@ namespace Webadmin.Controllers
         }
 
         // POST: Admins/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        public async Task<IActionResult> Delete(int adminid)
         {
-            var admins = await _context.Admins.FindAsync(id);
-            _context.Admins.Remove(admins);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            await CallDeleteAdminSP(adminid);
+            return RedirectToAction("Index", "Home");
         }
 
         private bool AdminsExists(int id)
@@ -206,6 +203,13 @@ namespace Webadmin.Controllers
             await _context.Database.ExecuteSqlRawAsync("EXEC edit_admin @admin_id, @admin_username, @admin_password, @response OUTPUT", parameters);
 
             return (string)parameters[3].Value;
+        }
+
+        private async Task CallDeleteAdminSP(int adminId)
+        {
+            SqlParameter[] parameters = new SqlParameter[1];
+            parameters[0] = new SqlParameter("@admin_id", adminId);
+            await _context.Database.ExecuteSqlRawAsync("EXEC delete_admin @admin_id", parameters);
         }
 
         private SqlParameter CheckIfNull(string parameterName, string stringToCheck)
