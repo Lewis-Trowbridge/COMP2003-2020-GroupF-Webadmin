@@ -35,7 +35,7 @@
 <div class="row">
     <a asp-controller="Staffs" asp-action="Index" asp-route-venueId="@Model.VenueId"><div class="btn bntLarge">Staff</div></a>
     <a asp-controller="VenueTables" asp-action="Index" asp-route-venueId="@Model.VenueId"><div class="btn bntLarge">Venue Tables</div></a>
-    <a asp-controller="Staffs" asp-action="Index" asp-route-venueId="@Model.VenueId"><div class="btn bntLarge">Staff Attendance</div></a>
+    <a asp-action="Export" asp-route-venueId="@Model.VenueId"><div class="btn bntLarge">Export</div></a>
 </div>
 <br />
 <br />

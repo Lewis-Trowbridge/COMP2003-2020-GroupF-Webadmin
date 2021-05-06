@@ -14,6 +14,7 @@ This repository contains the code for our CleanTable administration web applicat
 
 - [CsvHelper](https://joshclose.github.io/CsvHelper/)
 - [BCrypt.Net-Next](https://www.nuget.org/packages/BCrypt.Net-Next/)
+- [libphonenumber-csharp](https://www.nuget.org/packages/libphonenumber-csharp/)
 - [Xunit](https://github.com/xunit/xunit)
 - [HttpContextStubs](https://github.com/andrecarlucci/HttpContextStubs)
 

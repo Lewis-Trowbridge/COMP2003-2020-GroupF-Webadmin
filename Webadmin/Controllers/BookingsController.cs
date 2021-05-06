@@ -39,30 +39,6 @@ namespace Webadmin.Controllers
             }
         }
 
-        // GET: Bookings/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var bookings = await _context.Bookings
-                .FirstOrDefaultAsync(m => m.BookingId == id);
-            if (bookings == null)
-            {
-                return NotFound();
-            }
-
-            return View(bookings);
-        }
-
-        // GET: Bookings/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Attended (int bookingId, int venueId)
@@ -80,130 +56,11 @@ namespace Webadmin.Controllers
             _context.Database.ExecuteSqlRaw("EXEC attended_bookings @booking_id, @staff_id", parameters);
         }
 
-        // POST: Bookings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookingId,BookingTime,BookingSize")] Bookings bookings)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(bookings);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(bookings);
-        }
-
-        // GET: Bookings/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var bookings = await _context.Bookings.FindAsync(id);
-            if (bookings == null)
-            {
-                return NotFound();
-            }
-            return View(bookings);
-        }
-
-        // POST: Bookings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookingId,BookingTime,BookingSize")] Bookings bookings)
-        {
-            if (id != bookings.BookingId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(bookings);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BookingsExists(bookings.BookingId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(bookings);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit (int bookingSize, int customerId, int venueId, int venueTableId, DateTime bookingTime)
-        {
-            CallEditSP(bookingSize, customerId, venueId, venueTableId, bookingTime);
-            return RedirectToAction(nameof(Index));
-        }
-
-        private void CallEditSP (int bookingSize, int customerId, int venueId, int venueTableId, DateTime bookingTime)
-        {
-            SqlParameter[] parameters = new SqlParameter[5];
-            parameters[0] = new SqlParameter("@booking_size", bookingSize);
-            parameters[1] = new SqlParameter("@customer_id", customerId);
-            parameters[2] = new SqlParameter("@venue_id", venueId);
-            parameters[3] = new SqlParameter("@venue_table_id", venueTableId);
-            parameters[4] = new SqlParameter("@booking_time", bookingTime);
-            _context.Database.ExecuteSqlRaw("EXEC edit_bookings @booking_size, @customer_id, @venue_id, @venue_table_id, @booking_time", parameters);
-        }
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Edit ()
-
-        // GET: Bookings/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var bookings = await _context.Bookings
-                .FirstOrDefaultAsync(m => m.BookingId == id);
-            if (bookings == null)
-            {
-                return NotFound();
-            }
-
-            return View(bookings);
-        }
-
-        // POST: Bookings/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var bookings = await _context.Bookings.FindAsync(id);
-            _context.Bookings.Remove(bookings);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        public IActionResult Cancel (int bookingId)
+        public IActionResult Cancel (int bookingId, int venueId)
         {
             CallCancelSP(bookingId);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { venueId = venueId});
         }
 
         private void CallCancelSP (int bookingId)

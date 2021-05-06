@@ -20,10 +20,11 @@ namespace Webadmin.Controllers
         }
 
         // GET: VenueTables
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int venueId)
         {
-            var cleanTableDbContext = _context.VenueTables.Include(v => v.Venue);
-            return View(await cleanTableDbContext.ToListAsync());
+            return View(await _context.VenueTables
+                .Where(venueTable => venueTable.VenueId.Equals(venueId))
+                .ToListAsync());
         }
 
         // GET: VenueTables/Details/5

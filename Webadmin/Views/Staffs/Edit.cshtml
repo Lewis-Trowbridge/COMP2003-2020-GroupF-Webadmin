@@ -1,4 +1,4 @@
-﻿@model Webadmin.Models.Staff
+﻿@model Webadmin.Requests.EditStaffRequest
 
 @{
     ViewData["Title"] = "Edit";
@@ -35,8 +35,8 @@
                     <span asp-validation-for="StaffPosition" class="text-danger"></span>
                 </div>
                 <div class=" form-group">
-                    <input value="@staffId" name="staffId" type="hidden">
-                    <input value="@VenueId" name="venueId" type="hidden"/>
+                    <input asp-for="StaffId" value="@staffId" type="hidden">
+                    <input asp-for="VenueId" value="@VenueId" type="hidden"/>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn bntSmall" />

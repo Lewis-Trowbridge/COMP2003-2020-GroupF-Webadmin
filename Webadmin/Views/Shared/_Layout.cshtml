@@ -23,7 +23,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav ml-auto">
                         @{
-                            if (Context.Session.GetInt32(WebadminHelper.AdminIdKey) == null && Context.Session.GetInt32(WebadminHelper.StaffIdKey) == null)
+                            if (WebadminHelper.GetAdminId(Context.Session) == null && WebadminHelper.GetStaffId(Context.Session) == null)
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-light" asp-area="" asp-controller="Admins" asp-action="Create">Create account</a>
@@ -39,7 +39,15 @@
                                         My account
                                     </a>
                                     <div class="dropdown-menu">
-                                        <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="Admins" asp-action="Details" asp-route-id="@Context.Session.GetInt32(WebadminHelper.AdminIdKey)">Profile</a>
+                                        @if (WebadminHelper.GetAdminId(Context.Session) != null)
+                                        {
+                                            <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="Admins" asp-action="Details" asp-route-id="@WebadminHelper.GetAdminId(Context.Session)">Profile</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="Staffs" asp-action="Details" asp-route-id="@WebadminHelper.GetStaffId(Context.Session)">Profile</a>
+
+                                        }
                                         <a class="nav-link text-dark dropdown-item" asp-area="" asp-controller="Login" asp-action="Logout">Log out</a>
                                     </div>
                                 </li>

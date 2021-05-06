@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Webadmin.Models;
+using Webadmin.Requests;
+using PhoneNumbers;
 
 namespace Webadmin.Controllers
 {
@@ -19,7 +21,7 @@ namespace Webadmin.Controllers
             _context = context;
         }
 
-        // GET: Staffs/Indext/id
+        // GET: Staffs/Index/id
         public async Task<IActionResult> Index(int venueId)
         {
             ViewBag.venueId = venueId;
@@ -56,7 +58,7 @@ namespace Webadmin.Controllers
             {
                 return NotFound();
             }
-            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, id.Value, _context))
+            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, id.Value, _context) || WebadminHelper.GetStaffId(HttpContext.Session) == id)
             {
                 var staff = await _context.Staff
                 .FirstOrDefaultAsync(m => m.StaffId == id);
@@ -86,12 +88,23 @@ namespace Webadmin.Controllers
         // Post: Allows you to add new staff 
         [HttpPost] // /Staffs/Create/id
         [ValidateAntiForgeryToken]
-        public IActionResult Create(string staffName, string staffContactNum, string staffPosition, int venueId)
+        public IActionResult Create(CreateStaffRequest request)
         {
-            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, request.VenueId, _context))
             {
-                CallAddSaffSP(staffName, staffContactNum, staffPosition, venueId);
-                return RedirectToAction(nameof(Index));
+                string formattedContactNumber = TryConvertContactNumber(request.StaffContactNum);
+                if (formattedContactNumber != null)
+                {
+                    CallAddStaffSP(request.StaffName, request.StaffContactNum, request.StaffPosition,request.VenueId);
+                    return RedirectToAction(nameof(Index), new { venueId = request.VenueId });
+                }
+                else
+                {
+                    ModelState.AddModelError("staffContactNum", "Please input a valid UK phone number.");
+                    ViewBag.venueId = request.VenueId;
+                    return View();
+                }
+                
             }
             return Unauthorized();
         }
@@ -113,24 +126,44 @@ namespace Webadmin.Controllers
         // Edit staff details
 
         // GET /Staffs/
-        public IActionResult Edit(int staffId, int venueId)
+        public async Task<IActionResult> Edit(int staffId, int venueId)
         {
             if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
             {
                 ViewBag.staffId = staffId;
                 ViewBag.VenueId = venueId;
-                return View();
+                var staff = await _context.Staff
+                    .Where(staff => staff.StaffId.Equals(staffId))
+                    .Select(staff => new EditStaffRequest 
+                    { 
+                        StaffId = staff.StaffId,
+                        StaffName = staff.StaffName,
+                        StaffContactNum = staff.StaffContactNum,
+                        StaffPosition = staff.StaffPosition,
+                        VenueId = venueId
+                    })
+                    .SingleAsync();
+                return View(staff);
             }
             return Unauthorized();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(string staffName, string staffContactNum, string staffPosition, int staffId)
+        public IActionResult Edit(EditStaffRequest request)
         {
-            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
+            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, request.StaffId, _context))
             {
-                CallEditStaffSP(staffName, staffContactNum, staffPosition, staffId);
-                return RedirectToAction(nameof(Index));
+                string formattedContactNumber = TryConvertContactNumber(request.StaffContactNum);
+                if (formattedContactNumber != null)
+                {
+                    CallEditStaffSP(request.StaffName, request.StaffContactNum, request.StaffPosition, request.StaffId);
+                }
+                else
+                {
+                    ModelState.AddModelError("staffContactNum", "Please input a valid UK phone number.");
+                    return View();
+                }
+                return RedirectToAction(nameof(Index), new { venueId = request.VenueId });
             }
             return Unauthorized();
         }
@@ -158,20 +191,45 @@ namespace Webadmin.Controllers
             return Unauthorized();
         }
         [HttpPost] // /Staffs/Delete/ID
-        public IActionResult Delete(int staffId)
+        public IActionResult Delete(int staffId, int venueId)
         {
             if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, staffId, _context))
             {
                 CallDeleteStaffSP(staffId);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { venueId = venueId });
             }
             return Unauthorized();
+        }
+
+        private string TryConvertContactNumber(string contactNumber)
+        {
+            var phoneNumberUtil = PhoneNumberUtil.GetInstance();
+            try
+            {
+                var phoneNumber = phoneNumberUtil.Parse(contactNumber, "GB");
+                if (phoneNumberUtil.IsValidNumberForRegion(phoneNumber, "GB"))
+                {
+                    // If the phone number if a valid UK number, return the formatted string
+                    return phoneNumberUtil.Format(phoneNumber, PhoneNumberFormat.E164);
+                }
+                // If the phone number is not a valid UK number, signal this with a null
+                else
+                {
+                    return null;
+                }
+            }
+            // If there are any general issues with the formatting of the phone number, signal this with a null
+            catch (NumberParseException)
+            {
+                return null;
+            }
+
         }
 
         /*  DATABASE LINKED CODE  */
 
         // Execute add_staff stored procedure on SQL Database
-        private void CallAddSaffSP(string staffName, string staffContactNum, string staffPosition, int venueId)
+        private void CallAddStaffSP(string staffName, string staffContactNum, string staffPosition, int venueId)
         {
             SqlParameter[] parameters = new SqlParameter[4];
             parameters[0] = new SqlParameter("@staff_name", staffName);
