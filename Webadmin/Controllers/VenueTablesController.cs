@@ -25,6 +25,7 @@ namespace Webadmin.Controllers
             ViewBag.venueId = venueId;
             return View(await _context.VenueTables
                 .Where(venueTable => venueTable.VenueId.Equals(venueId))
+                .OrderBy(venueTable => venueTable.VenueTableNum)
                 .ToListAsync());
         }
 
