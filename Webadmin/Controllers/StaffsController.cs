@@ -160,6 +160,8 @@ namespace Webadmin.Controllers
                 }
                 else
                 {
+                    ViewBag.staffId = request.StaffId;
+                    ViewBag.VenueId = request.VenueId;
                     ModelState.AddModelError("staffContactNum", "Please input a valid UK phone number.");
                     return View();
                 }
