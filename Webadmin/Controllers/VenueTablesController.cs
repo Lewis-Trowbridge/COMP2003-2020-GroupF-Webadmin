@@ -99,47 +99,47 @@ namespace Webadmin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int venueTableId, int venueId)
         {
-            CallDeleteTableSP(venueTableId);
+            await CallDeleteTableSP(venueTableId);
             return RedirectToAction(nameof(Index), new { venueId = venueId });
         }
 
-        private void CallDeleteTableSP(int venueTableId)
+        private async Task CallDeleteTableSP(int venueTableId)
         {
             SqlParameter[] parameters = new SqlParameter[1];
             parameters[0] = new SqlParameter("@venue_table_id", venueTableId);
-            _context.Database.ExecuteSqlRaw("EXEC delete_venue_table @venue_table_id", parameters);
+            await _context.Database.ExecuteSqlRawAsync("EXEC delete_venue_table @venue_table_id", parameters);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(int venueId, int venueTableNum, int venueTableCapacity)
         {
-            CallCreateTableSP(venueId, venueTableNum, venueTableCapacity);
+            await CallCreateTableSP(venueId, venueTableNum, venueTableCapacity);
             return RedirectToAction(nameof(Index), new { venueId = venueId });
         }
 
-        private void CallCreateTableSP(int venueId, int venueTableNum, int venueTableCapacity)
+        private async Task CallCreateTableSP(int venueId, int venueTableNum, int venueTableCapacity)
         {
             SqlParameter[] parameters = new SqlParameter[3];
             parameters[0] = new SqlParameter("@venue_id", venueId);
             parameters[1] = new SqlParameter("@venue_table_number", venueTableNum);
             parameters[2] = new SqlParameter("@venue_table_capacity", venueTableCapacity);
-            _context.Database.ExecuteSqlRaw("EXEC add_venue_table @venue_id, @venue_table_number, @venue_table_capacity", parameters);
+            await _context.Database.ExecuteSqlRawAsync("EXEC add_venue_table @venue_id, @venue_table_number, @venue_table_capacity", parameters);
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(int venueTableId, int venueTableNum, int venueTableCapacity, int venueId)
         {
-            CallEditTableSP(venueTableId, venueTableNum, venueTableCapacity);
+            await CallEditTableSP(venueTableId, venueTableNum, venueTableCapacity);
             return RedirectToAction(nameof(Index), new { venueId = venueId });
         }
 
-        private void CallEditTableSP(int venueTableID, int venueTableNum, int venueTableCapacity)
+        private async Task CallEditTableSP(int venueTableID, int venueTableNum, int venueTableCapacity)
         {
             SqlParameter[] parameters = new SqlParameter[3];
             parameters[0] = new SqlParameter("@venue_table_id", venueTableID);
             parameters[1] = new SqlParameter("@venue_table_number", venueTableNum);
             parameters[2] = new SqlParameter("@venue_table_capacity", venueTableCapacity);
-            _context.Database.ExecuteSqlRaw("EXEC edit_venue_table @venue_table_id, @venue_table_number, @venue_table_capacity", parameters);
+            await _context.Database.ExecuteSqlRawAsync("EXEC edit_venue_table @venue_table_id, @venue_table_number, @venue_table_capacity", parameters);
         }
     }
 }
