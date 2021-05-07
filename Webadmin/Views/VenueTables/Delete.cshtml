@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Delete";
+    int venueId = ViewBag.venueId;
 }
 
 <h1>Delete</h1>
@@ -23,17 +24,14 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.VenueTableCapacity)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Venue)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Venue.AddLineOne)
-        </dd class>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="VenueTableId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <div class=" form-group">
+            <input value="@venueId" name="venueId" type="hidden">
+        </div>
+        <a asp-action="Index" asp-route-venueId="@venueId">Back to List</a>
     </form>
 </div>

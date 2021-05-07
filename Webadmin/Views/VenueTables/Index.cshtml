@@ -2,12 +2,13 @@
 
 @{
     ViewData["Title"] = "Index";
+    int venueId = ViewBag.venueId;
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" asp-route-venueId="@venueId">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -31,9 +32,9 @@
                 @Html.DisplayFor(modelItem => item.VenueTableCapacity)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.VenueTableId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.VenueTableId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.VenueTableId">Delete</a>
+                <a asp-action="Edit" asp-route-venueTableId="@item.VenueTableId" asp-route-venueId="@venueId">Edit</a> |
+                <a asp-action="Details" asp-route-venueTableId="@item.VenueTableId" asp-route-venueId="@venueId">Details</a> |
+                <a asp-action="Delete" asp-route-venueTableId="@item.VenueTableId" asp-route-venueId="@venueId">Delete</a>
             </td>
         </tr>
 }

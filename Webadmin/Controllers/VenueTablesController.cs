@@ -22,22 +22,23 @@ namespace Webadmin.Controllers
         // GET: VenueTables
         public async Task<IActionResult> Index(int venueId)
         {
+            ViewBag.venueId = venueId;
             return View(await _context.VenueTables
                 .Where(venueTable => venueTable.VenueId.Equals(venueId))
                 .ToListAsync());
         }
 
         // GET: VenueTables/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? venueTableId, int venueId)
         {
-            if (id == null)
+            ViewBag.venueId = venueId;
+            if (venueTableId == null)
             {
                 return NotFound();
             }
 
             var venueTables = await _context.VenueTables
-                .Include(v => v.Venue)
-                .FirstOrDefaultAsync(m => m.VenueTableId == id);
+                .FirstOrDefaultAsync(m => m.VenueTableId == venueTableId);
             if (venueTables == null)
             {
                 return NotFound();
@@ -47,40 +48,40 @@ namespace Webadmin.Controllers
         }
 
         // GET: VenueTables/Create
-        public IActionResult Create()
+        public IActionResult Create(int venueId)
         {
-            ViewData["VenueId"] = new SelectList(_context.Venues, "VenueId", "AddLineOne");
+            ViewBag.venueId = venueId;
             return View();
         }
 
         // GET: VenueTables/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? venueTableId, int venueId)
         {
-            if (id == null)
+            ViewBag.venueId = venueId;
+            if (venueTableId == null)
             {
                 return NotFound();
             }
 
-            var venueTables = await _context.VenueTables.FindAsync(id);
+            var venueTables = await _context.VenueTables.FindAsync(venueTableId);
             if (venueTables == null)
             {
                 return NotFound();
             }
-            ViewData["VenueId"] = new SelectList(_context.Venues, "VenueId", "AddLineOne", venueTables.VenueId);
             return View(venueTables);
         }
 
         // GET: VenueTables/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? venueTableId, int venueId)
         {
-            if (id == null)
+            ViewBag.venueId = venueId;
+            if (venueTableId == null)
             {
                 return NotFound();
             }
 
             var venueTables = await _context.VenueTables
-                .Include(v => v.Venue)
-                .FirstOrDefaultAsync(m => m.VenueTableId == id);
+                .FirstOrDefaultAsync(m => m.VenueTableId == venueTableId);
             if (venueTables == null)
             {
                 return NotFound();
@@ -94,48 +95,49 @@ namespace Webadmin.Controllers
             return _context.VenueTables.Any(e => e.VenueTableId == id);
         }
 
-        public async Task<IActionResult> Delete (int venueTableID)
+        [HttpPost]
+        public async Task<IActionResult> Delete(int venueTableId, int venueId)
         {
-            CallDeleteTableSP(venueTableID);
-            return RedirectToAction(nameof(Index));
+            CallDeleteTableSP(venueTableId);
+            return RedirectToAction(nameof(Index), new { venueId = venueId });
         }
 
-        private void CallDeleteTableSP(int venueTableID)
+        private void CallDeleteTableSP(int venueTableId)
         {
             SqlParameter[] parameters = new SqlParameter[1];
-            parameters[0] = new SqlParameter("@venue_table_id", venueTableID);
+            parameters[0] = new SqlParameter("@venue_table_id", venueTableId);
             _context.Database.ExecuteSqlRaw("EXEC delete_venue_table @venue_table_id", parameters);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create (int venueID, int venueTableNumber, int numberOfSeats)
+        public async Task<IActionResult> Create(int venueId, int venueTableNum, int venueTableCapacity)
         {
-            CallCreateTableSP(venueID, venueTableNumber, numberOfSeats);
-            return RedirectToAction(nameof(Index));
+            CallCreateTableSP(venueId, venueTableNum, venueTableCapacity);
+            return RedirectToAction(nameof(Index), new { venueId = venueId });
         }
 
-        private void CallCreateTableSP(int venueID, int venueTableNumber, int numberOfSeats)
+        private void CallCreateTableSP(int venueId, int venueTableNum, int venueTableCapacity)
         {
             SqlParameter[] parameters = new SqlParameter[3];
-            parameters[0] = new SqlParameter("@venue_id", venueID);
-            parameters[1] = new SqlParameter("@venue_table_number", venueTableNumber);
-            parameters[2] = new SqlParameter("@venue_table_capacity", numberOfSeats);
+            parameters[0] = new SqlParameter("@venue_id", venueId);
+            parameters[1] = new SqlParameter("@venue_table_number", venueTableNum);
+            parameters[2] = new SqlParameter("@venue_table_capacity", venueTableCapacity);
             _context.Database.ExecuteSqlRaw("EXEC add_venue_table @venue_id, @venue_table_number, @venue_table_capacity", parameters);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit (int venueTableID, int venueTableNumber, int numberOfSeats)
+        public async Task<IActionResult> Edit(int venueTableId, int venueTableNum, int venueTableCapacity, int venueId)
         {
-            CallEditTableSP(venueTableID, venueTableNumber, numberOfSeats);
-            return RedirectToAction(nameof(Index));
+            CallEditTableSP(venueTableId, venueTableNum, venueTableCapacity);
+            return RedirectToAction(nameof(Index), new { venueId = venueId });
         }
 
-        private void CallEditTableSP(int venueTableID, int venueTableNumber, int numberOfSeats)
+        private void CallEditTableSP(int venueTableID, int venueTableNum, int venueTableCapacity)
         {
             SqlParameter[] parameters = new SqlParameter[3];
             parameters[0] = new SqlParameter("@venue_table_id", venueTableID);
-            parameters[1] = new SqlParameter("@venue_table_number", venueTableNumber);
-            parameters[2] = new SqlParameter("@venue_table_capacity", numberOfSeats);
+            parameters[1] = new SqlParameter("@venue_table_number", venueTableNum);
+            parameters[2] = new SqlParameter("@venue_table_capacity", venueTableCapacity);
             _context.Database.ExecuteSqlRaw("EXEC edit_venue_table @venue_table_id, @venue_table_number, @venue_table_capacity", parameters);
         }
     }

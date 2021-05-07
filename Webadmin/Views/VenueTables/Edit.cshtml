@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";
+    int venueId = ViewBag.venueId;
 }
 
 <h1>Edit</h1>
@@ -14,11 +15,6 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="VenueTableId" />
             <div class="form-group">
-                <label asp-for="VenueId" class="control-label"></label>
-                <select asp-for="VenueId" class="form-control" asp-items="ViewBag.VenueId"></select>
-                <span asp-validation-for="VenueId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="VenueTableNum" class="control-label"></label>
                 <input asp-for="VenueTableNum" class="form-control" />
                 <span asp-validation-for="VenueTableNum" class="text-danger"></span>
@@ -28,6 +24,9 @@
                 <input asp-for="VenueTableCapacity" class="form-control" />
                 <span asp-validation-for="VenueTableCapacity" class="text-danger"></span>
             </div>
+            <div class=" form-group">
+                <input value="@venueId" name="venueId" type="hidden">
+            </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -36,7 +35,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-route-venueId="@venueId">Back to List</a>
 </div>
 
 @section Scripts {
