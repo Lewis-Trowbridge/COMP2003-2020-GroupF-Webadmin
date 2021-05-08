@@ -79,7 +79,16 @@ namespace Webadmin.Controllers
                     return NotFound();
                 }
 
-                var venueTables = await _context.VenueTables.FindAsync(venueTableId);
+                var venueTables = await _context.VenueTables
+                    .Where(venueTable => venueTable.VenueTableId.Equals(venueTableId))
+                    .Select(venueTable => new EditVenueTablesRequest
+                    {
+                        VenueId = venueId,
+                        VenueTableId = venueTable.VenueTableId,
+                        VenueTableNum = venueTable.VenueTableNum,
+                        VenueTableCapacity = venueTable.VenueTableCapacity
+                    })
+                    .SingleAsync();
                 if (venueTables == null)
                 {
                     return NotFound();
@@ -156,12 +165,12 @@ namespace Webadmin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int venueTableId, int venueTableNum, int venueTableCapacity, int venueId)
+        public async Task<IActionResult> Edit(EditVenueTablesRequest request)
         {
-            if (WebadminHelper.AdminPermissionVenueTable(HttpContext.Session, venueTableId, _context))
+            if (WebadminHelper.AdminPermissionVenueTable(HttpContext.Session, request.VenueTableId, _context))
             {
-                await CallEditTableSP(venueTableId, venueTableNum, venueTableCapacity);
-                return RedirectToAction(nameof(Index), new { venueId = venueId });
+                await CallEditTableSP(request.VenueTableId, request.VenueTableNum, request.VenueTableCapacity);
+                return RedirectToAction(nameof(Index), new { venueId = request.VenueId });
             }
             return Unauthorized();
             
