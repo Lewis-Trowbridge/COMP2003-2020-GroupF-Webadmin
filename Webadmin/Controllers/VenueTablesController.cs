@@ -34,29 +34,6 @@ namespace Webadmin.Controllers
             return Unauthorized();
         }
 
-        // GET: VenueTables/Details/5
-        public async Task<IActionResult> Details(int? venueTableId, int venueId)
-        {
-            if (WebadminHelper.AdminPermissionVenueTable(HttpContext.Session, venueTableId.Value, _context))
-            {
-                ViewBag.venueId = venueId;
-                if (venueTableId == null)
-                {
-                    return NotFound();
-                }
-
-                var venueTables = await _context.VenueTables
-                    .FirstOrDefaultAsync(m => m.VenueTableId == venueTableId);
-                if (venueTables == null)
-                {
-                    return NotFound();
-                }
-
-                return View(venueTables);
-            }
-            return Unauthorized();
-        }
-
         // GET: VenueTables/Create
         public IActionResult Create(int venueId)
         {
