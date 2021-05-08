@@ -4,38 +4,39 @@
     ViewData["Title"] = "Edit";
     int venueId = ViewBag.venueId;
 }
-
-<h1>Edit</h1>
-
-<h4>VenueTables</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="VenueTableId" />
-            <div class="form-group">
-                <label asp-for="VenueTableNum" class="control-label"></label>
-                <input asp-for="VenueTableNum" class="form-control" />
-                <span asp-validation-for="VenueTableNum" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VenueTableCapacity" class="control-label"></label>
-                <input asp-for="VenueTableCapacity" class="form-control" />
-                <span asp-validation-for="VenueTableCapacity" class="text-danger"></span>
-            </div>
-            <div class=" form-group">
-                <input asp-for="VenueId" value="@venueId" type="hidden">
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="borderBody">
+    <div class="titleMargin">
+        <h1>Edit</h1>
+        <div class="shareLine">
+            <h4>VenueTables</h4>
+            <a asp-action="Index" asp-route-venueId="@venueId" class="btn bntMedium">Back</a>
+        </div>
+        <hr />
     </div>
-</div>
-
-<div>
-    <a asp-action="Index" asp-route-venueId="@venueId">Back to List</a>
+    <div class="row" style="margin-left:100px">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="VenueTableId" />
+                <div class="form-group">
+                    <label asp-for="VenueTableNum" class="control-label"></label>
+                    <input asp-for="VenueTableNum" class="form-control" />
+                    <span asp-validation-for="VenueTableNum" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="VenueTableCapacity" class="control-label"></label>
+                    <input asp-for="VenueTableCapacity" class="form-control" />
+                    <span asp-validation-for="VenueTableCapacity" class="text-danger"></span>
+                </div>
+                <div class=" form-group">
+                    <input asp-for="VenueId" value="@venueId" type="hidden">
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn bntSmall" />
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
