@@ -22,73 +22,93 @@ namespace Webadmin.Controllers
         // GET: VenueTables
         public async Task<IActionResult> Index(int venueId)
         {
-            ViewBag.venueId = venueId;
-            return View(await _context.VenueTables
-                .Where(venueTable => venueTable.VenueId.Equals(venueId))
-                .OrderBy(venueTable => venueTable.VenueTableNum)
-                .ToListAsync());
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            {
+                ViewBag.venueId = venueId;
+                return View(await _context.VenueTables
+                    .Where(venueTable => venueTable.VenueId.Equals(venueId))
+                    .OrderBy(venueTable => venueTable.VenueTableNum)
+                    .ToListAsync());
+            }
+            return Unauthorized();
         }
 
         // GET: VenueTables/Details/5
         public async Task<IActionResult> Details(int? venueTableId, int venueId)
         {
-            ViewBag.venueId = venueId;
-            if (venueTableId == null)
+            if (WebadminHelper.AdminPermissionVenueTable(HttpContext.Session, venueTableId.Value, _context))
             {
-                return NotFound();
-            }
+                ViewBag.venueId = venueId;
+                if (venueTableId == null)
+                {
+                    return NotFound();
+                }
 
-            var venueTables = await _context.VenueTables
-                .FirstOrDefaultAsync(m => m.VenueTableId == venueTableId);
-            if (venueTables == null)
-            {
-                return NotFound();
-            }
+                var venueTables = await _context.VenueTables
+                    .FirstOrDefaultAsync(m => m.VenueTableId == venueTableId);
+                if (venueTables == null)
+                {
+                    return NotFound();
+                }
 
-            return View(venueTables);
+                return View(venueTables);
+            }
+            return Unauthorized();
         }
 
         // GET: VenueTables/Create
         public IActionResult Create(int venueId)
         {
-            ViewBag.venueId = venueId;
-            return View();
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            {
+                ViewBag.venueId = venueId;
+                return View();
+            }
+            return Unauthorized();
         }
 
         // GET: VenueTables/Edit/5
         public async Task<IActionResult> Edit(int? venueTableId, int venueId)
         {
-            ViewBag.venueId = venueId;
-            if (venueTableId == null)
+            if (WebadminHelper.AdminPermissionVenueTable(HttpContext.Session, venueTableId.Value, _context))
             {
-                return NotFound();
-            }
+                ViewBag.venueId = venueId;
+                if (venueTableId == null)
+                {
+                    return NotFound();
+                }
 
-            var venueTables = await _context.VenueTables.FindAsync(venueTableId);
-            if (venueTables == null)
-            {
-                return NotFound();
+                var venueTables = await _context.VenueTables.FindAsync(venueTableId);
+                if (venueTables == null)
+                {
+                    return NotFound();
+                }
+                return View(venueTables);
             }
-            return View(venueTables);
+            return Unauthorized();
         }
 
         // GET: VenueTables/Delete/5
         public async Task<IActionResult> Delete(int? venueTableId, int venueId)
         {
-            ViewBag.venueId = venueId;
-            if (venueTableId == null)
+            if (WebadminHelper.AdminPermissionVenueTable(HttpContext.Session, venueTableId.Value, _context))
             {
-                return NotFound();
-            }
+                ViewBag.venueId = venueId;
+                if (venueTableId == null)
+                {
+                    return NotFound();
+                }
 
-            var venueTables = await _context.VenueTables
-                .FirstOrDefaultAsync(m => m.VenueTableId == venueTableId);
-            if (venueTables == null)
-            {
-                return NotFound();
-            }
+                var venueTables = await _context.VenueTables
+                    .FirstOrDefaultAsync(m => m.VenueTableId == venueTableId);
+                if (venueTables == null)
+                {
+                    return NotFound();
+                }
 
-            return View(venueTables);
+                return View(venueTables);
+            }
+            return Unauthorized();
         }
 
         private bool VenueTablesExists(int id)
@@ -99,8 +119,12 @@ namespace Webadmin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int venueTableId, int venueId)
         {
-            await CallDeleteTableSP(venueTableId);
-            return RedirectToAction(nameof(Index), new { venueId = venueId });
+            if (WebadminHelper.AdminPermissionVenueTable(HttpContext.Session, venueTableId, _context))
+            {
+                await CallDeleteTableSP(venueTableId);
+                return RedirectToAction(nameof(Index), new { venueId = venueId });
+            }
+            return Unauthorized();
         }
 
         private async Task CallDeleteTableSP(int venueTableId)
@@ -113,8 +137,12 @@ namespace Webadmin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(int venueId, int venueTableNum, int venueTableCapacity)
         {
-            await CallCreateTableSP(venueId, venueTableNum, venueTableCapacity);
-            return RedirectToAction(nameof(Index), new { venueId = venueId });
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            {
+                await CallCreateTableSP(venueId, venueTableNum, venueTableCapacity);
+                return RedirectToAction(nameof(Index), new { venueId = venueId });
+            }
+            return Unauthorized();
         }
 
         private async Task CallCreateTableSP(int venueId, int venueTableNum, int venueTableCapacity)
@@ -129,8 +157,13 @@ namespace Webadmin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int venueTableId, int venueTableNum, int venueTableCapacity, int venueId)
         {
-            await CallEditTableSP(venueTableId, venueTableNum, venueTableCapacity);
-            return RedirectToAction(nameof(Index), new { venueId = venueId });
+            if (WebadminHelper.AdminPermissionVenueTable(HttpContext.Session, venueTableId, _context))
+            {
+                await CallEditTableSP(venueTableId, venueTableNum, venueTableCapacity);
+                return RedirectToAction(nameof(Index), new { venueId = venueId });
+            }
+            return Unauthorized();
+            
         }
 
         private async Task CallEditTableSP(int venueTableID, int venueTableNum, int venueTableCapacity)
