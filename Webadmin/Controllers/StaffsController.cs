@@ -51,27 +51,6 @@ namespace Webadmin.Controllers
                 .ToListAsync());
         }
 
-        // GET: Staffs/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            if (WebadminHelper.AdminPermissionStaff(HttpContext.Session, id.Value, _context) || WebadminHelper.GetStaffId(HttpContext.Session) == id)
-            {
-                var staff = await _context.Staff
-                .FirstOrDefaultAsync(m => m.StaffId == id);
-                if (staff == null)
-                {
-                    return NotFound();
-                }
-
-                return View(staff);
-            }
-            return Unauthorized();
-        }
-
         // Create new staff details
 
         // GET /Staffs/Create/5
