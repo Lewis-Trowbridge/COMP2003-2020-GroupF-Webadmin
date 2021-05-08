@@ -3,39 +3,38 @@
 @{
     ViewData["Title"] = "Create";
 }
-<div class="borderBody">
-    <div class="titleMargin">
-        <h1>Create</h1>
-        <div class="shareLine">
-            <h4>Venues Tables</h4>
-            <a asp-action="Index" class="btn bntSmall">Back</a>
-        </div>
-        <hr />
+
+<h1>Create</h1>
+
+<h4>VenueTables</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="VenueId" class="control-label"></label>
+                <select asp-for="VenueId" class ="form-control" asp-items="ViewBag.VenueId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="VenueTableNum" class="control-label"></label>
+                <input asp-for="VenueTableNum" class="form-control" />
+                <span asp-validation-for="VenueTableNum" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VenueTableCapacity" class="control-label"></label>
+                <input asp-for="VenueTableCapacity" class="form-control" />
+                <span asp-validation-for="VenueTableCapacity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
-    <div class="row" style="margin-left: 100px">
-        <div class="col-md-4">
-            <form asp-action="Create">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="VenueId" class="control-label"></label>
-                    <select asp-for="VenueId" class="form-control" asp-items="ViewBag.VenueId"></select>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VenueTableNum" class="control-label"></label>
-                    <input asp-for="VenueTableNum" class="form-control" />
-                    <span asp-validation-for="VenueTableNum" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VenueTableCapacity" class="control-label"></label>
-                    <input asp-for="VenueTableCapacity" class="form-control" />
-                    <span asp-validation-for="VenueTableCapacity" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn bntSmall" />
-                </div>
-            </form>
-        </div>
-    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
