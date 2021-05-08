@@ -54,13 +54,13 @@ namespace Webadmin.Controllers
         }
 
         // GET: VenueTables/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, int venueId)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
+            ViewBag.venueId = venueId;
             var venueTables = await _context.VenueTables.FindAsync(id);
             if (venueTables == null)
             {
