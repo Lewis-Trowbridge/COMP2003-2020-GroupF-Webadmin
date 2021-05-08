@@ -4,34 +4,38 @@
     ViewData["Title"] = "Delete";
     int venueId = ViewBag.venueId;
 }
-
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>VenueTables</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VenueTableNum)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VenueTableNum)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VenueTableCapacity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VenueTableCapacity)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="VenueTableId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <div class=" form-group">
-            <input value="@venueId" name="venueId" type="hidden">
+<div class="borderBody">
+    <div class="titleMargin">
+        <h1>Delete VenueTables</h1>
+        <div class="shareLine">
+            <h4>Are you sure you want to delete this?</h4>
+            <a asp-action="Index" asp-route-venueId="@venueId" class="btn bntMedium">Back</a>
         </div>
-        <a asp-action="Index" asp-route-venueId="@venueId">Back to List</a>
-    </form>
+        <hr />
+    </div>
+        <div class="row" style="margin-left:100px">
+            <form asp-action="Delete">
+                <div class="form-group">
+                    <label class="control-label">
+                        <b>Table Number</b>
+                        <span style="margin: 50px"></span>
+                        @Html.DisplayFor(model => model.VenueTableNum)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">
+                        <b>Table Capacity</b>
+                        <span style="margin: 50px"></span>
+                        @Html.DisplayFor(model => model.VenueTableCapacity)
+                    </label>
+                </div>
+                <div class=" form-group">
+                    <input value="@venueId" name="venueId" type="hidden">
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="VenueTableId" />
+                    <input type="submit" value="Delete" class="btn btn-danger" />
+                </div>
+            </form>
+        </div>
 </div>
