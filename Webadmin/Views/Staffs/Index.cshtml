@@ -25,6 +25,7 @@
                 Position
             </th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -41,17 +42,19 @@
                     @Html.DisplayFor(modelItem => item.StaffPosition)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-staffId="@item.StaffId" asp-route-venueId="@VenueId" class="btn bntMedium">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.StaffId" asp-route-venueId="@VenueId" class="btn bntMedium">Delete</a>
+                    <a asp-action="Edit" asp-route-staffId="@item.StaffId" asp-route-venueId="@VenueId" class="btn bntSmall">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.StaffId" asp-route-venueId="@VenueId" class="btn bntSmall" style="background-color:#dc3545;">Delete</a>
+
+                </td>
+                <td>
                     @if (WebadminHelper.StaffIsClockedIn(item))
                     {
-                        <a asp-action="ClockIn" asp-route-staffId="@item.StaffId" asp-route-venueId="@VenueId" class="btn bntMedium" style="background-color: red;">Clock Out</a>
+                        <a asp-action="ClockIn" asp-route-staffId="@item.StaffId" asp-route-venueId="@VenueId" class="btn bntMedium" style="background-color: #dc3545;">Clock Out</a>
                     }
                     else
                     {
-                        <a asp-action="ClockIn" asp-route-staffId="@item.StaffId" asp-route-venueId="@VenueId" class="btn bntMedium" style="background-color: green;">Clock In</a>
+                        <a asp-action="ClockIn" asp-route-staffId="@item.StaffId" asp-route-venueId="@VenueId" class="btn bntMedium" style="background-color: #28a745;">Clock In</a>
                     }
-
                 </td>
             </tr>
         }

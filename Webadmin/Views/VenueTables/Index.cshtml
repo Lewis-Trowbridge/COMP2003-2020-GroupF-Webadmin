@@ -34,8 +34,8 @@
                 @Html.DisplayFor(modelItem => item.VenueTableCapacity)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-venueTableId="@item.VenueTableId" asp-route-venueId="@venueId" class="btn bntMedium">Edit</a>
-                <a asp-action="Delete" asp-route-venueTableId="@item.VenueTableId" asp-route-venueId="@venueId" class="btn bntMedium">Delete</a>
+                <a asp-action="Edit" asp-route-venueTableId="@item.VenueTableId" asp-route-venueId="@venueId" class="btn bntSmall">Edit</a>
+                <a asp-action="Delete" asp-route-venueTableId="@item.VenueTableId" asp-route-venueId="@venueId" class="btn bntSmall" style="background-color:#dc3545;">Delete</a>
             </td>
         </tr>
 }
