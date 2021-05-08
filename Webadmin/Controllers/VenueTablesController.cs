@@ -71,13 +71,13 @@ namespace Webadmin.Controllers
         }
 
         // GET: VenueTables/Delete/5
-        public async Task<IActionResult> Delete(int? id, int venueId)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            ViewBag.VenueId = venueId;
+
             var venueTables = await _context.VenueTables
                 .Include(v => v.Venue)
                 .FirstOrDefaultAsync(m => m.VenueTableId == id);
