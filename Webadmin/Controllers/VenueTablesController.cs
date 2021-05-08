@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Webadmin.Models;
+using Webadmin.Requests;
 
 namespace Webadmin.Controllers
 {
@@ -135,12 +136,12 @@ namespace Webadmin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(int venueId, int venueTableNum, int venueTableCapacity)
+        public async Task<IActionResult> Create(CreateVenueTableRequest request)
         {
-            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, request.VenueId, _context))
             {
-                await CallCreateTableSP(venueId, venueTableNum, venueTableCapacity);
-                return RedirectToAction(nameof(Index), new { venueId = venueId });
+                await CallCreateTableSP(request.VenueId, request.VenueTableNum, request.VenueTableCapacity);
+                return RedirectToAction(nameof(Index), new { venueId = request.VenueId });
             }
             return Unauthorized();
         }

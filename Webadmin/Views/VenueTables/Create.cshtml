@@ -1,4 +1,4 @@
-﻿@model Webadmin.Models.VenueTables
+﻿@model Webadmin.Requests.CreateVenueTableRequest
 
 @{
     ViewData["Title"] = "Create";
@@ -24,7 +24,7 @@
                 <span asp-validation-for="VenueTableCapacity" class="text-danger"></span>
             </div>
             <div class=" form-group">
-                <input value="@venueId" name="venueId" type="hidden">
+                <input asp-for="VenueId" value="@venueId" type="hidden">
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
