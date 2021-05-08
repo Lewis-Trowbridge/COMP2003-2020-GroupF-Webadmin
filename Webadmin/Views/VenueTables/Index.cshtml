@@ -4,19 +4,21 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="shareLine">
+    <h1>Index</h1>
+    <a asp-action="Create" class="btn bntMedium" style="float: right">Create New</a>
+</div>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.VenueTableNum)
+                Table Number
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VenueTableCapacity)
+                Capacity
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Venue)
             </th>
             <th></th>
         </tr>
@@ -31,9 +33,11 @@
                 @Html.DisplayFor(modelItem => item.VenueTableCapacity)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.VenueTableId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.VenueTableId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.VenueTableId">Delete</a>
+                @Html.DisplayFor(modelItem => item.Venue.AddLineOne)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.VenueTableId" class="btn bntMedium">Edit</a>
+                <a asp-action="Delete" asp-route-id="@item.VenueTableId" class="btn bntMedium">Delete</a>
             </td>
         </tr>
 }
