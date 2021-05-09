@@ -12,7 +12,9 @@ namespace Webadmin.Requests
         public int VenueId { get; set; }
         [Required]
         public int VenueTableId { get; set; }
+        [Required]
         public int VenueTableNum { get; set; }
+        [Required]
         public int VenueTableCapacity { get; set; }
     }
 }
