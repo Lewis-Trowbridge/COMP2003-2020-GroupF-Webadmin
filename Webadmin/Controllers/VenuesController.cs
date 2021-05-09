@@ -136,7 +136,7 @@ namespace Webadmin.Controllers
             if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, request.VenueId, _context))
             {
                 await CallEditVenueSP(request.VenueName, request.VenueAddLineOne, request.VenueAddLineTwo, request.VenueCity, request.VenueCounty, request.VenuePostcode, request.VenueId);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), new { id = request.VenueId });
             }
 
             return Unauthorized();
