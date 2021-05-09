@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Webadmin.Models;
+using Webadmin.Requests;
 
 namespace Webadmin.Controllers
 {
@@ -22,71 +23,79 @@ namespace Webadmin.Controllers
         // GET: VenueTables
         public async Task<IActionResult> Index(int venueId)
         {
-            return View(await _context.VenueTables
-                .Where(venueTable => venueTable.VenueId.Equals(venueId))
-                .ToListAsync());
-        }
-
-        // GET: VenueTables/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
             {
-                return NotFound();
+                ViewBag.venueId = venueId;
+                return View(await _context.VenueTables
+                    .Where(venueTable => venueTable.VenueId.Equals(venueId))
+                    .OrderBy(venueTable => venueTable.VenueTableNum)
+                    .ToListAsync());
             }
-
-            var venueTables = await _context.VenueTables
-                .Include(v => v.Venue)
-                .FirstOrDefaultAsync(m => m.VenueTableId == id);
-            if (venueTables == null)
-            {
-                return NotFound();
-            }
-
-            return View(venueTables);
+            return Unauthorized();
         }
 
         // GET: VenueTables/Create
-        public IActionResult Create()
+        public IActionResult Create(int venueId)
         {
-            ViewData["VenueId"] = new SelectList(_context.Venues, "VenueId", "AddLineOne");
-            return View();
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, venueId, _context))
+            {
+                ViewBag.venueId = venueId;
+                return View();
+            }
+            return Unauthorized();
         }
 
         // GET: VenueTables/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? venueTableId, int venueId)
         {
-            if (id == null)
+            if (WebadminHelper.AdminPermissionVenueTable(HttpContext.Session, venueTableId.Value, _context))
             {
-                return NotFound();
-            }
+                ViewBag.venueId = venueId;
+                if (venueTableId == null)
+                {
+                    return NotFound();
+                }
 
-            var venueTables = await _context.VenueTables.FindAsync(id);
-            if (venueTables == null)
-            {
-                return NotFound();
+                var venueTables = await _context.VenueTables
+                    .Where(venueTable => venueTable.VenueTableId.Equals(venueTableId))
+                    .Select(venueTable => new EditVenueTablesRequest
+                    {
+                        VenueId = venueId,
+                        VenueTableId = venueTable.VenueTableId,
+                        VenueTableNum = venueTable.VenueTableNum,
+                        VenueTableCapacity = venueTable.VenueTableCapacity
+                    })
+                    .SingleAsync();
+                if (venueTables == null)
+                {
+                    return NotFound();
+                }
+                return View(venueTables);
             }
-            ViewData["VenueId"] = new SelectList(_context.Venues, "VenueId", "AddLineOne", venueTables.VenueId);
-            return View(venueTables);
+            return Unauthorized();
         }
 
         // GET: VenueTables/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? venueTableId, int venueId)
         {
-            if (id == null)
+            if (WebadminHelper.AdminPermissionVenueTable(HttpContext.Session, venueTableId.Value, _context))
             {
-                return NotFound();
-            }
+                ViewBag.venueId = venueId;
+                if (venueTableId == null)
+                {
+                    return NotFound();
+                }
 
-            var venueTables = await _context.VenueTables
-                .Include(v => v.Venue)
-                .FirstOrDefaultAsync(m => m.VenueTableId == id);
-            if (venueTables == null)
-            {
-                return NotFound();
-            }
+                var venueTables = await _context.VenueTables
+                    .FirstOrDefaultAsync(m => m.VenueTableId == venueTableId);
+                if (venueTables == null)
+                {
+                    return NotFound();
+                }
 
-            return View(venueTables);
+                return View(venueTables);
+            }
+            return Unauthorized();
         }
 
         private bool VenueTablesExists(int id)
@@ -94,49 +103,63 @@ namespace Webadmin.Controllers
             return _context.VenueTables.Any(e => e.VenueTableId == id);
         }
 
-        public async Task<IActionResult> Delete (int venueTableID)
+        [HttpPost]
+        public async Task<IActionResult> Delete(int venueTableId, int venueId)
         {
-            CallDeleteTableSP(venueTableID);
-            return RedirectToAction(nameof(Index));
+            if (WebadminHelper.AdminPermissionVenueTable(HttpContext.Session, venueTableId, _context))
+            {
+                await CallDeleteTableSP(venueTableId);
+                return RedirectToAction(nameof(Index), new { venueId = venueId });
+            }
+            return Unauthorized();
         }
 
-        private void CallDeleteTableSP(int venueTableID)
+        private async Task CallDeleteTableSP(int venueTableId)
         {
             SqlParameter[] parameters = new SqlParameter[1];
-            parameters[0] = new SqlParameter("@venue_table_id", venueTableID);
-            _context.Database.ExecuteSqlRaw("EXEC delete_venue_table @venue_table_id", parameters);
+            parameters[0] = new SqlParameter("@venue_table_id", venueTableId);
+            await _context.Database.ExecuteSqlRawAsync("EXEC delete_venue_table @venue_table_id", parameters);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create (int venueID, int venueTableNumber, int numberOfSeats)
+        public async Task<IActionResult> Create(CreateVenueTableRequest request)
         {
-            CallCreateTableSP(venueID, venueTableNumber, numberOfSeats);
-            return RedirectToAction(nameof(Index));
+            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, request.VenueId, _context))
+            {
+                await CallCreateTableSP(request.VenueId, request.VenueTableNum, request.VenueTableCapacity);
+                return RedirectToAction(nameof(Index), new { venueId = request.VenueId });
+            }
+            return Unauthorized();
         }
 
-        private void CallCreateTableSP(int venueID, int venueTableNumber, int numberOfSeats)
+        private async Task CallCreateTableSP(int venueId, int venueTableNum, int venueTableCapacity)
         {
             SqlParameter[] parameters = new SqlParameter[3];
-            parameters[0] = new SqlParameter("@venue_id", venueID);
-            parameters[1] = new SqlParameter("@venue_table_number", venueTableNumber);
-            parameters[2] = new SqlParameter("@venue_table_capacity", numberOfSeats);
-            _context.Database.ExecuteSqlRaw("EXEC add_venue_table @venue_id, @venue_table_number, @venue_table_capacity", parameters);
+            parameters[0] = new SqlParameter("@venue_id", venueId);
+            parameters[1] = new SqlParameter("@venue_table_number", venueTableNum);
+            parameters[2] = new SqlParameter("@venue_table_capacity", venueTableCapacity);
+            await _context.Database.ExecuteSqlRawAsync("EXEC add_venue_table @venue_id, @venue_table_number, @venue_table_capacity", parameters);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit (int venueTableID, int venueTableNumber, int numberOfSeats)
+        public async Task<IActionResult> Edit(EditVenueTablesRequest request)
         {
-            CallEditTableSP(venueTableID, venueTableNumber, numberOfSeats);
-            return RedirectToAction(nameof(Index));
+            if (WebadminHelper.AdminPermissionVenueTable(HttpContext.Session, request.VenueTableId, _context))
+            {
+                await CallEditTableSP(request.VenueTableId, request.VenueTableNum, request.VenueTableCapacity);
+                return RedirectToAction(nameof(Index), new { venueId = request.VenueId });
+            }
+            return Unauthorized();
+            
         }
 
-        private void CallEditTableSP(int venueTableID, int venueTableNumber, int numberOfSeats)
+        private async Task CallEditTableSP(int venueTableID, int venueTableNum, int venueTableCapacity)
         {
             SqlParameter[] parameters = new SqlParameter[3];
             parameters[0] = new SqlParameter("@venue_table_id", venueTableID);
-            parameters[1] = new SqlParameter("@venue_table_number", venueTableNumber);
-            parameters[2] = new SqlParameter("@venue_table_capacity", numberOfSeats);
-            _context.Database.ExecuteSqlRaw("EXEC edit_venue_table @venue_table_id, @venue_table_number, @venue_table_capacity", parameters);
+            parameters[1] = new SqlParameter("@venue_table_number", venueTableNum);
+            parameters[2] = new SqlParameter("@venue_table_capacity", venueTableCapacity);
+            await _context.Database.ExecuteSqlRawAsync("EXEC edit_venue_table @venue_table_id, @venue_table_number, @venue_table_capacity", parameters);
         }
     }
 }

@@ -69,6 +69,30 @@ namespace Webadmin
             return false;
         }
 
+        public static bool AdminPermissionVenueTable(ISession sessionContext, int venueTableId, COMP2003_FContext dbContext)
+        {
+            int? adminId = GetAdminId(sessionContext);
+            if (adminId != null)
+            {
+                bool exists = dbContext.Admins
+                    .Where(admin => admin.AdminId.Equals(adminId))
+                    .Join(dbContext.AdminLocations, admin => admin.AdminId, location => location.AdminId, (admin, location) => new
+                    {
+                        Location = location
+                    })
+                    .Join(dbContext.VenueTables, location => location.Location.VenueId, venueTable => venueTable.VenueId, (location, venueTable) => new
+                    {
+                        VenueTable = venueTable
+                    })
+                    .Any(venueTable => venueTable.VenueTable.VenueTableId.Equals(venueTableId));
+                return exists;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public static bool StaffPermissionVenue(ISession sessionContext, int venueId, COMP2003_FContext dbContext)
         {
             int? staffId = GetStaffId(sessionContext);

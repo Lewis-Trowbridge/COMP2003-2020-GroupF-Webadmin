@@ -4,21 +4,20 @@
     ViewData["Title"] = "Index";
     int venueId = ViewBag.venueId;
 }
+<div class="shareLine">
+    <h1>Index</h1>
+</div>
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.BookingTime)
+                Booking Time
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BookingSize)
+                Booking Size
             </th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -37,11 +36,12 @@
                     <input name="venueId" value="@venueId" hidden />
                     <button type="submit" class="btn bntMedium" asp-action="Attended">Attended</button>
                 </form>
-                <br />
+            </td>
+            <td>
                 <form asp-action="Cancel">
                     <input name="bookingId" value="@item.BookingId" hidden />
                     <input name="venueId" value="@venueId" hidden />
-                    <button type="submit" class="btn bntMedium" asp-action="Cancel">Cancel</button>
+                    <button type="submit" class="btn bntMedium" style="background-color:#dc3545;" asp-action="Cancel">Cancel</button>
                 </form>
             </td>
         </tr>

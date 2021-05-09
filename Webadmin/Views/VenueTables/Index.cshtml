@@ -2,21 +2,24 @@
 
 @{
     ViewData["Title"] = "Index";
+    int venueId = ViewBag.venueId;
 }
+<div class="shareLine">
+    <h1>Index</h1>
+    <div>
+        <a asp-action="Create" asp-route-venueId="@venueId" class="btn bntMedium">Create New</a>
+        <a asp-controller="Venues" asp-action="Details" asp-route-id="@venueId" class="btn bntMedium">Back </a>
+    </div>
+</div>
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.VenueTableNum)
+                Table Number
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VenueTableCapacity)
+                Table Capacity
             </th>
             <th></th>
         </tr>
@@ -31,9 +34,8 @@
                 @Html.DisplayFor(modelItem => item.VenueTableCapacity)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.VenueTableId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.VenueTableId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.VenueTableId">Delete</a>
+                <a asp-action="Edit" asp-route-venueTableId="@item.VenueTableId" asp-route-venueId="@venueId" class="btn bntSmall">Edit</a>
+                <a asp-action="Delete" asp-route-venueTableId="@item.VenueTableId" asp-route-venueId="@venueId" class="btn bntSmall" style="background-color:#dc3545;">Delete</a>
             </td>
         </tr>
 }
