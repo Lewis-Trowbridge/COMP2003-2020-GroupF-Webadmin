@@ -12,7 +12,7 @@ namespace Webadmin.Models
         public int StaffShiftId { get; set; }
         public int? StaffId { get; set; }
         public DateTime StaffStartTime { get; set; }
-        public DateTime StaffEndTime { get; set; }
+        public DateTime? StaffEndTime { get; set; }
 
         public virtual Staff Staff { get; set; }
     }
