@@ -142,27 +142,6 @@ namespace Webadmin.Controllers
             return Unauthorized();
         }
 
-        // GET: Venues/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            if (WebadminHelper.AdminPermissionVenue(HttpContext.Session, id.Value, _context))
-            {
-                var venues = await _context.Venues
-                .FirstOrDefaultAsync(m => m.VenueId == id);
-            if (venues == null)
-            {
-                return NotFound();
-            }
-
-            return View(venues);
-            }
-
-            return Unauthorized();
-        }
         [HttpPost]
         public async Task<IActionResult> Delete(int venueId)
         {
