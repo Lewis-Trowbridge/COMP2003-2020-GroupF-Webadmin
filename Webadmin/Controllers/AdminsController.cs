@@ -23,12 +23,6 @@ namespace Webadmin.Controllers
             _context = context;
         }
 
-        // GET: Admins
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Admins.ToListAsync());
-        }
-
         // GET: Admins/Details/5
         public async Task<IActionResult> Details(int? id)
         {

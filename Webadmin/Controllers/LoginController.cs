@@ -54,7 +54,7 @@ namespace Webadmin.Controllers
         public IActionResult LoginStaff(int staffId)
         {
             HttpContext.Session.SetInt32(WebadminHelper.StaffIdKey, staffId);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Venues");
         }
 
         public IActionResult Logout()
