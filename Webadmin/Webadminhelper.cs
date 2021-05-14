@@ -112,7 +112,7 @@ namespace Webadmin
         public static bool StaffIsClockedIn(Staff staffToCheck)
         {
             bool clockedIn = staffToCheck.StaffShifts
-                .Any(shift => shift.StaffEndTime.Equals(default(DateTime)));
+                .Any(shift => shift.StaffEndTime.Equals(null));
             return clockedIn;
         }
     }
