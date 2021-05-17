@@ -152,7 +152,7 @@ namespace Webadmin.Controllers
         public async Task<IActionResult> Delete(int adminid)
         {
             await CallDeleteAdminSP(adminid);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Logout", "Login");
         }
 
         private bool AdminsExists(int id)
