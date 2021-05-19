@@ -5,9 +5,11 @@
 }
 
 <h1>Details</h1>
-
-<div>
+<div class="shareLine">
     <h4>Staff</h4>
+    <a asp-controller="Venues" asp-action="Index" class="btn bntSmall">Back</a>
+</div>
+<div>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -29,8 +31,4 @@
             @Html.DisplayFor(model => model.StaffPosition)
         </dd>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.StaffId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
 </div>
